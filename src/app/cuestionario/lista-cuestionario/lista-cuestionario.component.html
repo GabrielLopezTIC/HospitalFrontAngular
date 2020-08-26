@@ -1,0 +1,42 @@
+<app-menu-adm-cuestionario></app-menu-adm-cuestionario>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="container">
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr class="color-theme-green">
+              <th scope="col">Clave</th>
+              <th scope="col">Fecha registro</th>
+              <th scope="col">Registrado o actualizado por:</th>
+              <th scope="col">Medico tratante</th>
+              <th scope="col">Nombre paciente</th>
+              <th scope="col">Apellido</th>
+              <th scope="col">Padecimientos</th>
+              <th scope="col">Terapeutica indicada</th>
+              <th scope="col" *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'">Detalles</th>
+              <th scope="col"*ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let paciente of pacientes" class="color-theme-dark-ligth">
+              <td>{{paciente.clavePaciente}}</td>
+              <td>{{paciente.fecha_ingreso}}</td>
+              <td>{{paciente.registrado_por}}</td>
+              <td>{{paciente.medico_tratante}}</td>
+              <td>{{paciente.nombre}}</td>
+              <td>{{paciente.apellido}}</td>
+              <td>{{paciente.padecimientos}}</td>
+              <td>{{paciente.terapeutica_indicada}}</td>
+              <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button
+                  class="btn btn-outline-info" routerLink="/editarCuestionario/{{paciente.nombre}}" ><i class="far fa-trash-alt"></i> Detalles</button></td>
+              <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
+                  (click)="borrar(paciente.nombre)"><i class="far fa-trash-alt"></i> Eliminar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+

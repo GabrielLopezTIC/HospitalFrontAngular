@@ -1,0 +1,31 @@
+<app-menu-adm-medicamento></app-menu-adm-medicamento>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="container">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr class="color-theme-green">
+                            <th scope="col">Nombre</th>
+                            <th scope="col">RMP Version</th>
+                            <th scope="col" *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'">Detalles</th>
+                            <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let medicamento of medicamentos" class="color-theme-dark-ligth">
+                            <td>{{medicamento.productName}}</td>
+                            <td>{{medicamento.rmpVersion}}</td>
+                            <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button
+                                    class="btn btn-outline-info"><i
+                                        class="far fa-trash-alt"></i> Detalles</button></td>
+                            <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
+                                    (click)="borrar(medicamento.productName)"><i class="far fa-trash-alt"></i> Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>

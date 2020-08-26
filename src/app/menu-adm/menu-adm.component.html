@@ -1,0 +1,35 @@
+
+<nav class="navbar navbar-expand-lg nav-bar-custom mb-4">
+    <label class="nombreUsuario" *ngIf="isLogged">
+        <img class="img-usr" src="assets/logo-usr.png" alt="">
+            {{getUser() | uppercase}}
+        </label>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto" *ngIf="lang() === 'es' || lang() === 'en' || lang() === 'br'">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="cuestioanrio"><i class="fa fa-home" aria-hidden="true"></i>
+                    Inicio</a>
+            </li>
+            <li class="nav-item" *ngIf="roleType() == 'ROLE_ADMIN' || roleType() == 'ROLE_MEDICO'">
+                <a class="nav-link" routerLink="/listaUsuario"><i class="fa fa-users" aria-hidden="true"></i>
+                    Usuarios</a>
+            </li>
+            <li class="nav-item" *ngIf="roleType() == 'ROLE_ADMIN'">
+                <a class="nav-link" routerLink="/listaMedicamento"><i class="fa fa-medkit"></i> Medicamentos</a>
+            </li>
+            <li class="nav-item" *ngIf="roleType() == 'ROLE_ADMIN'">
+                <a class="nav-link" routerLink="/listaEnfermedades"><i class="fa fa-heartbeat"></i> Enfermedades</a>
+            </li>
+            <li class="nav-item" *ngIf="roleType() == 'ROLE_ADMIN' || roleType() == 'ROLE_MEDICO'">
+                <a class="nav-link" routerLink="/listaCuestionario"><i class="fa fa-book"></i> Cuestionario</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged" (click)="onLogOut()">
+                <a class="nav-link" style="cursor: pointer;"><i class="fa fa-sign-out"></i> Cerrar Sesión</a>
+            </li>
+        </ul>
+    </div>
+</nav>

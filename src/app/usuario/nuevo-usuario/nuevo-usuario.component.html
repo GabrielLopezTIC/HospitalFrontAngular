@@ -1,0 +1,50 @@
+<app-menuAdmUsers></app-menuAdmUsers>
+<div class="text-center" *ngIf="!isLogged; else loggedOut">
+    <h2>No has iniciado sesión</h2>
+</div>
+
+<ng-template #loggedOut>
+    <div class="container d-flex justify-content-center">
+        <div class="card">
+            <div class="card-body">
+                <form #f="ngForm" (ngSubmit)="onRegister()" novalidate>
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" [(ngModel)]="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreUsuario">Nombre de Usuario</label>
+                        <input type="text" name="nombreUsuario" id="nombreUsuario" class="form-control"
+                            [(ngModel)]="nombreUsuario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico</label>
+                        <input type="text" name="email" id="email" class="form-control" [(ngModel)]="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" [ngStyle]="{'color':password!=passwordConf?'red':''}">Contraseña</label>
+                        <input type="password" name="password" id="password" class="form-control" [(ngModel)]="password"
+                            required >
+                    </div>
+                    <div class="form-group">
+                        <label for="password" [ngStyle]="{'color':password!=passwordConf?'red':''}">Confirmar contraseña</label>
+                        <input type="password" name="passwordConf" id="passwordConf" class="form-control" [(ngModel)]="passwordConf"
+                            required   >
+                    </div>
+                    <div class="form-grup" *ngIf="roleType() == 'ROLE_ADMIN'">
+                        <label for="password">Rol</label>
+                        <p>
+                            <select name="miselect" [(ngModel)]="rolSelec">
+                                <option [value]="item" *ngFor="let item of rolesList">{{item | uppercase}}</option>
+                            </select>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-success btn-block" [disabled]="!f.valid || !(password === passwordConf) || !(rolSelec != null)">
+                            <i class="fas fa-sign-in-alt"></i> Crear Cuenta</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

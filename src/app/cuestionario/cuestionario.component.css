@@ -1,0 +1,29 @@
+.color-theme-green{
+    background-color:#BFDB6A !important;
+}
+
+
+.pade-container-list {
+    width: 95%;
+    height: 200px;
+    overflow: auto;
+  }
+
+
+  .terap-container-list {
+    width: 95%;
+    height: 200px;
+    overflow: auto;
+  }
+
+  .iniFiltro{
+    width: 100%;
+  }
+
+  .filterInput{
+    width: 100%;
+  }
+
+  .itemsPade{
+    border-radius: 10px;
+  }

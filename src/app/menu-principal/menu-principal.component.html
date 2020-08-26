@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 nav-bar-custom">
+    <label class="nombreUsuario" *ngIf="isLogged">
+    <img class="img-usr" src="assets/logo-usr.png" alt="">
+        {{getUser() | uppercase}}
+    </label>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto" *ngIf="lang() === 'es'">
+            <li class="nav-item" *ngIf="(roleType() == 'ROLE_MEDICO') || (roleType() == 'ROLE_ADMIN')">
+                <a class="nav-link" routerLink="/administracion"><i class="fa fa-cog"></i> Admin.</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged">
+                <a class="nav-link" routerLink="/cuestionario"><i class="fa fa-book"></i>Registrar Paciente</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged" (click)="onLogOut()">
+                <a class="nav-link" style="cursor: pointer;"><i class="fa fa-sign-out"></i> Cerrar Sesión</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto" *ngIf="lang() === 'en'">
+            <li class="nav-item" *ngIf="(roleType() == 'ROLE_MEDICO') || (roleType() == 'ROLE_ADMIN')">
+                <a class="nav-link" routerLink="/administracion"><i class="fa fa-cog"></i> Admin.</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged">
+                <a class="nav-link" routerLink="/cuestionario"><i class="fa fa-book"></i>Register patient</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged" (click)="onLogOut()">
+                <a class="nav-link" style="cursor: pointer;"><i class="fa fa-sign-out"></i> Log out</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto" *ngIf="lang() === 'br'">
+            <li class="nav-item" *ngIf="(roleType() == 'ROLE_MEDICO') || (roleType() == 'ROLE_ADMIN')">
+                <a class="nav-link" routerLink="/administracion"><i class="fa fa-cog"></i> Admin.</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged">
+                <a class="nav-link" routerLink="/cuestionario"><i class="fa fa-book"></i>Registrar paciente</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged" (click)="onLogOut()">
+                <a class="nav-link" style="cursor: pointer;"><i class="fa fa-sign-out"></i> Fechar Sessão</a>
+            </li>
+        </ul>
+    </div>
+</nav>

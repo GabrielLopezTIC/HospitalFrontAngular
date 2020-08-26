@@ -1,0 +1,46 @@
+import { Component, OnInit } from '@angular/core';
+import { TokenService } from '../services/token.service';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-menuPrincipal',
+  templateUrl: './menu-principal.component.html',
+  styleUrls: ['./menu-principal.component.css']
+})
+export class MenuPrincipalComponent implements OnInit {
+
+  isLogged = false;
+
+  constructor(private tokenService: TokenService,
+  private language: AuthService,
+  private router:Router
+  ) { }
+
+  ngOnInit() {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+  }
+
+  onLogOut(): void {
+    this.tokenService.logOut();
+    this.router.navigate(['login']);
+  }
+
+  public lang():string{
+    return this.language.lang();
+  }
+
+
+  roleType():string{
+    return this.tokenService.getAuthorities()[0];
+  }
+
+  getUser():string{
+    return this.tokenService.getUserName();
+  }
+
+}

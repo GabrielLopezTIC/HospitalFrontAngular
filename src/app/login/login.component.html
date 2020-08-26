@@ -1,0 +1,97 @@
+<div class="bg-image">
+    <div class="text-center" *ngIf="isLogged; else loggedOut">
+        <app-menuPrincipal></app-menuPrincipal>
+        <h2>Panel principal</h2>
+    </div>
+    <ng-template #loggedOut>
+        <div class="row">
+            <div class="col-sm-12 col-lg-4"></div>
+            <div class="col-sm-12 col-lg-4 mt-4">
+                <div class="card ml-2 mr-2">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <diV class="logo-container">
+                                    <img class="img-fluid mb-2 logo" src="assets/nolasco-logo.PNG" alt="">
+                                </diV>
+                                <div class="logo-container">
+                                    <h6 class="logoText ml-4">Comprometidos con la seguridad del paciente.</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-sm-12">
+                                <form #f="ngForm" (ngSubmit)="onLogin()" novalidate>
+                                    <div *ngIf="lang() == 'es'">
+                                        <div class="form-group">
+                                            <label for="nombreUsuario">Nombre de Usuario</label>
+                                            <input type="text" name="nombreUsuario" id="nombreUsuario"
+                                                class="form-control" [(ngModel)]="nombreUsuario" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password">Contraseña</label>
+                                            <input type="password" name="password" id="password" class="form-control"
+                                                [(ngModel)]="password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <a (click)="idioma('es')" id="es">Español |</a>
+                                            <a (click)="idioma('en')" id="en">English |</a>
+                                            <a (click)="idioma('br')" id="br">Português</a>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">
+                                                <i class="fas fa-sign-in-alt"></i>Iniciar Sesión</button>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="lang() == 'en'">
+                                        <div class="form-group">
+                                            <label for="nombreUsuario">Username</label>
+                                            <input type="text" name="nombreUsuario" id="nombreUsuario"
+                                                class="form-control" [(ngModel)]="nombreUsuario" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password">Password</label>
+                                            <input type="password" name="password" id="password" class="form-control"
+                                                [(ngModel)]="password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <a (click)="idioma('es')" id="es">Español |</a>
+                                            <a (click)="idioma('en')" id="en">English |</a>
+                                            <a (click)="idioma('br')" id="br">Português</a>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">
+                                                <i class="fas fa-sign-in-alt"></i>Log in</button>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="lang() == 'br'">
+                                        <div class="form-group">
+                                            <label for="nombreUsuario">Nome de usuário</label>
+                                            <input type="text" name="nombreUsuario" id="nombreUsuario"
+                                                class="form-control" [(ngModel)]="nombreUsuario" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password">Senha</label>
+                                            <input type="password" name="password" id="password" class="form-control"
+                                                [(ngModel)]="password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <a (click)="idioma('es')" id="es">Español |</a>
+                                            <a (click)="idioma('en')" id="en">English |</a>
+                                            <a (click)="idioma('br')" id="br">Português</a>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">
+                                                <i class="fas fa-sign-in-alt"></i>Iniciar sessão</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-4"></div>
+        </div>
+    </ng-template>
+</div>

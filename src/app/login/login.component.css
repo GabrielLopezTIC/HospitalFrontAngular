@@ -1,0 +1,43 @@
+#toast-container > div {
+    opacity:1;
+    background-color: red;
+}
+
+
+.logo-container{
+    display: flex;
+    align-items: center;
+}
+
+.logo{
+    width: 80%;
+    margin: 0 auto;
+}
+.logoText{
+    width: 100%;
+    margin: 0 auto;
+    font-size: small;
+    font-weight: bold;
+}
+
+.botonSesion{
+    width: 20% !important;
+}
+
+.bg-image{
+    background-image: url('/assets/bg-login.jpg') ;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    height:100%;
+}
+
+.card{
+    border-radius: 5px !important;
+    -webkit-box-shadow: 10px 9px 4px 3px rgba(0,0,0,0.12);
+-moz-box-shadow: 10px 9px 4px 3px rgba(0,0,0,0.12);
+box-shadow: 10px 9px 4px 3px rgba(0,0,0,0.12);
+}

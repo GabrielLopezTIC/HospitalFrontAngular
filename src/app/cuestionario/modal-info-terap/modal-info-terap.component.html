@@ -1,0 +1,78 @@
+<div>
+    <mat-dialog-content class="mat-typography">
+        <label *ngIf="lang() === 'es' " class="title">Nombre del producto</label>
+        <label *ngIf="lang() === 'en' " class="title">Product Name</label>
+        <label *ngIf="lang() === 'br' " class="title">Nome do produto</label>
+        <p>{{medicamento.productName}}</p>
+        <label *ngIf="lang() === 'es' " class="title">MRP / DCP</label>
+        <label *ngIf="lang() === 'en' " class="title">MRP / DCP</label>
+        <label *ngIf="lang() === 'br' " class="title">MRP / DCP</label>
+        <p>{{medicamento.mrpDcp}}</p>
+        <label *ngIf="lang() === 'es' " class="title">Base legal</label>
+        <label *ngIf="lang() === 'en' " class="title">Legal Basis</label>
+        <label *ngIf="lang() === 'br' " class="title">base jurídica</label>
+        <p>{{medicamento.legalBasis}}</p>
+        <label *ngIf="lang() === 'es' " class="title">RPM Versión</label>
+        <label *ngIf="lang() === 'en' " class="title">RPM Version</label>
+        <label *ngIf="lang() === 'br' " class="title">RPM Versão</label>
+        <p>{{medicamento.rmpVersion}}</p>
+
+        <div *ngIf="lang() === 'es' ">
+            <label class="title">Riesgo de identificación importante:</label>
+            <!--<p *ngFor="let item of medicamento.importantIdRisk.safetyConcernsEs">{{item}}</p>-->
+            <p>{{medicamento.importantRiskEs}}</p>
+        </div>
+        <div *ngIf="lang() === 'en' ">
+            <label class="title">Important id risk:</label>
+            <!--<p *ngFor="let item of medicamento.importantIdRisk.safetyConcernsEn">{{item}}</p>
+            -->
+            <p>{{medicamento.importantIdRiskEn}}</p>
+        </div>
+        <div *ngIf="lang() === 'br' ">
+            <label class="title">Risco de identificação significativo:</label>
+            <!--<p *ngFor="let item of medicamento.importantIdRisk.safetyConcernsBr">{{item}}</p>
+            -->
+            <p>{{medicamento.importantIdRiskBr}}</p>
+        </div>
+
+
+        <div *ngIf="lang() === 'es' ">
+            <label class="title">Riesgo potencial importante:</label>
+            <!-- <p *ngFor="let item of medicamento.importantPotentialRisk.safetyConcernsEs">{{item}}</p>
+           -->
+            <p>{{medicamento.importantPotentialRiskEs}}</p>
+        </div>
+        <div *ngIf="lang() === 'en' ">
+            <label class="title">Important potential risk:</label>
+            <!--<p *ngFor="let item of medicamento.importantPotentialRisk.safetyConcernsEn">{{item}}</p>
+            -->
+            <p>{{medicamento.importantPotentialRiskEn}}</p>
+        </div>
+        <div *ngIf="lang() === 'br' ">
+            <label class="title">Risco potencial significativo:</label>
+            <!--<p *ngFor="let item of medicamento.importantPotentialRisk.safetyConcernsBr">{{item}}</p>
+            -->
+            <p>{{medicamento.importantPotentialRiskBr}}</p>
+        </div>
+
+
+        <div *ngIf="lang() === 'es' ">
+            <label class="title">Información faltante:</label>
+            <!--<p *ngFor="let item of medicamento.missingInfo.safetyConcernsEs">{{item}}</p>
+            -->
+            <p>{{medicamento.missingInfoEs}}</p>
+        </div>
+        <div *ngIf="lang() === 'en' ">
+            <label class="title">Missing Info:</label>
+            <!--<p *ngFor="let item of medicamento.missingInfo.safetyConcernsEn">{{item}}</p>
+            -->
+            <p>{{medicamento.missingInfoEn}}</p>
+        </div>
+        <div *ngIf="lang() === 'br' ">
+            <label class="title">Faltando informação:</label>
+            <!--<p *ngFor="let item of medicamento.missingInfo.safetyConcernsBr">{{item}}</p>
+            -->
+            <p>{{medicamento.missingInfoBr}}</p>
+        </div>
+    </mat-dialog-content>
+</div>

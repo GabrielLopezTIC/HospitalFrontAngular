@@ -1,0 +1,24 @@
+.nav-bar-custom{
+    background-color:#BFDB6A !important;
+}
+
+nav a{
+    color: black;
+}
+
+.nombreUsuario{
+    color:black;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+
+.nombreUsuario{
+    color:black;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.img-usr{
+    width: 40px;
+    height: 40px;
+}

@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg nav-bar-custom mb-4">
+    <label class="nombreUsuario" *ngIf="isLogged">
+        <img class="img-usr" src="assets/logo-usr.png" alt="">
+            {{getUser() | uppercase}}
+        </label>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto" *ngIf="lang() === 'es' || lang() === 'en' || lang() === 'br'">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/"><i class="fa fa-home" aria-hidden="true"></i>
+                    Inicio</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged">
+                <a class="nav-link" routerLink="/administracion"><i class="fa fa-cog"></i> Admin</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged">
+                <a class="nav-link" routerLink="/listaCuestionario"><i class="fa fa-users"></i> Lista de pacientes</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged">
+                <a class="nav-link" routerLink="/estadisticas"><i class="fa fa-pie-chart"></i> Estadisticas</a>
+            </li>
+            <li class="nav-item" *ngIf="isLogged" (click)="onLogOut()">
+                <a class="nav-link" style="cursor: pointer;"><i class="fa fa-sign-out"></i> Cerrar Sesión</a>
+            </li>
+        </ul>
+    </div>
+</nav>
