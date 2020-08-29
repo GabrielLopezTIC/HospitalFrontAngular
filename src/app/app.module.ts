@@ -51,6 +51,8 @@ import { GraficaTabaquismoComponent } from './grafica-tabaquismo/grafica-tabaqui
 import { HighchartsChartModule } from 'highcharts-angular';
 import { EstadisticasComponent } from './estadisticas/estadisticas.component';
 import {MatStepperModule} from '@angular/material/stepper'; 
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatProgressBarModule} from '@angular/material/progress-bar'; 
 
 // Import pdfmake-wrapper and the fonts to use
 import { PdfMakeWrapper } from 'pdfmake-wrapper';
@@ -97,14 +99,16 @@ PdfMakeWrapper.setFonts(pdfFonts);
     MatSelectModule,
     MatDialogModule,
     MatAutocompleteModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule, 
     MatPaginatorModule,
     MatSortModule,
     MatTooltipModule,
     RouterModule,
     CommonModule,
     HighchartsChartModule,
-    MatStepperModule
+    MatStepperModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule
   ],
   providers: [
     interceptorProvider

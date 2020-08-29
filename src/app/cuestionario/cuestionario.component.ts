@@ -31,6 +31,12 @@ export class CuestionarioComponent implements OnInit {
   isLogged = false;
 
   turno: string;
+  generoEs = ['H', 'M'];
+  generoEn = ['M', 'F'];
+  generoBr = ['H', 'M'];
+  generoSel: string;
+
+
   nombre: string; //nombre cuestionario
   apellido: string; //apellido cuestionario
   peso: number; //peso cuestionario
@@ -49,7 +55,7 @@ export class CuestionarioComponent implements OnInit {
 
 
   //////////////////////////////////Grados informacion
-  opcGradoInfo = ['Grado 0', 'Grado 1', 'Grado 2'];
+  opcGradoInfo = ['0', '1', '2'];
   gradoInfo: string;
 
 
@@ -57,14 +63,30 @@ export class CuestionarioComponent implements OnInit {
 
 
   ///////////////////////////////////Opciones si y no
-  opcionesSN = ['Si', 'No'];
+  opcionesSNEs = ['POSITIVO', 'NEGATIVO'];
+  opAlcoholSelEs: string = "NEGATIVO";
+  opTabSelEs: string = "NEGATIVO";
+  opDrogSelEs: string = "NEGATIVO";
+  opSuplSelEs: string = "NEGATIVO";
+  opHerbSelEs: string = "NEGATIVO";
+  opMedTradSelEs: string = "NEGATIVO";
+  ///////////////////////////////////Opriones ingles
+  opcionesSNEn = ['POSITIVE', 'NEGATIVE'];
+  opAlcoholSelEn: string = "NEGATIVE";
+  opTabSelEn: string = "NEGATIVE";
+  opDrogSelEn: string = "NEGATIVE";
+  opSuplSelEn: string = "NEGATIVE";
+  opHerbSelEn: string = "NEGATIVE";
+  opMedTradSelEn: string = "NEGATIVE";
+  ////////////////////////////////opciones portugues
+  opcionesSNBr = ['POSITIVO', 'NEGATIVO'];
+  opAlcoholSelBr: string = "NEGATIVO";
+  opTabSelBr: string = "NEGATIVO";
+  opDrogSelBr: string = "NEGATIVO";
+  opSuplSelBr: string = "NEGATIVO";
+  opHerbSelBr: string = "NEGATIVO";
+  opMedTradSelBr: string = "NEGATIVO";
 
-  opAlcoholSel: string = "No";
-  opTabSel: string = "No";
-  opDrogSel: string = "No";
-  opSuplSel: string = "No";
-  opHerbSel: string = "No";
-  opMedTradSel: string = "No";
 
   ///////////////////////////////////Padecimientos
   myControlPade = new FormControl();
@@ -112,32 +134,17 @@ export class CuestionarioComponent implements OnInit {
       this.cargarMedicamentos("A");
       this.cargarPadecimientos("A");
     }
-    this.firstFormGroup = this._formBuilder.group({
-      nameCtrl: ['', Validators.required],
-      lastnameCtrl: ['', Validators.required],
-      pesoCtrl: ['', Validators.required],
-      tallaCtrl: ['', Validators.required],
-      imcCtrl: ['', Validators.required],
-      l_nacCtrl: ['', Validators.required],
-      f_nacCtrl: ['', Validators.required],
-      tipoSangre: ['', Validators.required]
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      alcoholismo: ['', Validators.required],
-      tabaquismo: ['', Validators.required],
-      drogas: ['', Validators.required],
-      suplementos: ['', Validators.required],
-      herbolaria: ['', Validators.required],
-      medicina_trad: ['', Validators.required]
-    });
-
-    this.thirdFormGroup = this._formBuilder.group({
-      padecimientos: ['', Validators.required],
-    });
   }
 
 
   cargarPadecimientos(letra: string) {
+    if (this.lang() === "es")
+      this.myControlPade.setValue("Buscando...");
+    if (this.lang() === "en")
+      this.myControlPade.setValue("Searching...");
+    if (this.lang() === "br")
+      this.myControlPade.setValue("Procurando...");
+    this.myControlPade.disable();
     this.optionsPade = [];
     this.padecimientoService.findAllIniciaCon(letra, this.lang()).subscribe(
       data => {
@@ -149,11 +156,13 @@ export class CuestionarioComponent implements OnInit {
           } else if (this.lang() == "br") {
             this.optionsPade.push(padecimiento.nombreBr);
           }
-          this.filteredOptionsPade = this.myControlPade.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filterPade(value))
-          );
         });
+        this.filteredOptionsPade = this.myControlPade.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filterPade(value))
+        );
+        this.myControlPade.enable();
+        this.myControlPade.setValue("");
       },
       err => {
         this.toastr.error("Error al cargar los padecimientos", 'Fail', {
@@ -166,6 +175,13 @@ export class CuestionarioComponent implements OnInit {
 
   cargarMedicamentos(letra: string) {
     this.options = [];
+    if (this.lang() === "es")
+      this.myControl.setValue("Buscando...");
+    if (this.lang() === "en")
+      this.myControl.setValue("Searching...");
+    if (this.lang() === "br")
+      this.myControl.setValue("Procurando...");
+    this.myControl.disable();
     this.medicamentoService.findAllIniciaCon(letra, this.lang()).subscribe(
       data => {
         this.optionsMedic = data;
@@ -176,6 +192,8 @@ export class CuestionarioComponent implements OnInit {
           startWith(''),
           map(value => this._filter(value))
         );
+        this.myControl.enable();
+        this.myControl.setValue("");
       },
       err => {
         this.toastr.error("Error al cargar los medicamentos", 'Fail', {
@@ -186,12 +204,10 @@ export class CuestionarioComponent implements OnInit {
   }
 
   private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
     return this.options.filter(option => option.includes(value));
   }
 
   private _filterPade(value: string): string[] {
-    const filterValue = value.toLowerCase();
     return this.optionsPade.filter(option => option.includes(value));
   }
 
@@ -266,184 +282,180 @@ export class CuestionarioComponent implements OnInit {
 
 
   public registrar(): void {
+    let texto = "";
+    if (this.lang() === "es") {
+      texto = "Desea confirmar el registro";
+    }
+    if (this.lang() === "en") {
+      texto = "Do you want to confirm the registration?";
+    }
+    if (this.lang() === "br") {
+      texto = "Quer confirmar o registro?";
+    }
 
-    let anio = moment().format("YYYY-MM-DD");
-    console.log(anio);
+    if (confirm("Desea confirmar el registro") === true) {
+      let fecha = moment().format("YYYY-MM-DD");
+      let alch, tab, drog, supl, herb, trad;
+      if (this.lang() === "es") {
+        alch = this.opAlcoholSelEs;
+        tab = this.opTabSelEs;
+        drog = this.opDrogSelEs;
+        supl = this.opSuplSelEs;
+        herb = this.opHerbSelEs;
+        trad = this.opMedTradSelEs;
+      }
+      if (this.lang() === "en") {
+        alch = this.opAlcoholSelEn;
+        tab = this.opTabSelEn;
+        drog = this.opDrogSelEn;
+        supl = this.opSuplSelEn;
+        herb = this.opHerbSelEn;
+        trad = this.opMedTradSelEn;
+      }
+      if (this.lang() === "br") {
+        alch = this.opAlcoholSelBr;
+        tab = this.opTabSelBr;
+        drog = this.opDrogSelBr;
+        supl = this.opSuplSelBr;
+        herb = this.opHerbSelBr;
+        trad = this.opMedTradSelBr;
 
-    let data = {
-      "id": "5f45f13a15b3a14bc15915a2",
-      "clavePaciente": "cdubmy4598",
-      "fecha_ingreso": "2020-08-26",
-      "turno": "AAAA",
-      "nombre": "GABRIEL",
-      "apellido": "LOPEZ",
-      "fecha_nacimiento": "2017-06-23",
-      "peso": 30.0,
-      "talla": 180.0,
-      "imc": 23.0,
-      "ciudad_nacimiento": "CHALCO",
-      "tipo_sangre": "O +",
-      "alcoholismo": "No",
-      "tabaquismo": "No",
-      "drogas": "No",
-      "suplementos": "No",
-      "herbolaria": "No",
-      "medicina_tradicional": "No",
-      "registrado_por": "gabriel",
-      "medico_tratante": "gabriel",
-      "padecimientos": [{
-        "id": "5f44592ada5ae238ba9a6241",
-        "catalogKey": "A20",
-        "nombreEs": "PESTE",
-        "nombreEn": "PLAGUE",
-        "nombreBr": "PRAGA",
-        "cie10Es": "I CIERTAS ENFERMEDADES INFECCIOSAS Y PARASITARIAS",
-        "cie10En": "I CERTAIN DISEASES INFECTIOUS AND PARASITIC",
-        "cie10Br": "I ALGUMAS DOENÇAS INFECCIOSAS E PARASITARIAS"
-      }, {
-        "id": "5f44592ada5ae238ba9a6241",
-        "catalogKey": "A20",
-        "nombreEs": "PESTE2",
-        "nombreEn": "PLAGUE2",
-        "nombreBr": "PRAGA2",
-        "cie10Es": "I CIERTAS ENFERMEDADES INFECCIOSAS Y PARASITARIAS",
-        "cie10En": "I CERTAIN DISEASES INFECTIOUS AND PARASITIC",
-        "cie10Br": "I ALGUMAS DOENÇAS INFECCIOSAS E PARASITARIAS"
-      }],
-      "terapeuticas": [{
-        "medicamento": {
-          "id": "5f458894102a050831eda668",
-          "productName": "ACEBUTOLOL",
-          "mrpDcp": "PT/H/1796/001-002/DC",
-          "legalBasis": "GENERIC (ARTICLE 10(1))",
-          "rmpVersion": "VERSION 1.1 DATED 29.06.2017",
-          "importantRiskEs": "DESCOMPENSACION DE LA INSUFICIENCIA CARDIACA\nBRADICARDIA\nHIPOTENSION\nBRONCOESPASMO\nBLOQUEO AV DE SEGUNDO O TERCER GRADO\nSHOCK CARDIOGENICO\nCONTROL DIABETICO DISMINUIDO Y EL ENMASCARAMIENTO DE LOS EFECTOS HIPOGLUCEMIANTES\nHIPERSENSIBILIDAD, INCLUYENDO REACCIONES ANAFILACTICAS\nEXACERBACION SEVERA DE LA ANGINA DE PECHO Y LA PRECIPITACION DE LAS ENFERMEDADES DEL CORAZON ISCHEAMIC DEBIDO A LA INTERRUPCION BRUSCA DE ACEBUTOLOL",
-          "importantRiskEn": "DECOMPENSATION OF HEART FAILURE\nBRADYCARDIA\nHYPOTENSION\nBRONCHOSPASM\nSECOND OR THIRD DEGREE AV BLOCK\nCARDIOGENIC SHOCK\nDECREASED DIABETIC CONTROL AND MASKING OF HYPOGLYCEMIC EFFECTS\nHYPERSENSITIVITY , INCLUDING ANAPHYLACTIC REACTIONS\nSEVERE EXACERBATION OF ANGINA AND PRECIPITATION OF ISCHEAMIC HEART DISEASE DUE TO ABRUPT DISCONTINUATION OF ACEBUTOLOL",
-          "importantRiskBr": "DESCOMPENSAÇÃO DE INSUFICIÊNCIA CARDIACA\nBRADICARDIA\nHIPOTENSÃO\nBRONCOESPASMO\nBLOQUEIO AV DE SEGUNDO OU TERCEIRO GRAU\nCHOQUE CARDIOGÊNICO\nCONTROLE DIABETICO DIMINUIU E MASCARAMENTO DE EFEITOS HIPOGLICÊMICOS\nHIPERSENSIBILIDADE, INCLUINDO REACÇÕES ANAFILATICAS\nEXACERBAÇÃO GRAVE DE ANGINA E PRECIPITAÇÃO DE DOENÇAS CARDIACAS ISCHEAMIC DEVIDO À INTERRUPÇÃO BRUSCA DO ACEBUTOLOL",
-          "importantPotentialRiskEs": "NEUMONITIS\nENFERMEDAD DE PEYRONIE\nLA EXACERBACION DE LA PSORIASIS\nCOMO EL SINDROME DE LUPUS\nTRASTORNOS CIRCULATORIOS PERIFERICOS\nANGINA DE PRINZMETAL\nENFERMEDAD PULMONAR OBSTRUCTIVA CRONICA (EPOC)\nUSO DURANTE EL EMBARAZO Y LA LACTANCIA",
-          "importantPotentialRiskEn": "PNEUMONITIS\nPEYRONIE’S DISEASE\nEXACERBATION OF PSORIASIS\nLUPUS LIKE SYNDROME\nPERIPHERAL CIRCULATORY DISORDERS\nPRINZMETAL’S ANGINA\nCHRONIC OBSTRUCTIVE PULMONARY DISEASE (COPD)\nUSE IN PREGNANCY AND LACTATION",
-          "importantPotentialRiskBr": "PNEUMONIA\nA DOENÇA DE PEYRONIE\nEXACERBAÇÃO DA PSORIASE\nLUPUS COMO SINDROME\nDISTURBIOS CIRCULATORIOS PERIFERICOS\nANGINA DE PRINZMETAL\nDOENÇA PULMONAR OBSTRUTIVA CRÔNICA (DPOC)\nUTILIZAÇÃO DURANTE A GRAVIDEZ E LACTAÇÃO",
-          "missingInfoEs": "SU USO EN POBLACION PEDIATRICA",
-          "missingInfoEn": "USE IN PAEDIATRIC POPULATION",
-          "missingInfoBr": "USE NA POPULAÇÃO PEDIATRICA",
-          "contraindicaciones": null
+      }
+      this.nuevoRegistro = new Cuestionario(
+        this.lang(),
+        fecha, // fecha ingreso
+        this.turno, //turno
+        this.generoSel,
+        this.nombre,
+        this.apellido,
+        this.f_nac,
+        this.peso,
+        this.talla,
+        this.imc,
+        this.l_nac,
+        this.opSangSel,
+        alch,
+        tab,
+        drog,
+        supl,
+        herb,
+        trad,
+        this.padecimientosList,
+        this.terapeuticasList,
+        this.obsClin,//obsClinicas
+        this.datosLabo,//datoslabo
+        "",//riesgoside se llena automaticamente en el back
+        this.gradoInfo,//gradoinfo
+
+      );
+
+      this.cuestionarioService.nuevo(this.nuevoRegistro).subscribe(
+        data => {
+          this.toastr.success('Paciente Registrado', 'OK', {
+            timeOut: 3000, positionClass: 'toast-top-center'
+          });
+
+          let texto = "";
+          if (this.lang() === "es") {
+            texto = "¿Desea imprimir formato?";
+          }
+          if (this.lang() === "en") {
+            texto = "Do you want to print format?";
+          }
+          if (this.lang() === "br") {
+            texto = "Você quer imprimir o formato?";
+          }
+          if (confirm(texto)) {
+            if (this.lang() === "es")
+              this.imprimePDFEs(data);
+            if (this.lang() === "en")
+              this.imprimePDFEn(data);
+            if (this.lang() === "br")
+              this.imprimePDFBr(data);
+          }
+          //this.reestablece();
+          //this.router.navigate(['/cuestionario']);
         },
-        "distintivo": "SSS",
-        "presentacion": "AAA",
-        "dosis": "SSS",
-        "via": "AAA",
-        "intervalo": "SSSS",
-        "caducidad": "2019-07-25",
-        "finicio": "2019-07-25",
-        "ftermino": "2018-07-25",
-        "nlote": "4"
-      }],
-      "obsClin": "WWWWW",
-      "datosLabo": "EEEEE",
-      "riesgosIdent": "",
-      "gradoInfo": "Grado 2"
-    };
-
-
-
-
-
-
-    this.imprimePDF(data);
-
-
-    /*// if (confirm("Desea confirmar el registro") === true) {
-       let fecha = moment().format("YYYY-MM-DD");
-       this.nuevoRegistro = new Cuestionario(
-         this.lang(),
-         fecha, // fecha ingreso
-         this.turno, //turno
-         this.nombre,
-         this.apellido,
-         this.f_nac,
-         this.peso,
-         this.talla,
-         this.imc,
-         this.l_nac,
-         this.opSangSel,
-         this.opAlcoholSel,
-         this.opTabSel,
-         this.opDrogSel,
-         this.opSuplSel,
-         this.opHerbSel,
-         this.opMedTradSel,
-         this.padecimientosList,
-         this.terapeuticasList,
-         this.obsClin,//obsClinicas
-         this.datosLabo,//datoslabo
-         "",//riesgoside se llena automaticamente en el back
-         this.gradoInfo,//gradoinfo
-         
-       );
- 
- 
-       console.log(this.nuevoRegistro);
- 
- 
-       this.cuestionarioService.nuevo(this.nuevoRegistro).subscribe(
-         data => {
-           this.toastr.success('Paciente Registrado', 'OK', {
-             timeOut: 3000, positionClass: 'toast-top-center'
-           });
- 
-           this.imprimePDF(data);
- 
-           //this.reestablece();
-           //this.router.navigate(['/cuestionario']);
-         },
-         err => {
-           this.toastr.error("Error al registrar el paciente", 'Fail', {
-             timeOut: 3000, positionClass: 'toast-top-center',
-           });
-         }
-       );*/
-    // }
+        err => {
+          this.toastr.error("Error al registrar el paciente", 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
+        }
+      );
+    }
   }
 
 
-  public imprimePDF(data) {
-
+  /**
+   * gENERA PDF CON LA INFO DEL CUESTIONARIO EN ESPAÑOL
+   */
+  public imprimePDFEs(data) {
     let bod = []
-
-    bod.push([{ content: 'N° Registro', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'N° REGISTRO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.clavePaciente, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'Fecha', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'FECHA', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.fecha_ingreso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'Turno', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TURNO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },
-    { content: 'Perfil farmacotérapeutico', colSpan: 9, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    { content: 'PERFIL FARMACOTÉRAPEUTICO', colSpan: 9, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Paciente', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'PACIENTE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.nombre + " " + data.apellido, colSpan: 7, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Edad', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: "", colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'Peso', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    var hoy = new Date();
+    var cumpleanos = new Date(data.fecha_nacimiento);
+    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    var m = hoy.getMonth() - cumpleanos.getMonth();
+
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+      edad--;
+    }
+    bod.push([{ content: 'EDAD', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: edad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'PESO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.peso, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'Etilismo', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'ETILISMO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.alcoholismo, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Género', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'Talla', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    let toxicoman = [];
+    if (data.tabaquismo === "POSITIVO") {
+      toxicoman.push("TABAQUISMO");
+    }
+    if (data.drogas === "POSITIVO") {
+      toxicoman.push("DROGAS");
+    }
+    if (data.suplementos === "POSITIVO") {
+      toxicoman.push("SUPLEMENTOS");
+    }
+    if (data.herbolaria === "POSITIVO") {
+      toxicoman.push("HERBOLARIA");
+    }
+    if (data.medicina_tradicional === "POSITIVO") {
+      toxicoman.push("MED. TRADICIONAL");
+    }
+
+    let tox_string = "";
+    toxicoman.forEach(tox => {
+      tox_string = tox_string + tox + "\n";
+    });
+
+    bod.push([{ content: 'GÉNERO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.genero, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'TALLA', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'Toxicomanias', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: '', colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
+    { content: 'TOXICOMANIAS', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: tox_string, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Medico prescriptor', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.medico_tratante, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }]);
+    bod.push([{ content: 'MEDICO PRESCRIPTOR', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.medico_tratante.nombre, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'CIE 10', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'Diagnóstico', colSpan: 10, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    { content: 'DIAGNÓSTICO', colSpan: 10, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     data.padecimientos.forEach(pade => {
       let pad = [{ content: pade.cie10Es, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
@@ -453,26 +465,26 @@ export class CuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Tipo de evento', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'Sospecha de reaccion adversa', colSpan: 10, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    bod.push([{ content: 'TIPO DE EVENTO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'SOSPECHA DE REACCIÓN ADVERSA', colSpan: 10, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: '', colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
     { content: '', colSpan: 10, rowSpan: 1, styles: { halign: 'center' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Farmacos empleados', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    bod.push([{ content: 'FARMACOS EMPLEADOS', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Genérico', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'Distintivo', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'Presentación', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'Dosis', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'Via de administración', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'Intervalo', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'Fecha de inicio', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'Fecha de término', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'Caducidad', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: 'N° Lote', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }]);
+    bod.push([{ content: 'GENÉRICO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'DISTINTIVO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'PRESENTACIÓN', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'DOSIS', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'VIA DE ADMINISTRACION', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'INTERVALO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'FECHA DE INICIO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'FECHA DE TÉRMINO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'CADUCIDAD', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'N° LOTE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     data.terapeuticas.forEach(terapeutica => {
       let terapias = [
@@ -483,7 +495,7 @@ export class CuestionarioComponent implements OnInit {
         { content: terapeutica.via, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
         { content: terapeutica.intervalo, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
         { content: terapeutica.finicio, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: terapeutica.fTermino, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.ftermino, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
         { content: terapeutica.caducidad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
         { content: terapeutica.nlote, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } }];
       bod.push(terapias);
@@ -491,24 +503,18 @@ export class CuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Observaciones clínicas', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'OBSERVACIONES CLÍNICAS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.obsClin, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Datos de laboratorio relevantes', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'DATOS DE LABORATORIO RELEVANTES', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.datosLabo, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Concordancia con riesgos identificados', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }, { content: '', colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
+    bod.push([{ content: 'CONCORDANCIA CON RIESGOS IDENTIFICADOS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: '', colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'Grado de información', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'GRADO DE INFORMACIÓN', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.gradoInfo, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    console.log(bod);
-
-
-
-
-
-
     const doc = new jsPDF()
     autoTable(doc,
       {
@@ -518,99 +524,295 @@ export class CuestionarioComponent implements OnInit {
           } 
         },*/
         theme: "grid",
-        body: bod /*[
-        [{ content: 'N° Registro', colSpan: 2, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold' } },
-        { content: data.clavePaciente, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-        { content: 'Fecha', colSpan: 2, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold' } },
-        { content: data.fecha_ingreso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-        { content: 'Turno', colSpan: 2, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }],
-  
-        [{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },
-        { content: 'Perfil farmacotérapeutico', colSpan: 9, rowSpan: 1, styles: { halign: 'center',fontStyle: 'bold'  } }],
-  
-        [{ content: 'Paciente', colSpan: 2, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: data.nombre+" "+data.apellido, colSpan: 7, rowSpan: 1, styles: { halign: 'left' } }],
-  
-        [{ content: 'Edad', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: "", colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: 'Peso', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: data.peso, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: 'Etilismo', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: data.alcoholismo, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }],
-  
-        [{ content: 'Género', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: 'Talla', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: 'Toxicomanias', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: '', colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }],
-  
-        [{ content: 'Medico prescriptor', colSpan: 3, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: data.medico_tratante, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }],
-  
-        [{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' }}],
-  
-        [{ content: 'CIE 10', colSpan: 2, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'Diagnóstico', colSpan: 10, rowSpan: 1, styles: { halign: 'center',fontStyle: 'bold'  } }],
-  
-        [{ content: '', colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 10, rowSpan: 1, styles: { halign: 'center' } }],
-  
-        ////.... n-arreglos dependiendo del medicamento
+        body: bod
+      }
+    );
+    doc.output('dataurlnewwindow');
+  }
 
+  /**
+   * GENERA PDF CON LA INFO DEL CUESTIONARIO EN INGLES
+   */
+  public imprimePDFEn(data) {
+    let bod = []
+    bod.push([{ content: 'N° REGISTER', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.clavePaciente, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'DATE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.fecha_ingreso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'TURN', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },
+    { content: 'PHARMACOTHERAPEUTIC PROFILE', colSpan: 9, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'PATIENT', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.nombre + " " + data.apellido, colSpan: 7, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    var hoy = new Date();
+    var cumpleanos = new Date(data.fecha_nacimiento);
+    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    var m = hoy.getMonth() - cumpleanos.getMonth();
 
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+      edad--;
+    }
+    bod.push([{ content: 'AGE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: edad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'WEIGHT', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.peso, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'ETHYLISM', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.alcoholismo, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    let toxicoman = [];
+    if (data.tabaquismo === "POSITIVE") {
+      toxicoman.push("SMOKING");
+    }
+    if (data.drogas === "POSITIVE") {
+      toxicoman.push("DRUGS");
+    }
+    if (data.suplementos === "POSITIVE") {
+      toxicoman.push("SUPPLEMENTS");
+    }
+    if (data.herbolaria === "POSITIVE") {
+      toxicoman.push("HERBOLARY");
+    }
+    if (data.medicina_tradicional === "POSITIVE") {
+      toxicoman.push("MED. TRADITIONAL");
+    }
 
-        [{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' }}],
-  
-        [{ content: 'Tipo de evento', colSpan: 2, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'Sospecha de reaccion adversa', colSpan: 10, rowSpan: 1, styles: { halign: 'center',fontStyle: 'bold'  } }],
-  
-        [{ content: '', colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 10, rowSpan: 1, styles: { halign: 'center' } }],
-  
-        [{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' }}],
-  
-        [{ content: 'Farmacos empleados', colSpan: 12, rowSpan: 1, styles: { halign: 'center',fontStyle: 'bold'  }}],
-  
-        [{ content: 'Genérico', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'Distintivo', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'Presentación', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'Dosis', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'Via de administración', colSpan: 3, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'Intervalo', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'Fecha de inicio', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'Fecha de término', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'Caducidad', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: 'N° Lote', colSpan: 1, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } }],
-  
-        [{ content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 3, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-        { content: '', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } }],
-  
-        [{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' }}],
-  
-        [{ content: 'Observaciones clínicas', colSpan: 4, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: data.obsClin, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }],
-        [{ content: 'Datos de laboratorio relevantes', colSpan: 4, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: data.datosLabo, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }],
-        [{ content: 'Concordancia con riesgos identificados', colSpan: 4, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: '', colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }],
-        [{ content: 'Grado de información', colSpan: 4, rowSpan: 1, styles: { halign: 'left',fontStyle: 'bold'  } },
-        { content: data.gradoInfo, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }],
-  
-        
-  
-  
-      ]*/
+    let tox_string = "";
+    toxicoman.forEach(tox => {
+      tox_string = tox_string + tox + "\n";
+    });
 
+    bod.push([{ content: 'GENDER', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.genero, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'SIZE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'TOXICOMANIES', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: tox_string, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'PRESCRIBING DOCTOR', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.medico_tratante.nombre, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'CIE 10', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'DIAGNOSTIC', colSpan: 10, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    data.padecimientos.forEach(pade => {
+      let pad = [{ content: pade.cie10Es, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+      { content: pade.nombreEs, colSpan: 10, rowSpan: 1, styles: { halign: 'center' } }];
+      bod.push(pad);
+    });
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'EVENT TYPE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'SUSPECTED ADVERSE REACTION', colSpan: 10, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: '', colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: '', colSpan: 10, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'USED MEDICAL DRUGS', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'GENERIC', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'DISCTINTIVE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'PRESENTATION', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'DOSE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'THROUG', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'INTERVAL', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'INITIAL DATE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'END DATE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'EXPIRATION', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'LOT N°', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    data.terapeuticas.forEach(terapeutica => {
+      let terapias = [
+        { content: terapeutica.medicamento.productName, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.distintivo, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.presentacion, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.dosis, colSpan: 3, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.via, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.intervalo, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.finicio, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.ftermino, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.caducidad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.nlote, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } }];
+      bod.push(terapias);
+    });
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'CLINICAL OBSERVATIONS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.obsClin, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'RELEVANT LABORATORY DATA', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.datosLabo, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'CONCORDANCE WITH IDENTIFIED RISKS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: '', colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'DEGREE OF INFORMATION', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.gradoInfo, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+    const doc = new jsPDF()
+    autoTable(doc,
+      {
+        /*didDrawCell : ( data )  =>  { 
+          if  (data.column.index  ===  0 && data.row.index === 1 )  { 
+            doc.addImage(this.imageLogo.imgData, 'PNG',data.cell.x + 5, data.cell.y + 5, 50, 20); 
+          } 
+        },*/
+        theme: "grid",
+        body: bod
+      }
+    );
+    doc.output('dataurlnewwindow');
+  }
+
+  /**
+     * gENERA PDF CON LA INFO DEL CUESTIONARIO EN PORTUGUES
+     */
+  public imprimePDFBr(data) {
+    let bod = []
+    bod.push([{ content: 'N° REGISTRO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.clavePaciente, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'DATA', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.fecha_ingreso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'VIRAR', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },
+    { content: 'PERFIL FARMACOTERAPÊUTICO', colSpan: 9, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'PACIENTE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.nombre + " " + data.apellido, colSpan: 7, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    var hoy = new Date();
+    var cumpleanos = new Date(data.fecha_nacimiento);
+    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    var m = hoy.getMonth() - cumpleanos.getMonth();
+
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+      edad--;
+    }
+    bod.push([{ content: 'ERA', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: edad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'PESO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.peso, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'ETILISMO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.alcoholismo, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    let toxicoman = [];
+    if (data.tabaquismo === "POSITIVO") {
+      toxicoman.push("FUMAR");
+    }
+    if (data.drogas === "POSITIVO") {
+      toxicoman.push("DROGAS");
+    }
+    if (data.suplementos === "POSITIVO") {
+      toxicoman.push("SUPLEMENTOS");
+    }
+    if (data.herbolaria === "POSITIVO") {
+      toxicoman.push("HERBOLÁRIO");
+    }
+    if (data.medicina_tradicional === "POSITIVO") {
+      toxicoman.push("MED. TRADICIONAL");
+    }
+
+    let tox_string = "";
+    toxicoman.forEach(tox => {
+      tox_string = tox_string + tox + "\n";
+    });
+
+    bod.push([{ content: 'GÊNERO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.genero, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'TAMANHO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'TOXICOMANIAS', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: tox_string, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'MÉDICO DE RECEITA', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.medico_tratante.nombre, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'CIE 10', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'DIAGNÓSTICO', colSpan: 10, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    data.padecimientos.forEach(pade => {
+      let pad = [{ content: pade.cie10Es, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+      { content: pade.nombreEs, colSpan: 10, rowSpan: 1, styles: { halign: 'center' } }];
+      bod.push(pad);
+    });
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'TIPO DE EVENTO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'REAÇÃO ADVERSA SUSPEITA', colSpan: 10, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: '', colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: '', colSpan: 10, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'DROGAS UTILIZADAS', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'GENÉRICO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'DISTINTIVO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'APRESENTAÇÃO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'DOSE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'ATRAVÉS DA', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'INTERVALO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'DATA INICIAL', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'DATA FINAL', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'EXPIRAÇÃO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'N° DO LOTE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    data.terapeuticas.forEach(terapeutica => {
+      let terapias = [
+        { content: terapeutica.medicamento.productName, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.distintivo, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.presentacion, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.dosis, colSpan: 3, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.via, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.intervalo, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.finicio, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.ftermino, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.caducidad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+        { content: terapeutica.nlote, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } }];
+      bod.push(terapias);
+    });
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'OBSERVAÇÕES CLÍNICAS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.obsClin, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'DADOS RELEVANTES DE LABORATÓRIO', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.datosLabo, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'CONCORDÂNCIA COM RISCOS IDENTIFICADOS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: '', colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    bod.push([{ content: 'GRAU DE INFORMAÇÃO', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.gradoInfo, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const doc = new jsPDF()
+    autoTable(doc,
+      {
+        /*didDrawCell : ( data )  =>  { 
+          if  (data.column.index  ===  0 && data.row.index === 1 )  { 
+            doc.addImage(this.imageLogo.imgData, 'PNG',data.cell.x + 5, data.cell.y + 5, 50, 20); 
+          } 
+        },*/
+        theme: "grid",
+        body: bod
       }
     );
     doc.output('dataurlnewwindow');
@@ -622,6 +824,34 @@ export class CuestionarioComponent implements OnInit {
 
 
   public reestablece() {
+
+    if (this.lang() === "es") {
+      this.opAlcoholSelEs = "NEGATIVO";
+      this.opTabSelEs = "NEGATIVO";
+      this.opDrogSelEs = "NEGATIVO";
+      this.opSuplSelEs = "NEGATIVO";
+      this.opHerbSelEs = "NEGATIVO";
+      this.opMedTradSelEs = "NEGATIVO";
+    }
+    if (this.lang() === "en") {
+      this.opAlcoholSelEn = "NEGATIVE";
+      this.opTabSelEn = "NEGATIVE";
+      this.opDrogSelEn = "NEGATIVE";
+      this.opSuplSelEn = "NEGATIVE";
+      this.opHerbSelEn = "NEGATIVE";
+      this.opMedTradSelEn = "NEGATIVE";
+    }
+    if (this.lang() === "br") {
+      this.opAlcoholSelBr = "NEGATIVO";
+      this.opTabSelBr = "NEGATIVO";
+      this.opDrogSelBr = "NEGATIVO";
+      this.opSuplSelBr = "NEGATIVO";
+      this.opHerbSelBr = "NEGATIVO";
+      this.opMedTradSelBr = "NEGATIVO";
+    }
+
+
+
     this.nombre = "";
     this.apellido = "";
     this.peso = 0;
@@ -630,12 +860,6 @@ export class CuestionarioComponent implements OnInit {
     this.f_nac = "";
     this.l_nac = "";
     this.opSangSel = "";
-    this.opAlcoholSel = "Si";
-    this.opTabSel = "Si";
-    this.opDrogSel = "Si";
-    this.opSuplSel = "Si";
-    this.opHerbSel = "Si";
-    this.opMedTradSel = "Si";
     this.padecimientosList = [];
     this.terapeuticasList = [];
   }

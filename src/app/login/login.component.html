@@ -21,68 +21,47 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-sm-12">
+                                <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-sm-12">
                                 <form #f="ngForm" (ngSubmit)="onLogin()" novalidate>
-                                    <div *ngIf="lang() == 'es'">
+                                    <div>
                                         <div class="form-group">
-                                            <label for="nombreUsuario">Nombre de Usuario</label>
-                                            <input type="text" name="nombreUsuario" id="nombreUsuario"
-                                                class="form-control" [(ngModel)]="nombreUsuario" required>
+                                            <mat-form-field class="w-100">
+                                                <input type="text"
+                                                    [placeholder]="lang() == 'es'? 'Nombre de usuario' : lang() == 'en'? 'Username' : 'Nome de usuário' "
+                                                    aria-label="Number" matInput [formControl]="userNameInput"
+                                                    [(ngModel)]="nombreUsuario">
+                                            </mat-form-field>
                                         </div>
                                         <div class="form-group">
-                                            <label for="password">Contraseña</label>
-                                            <input type="password" name="password" id="password" class="form-control"
-                                                [(ngModel)]="password" required>
+                                            <mat-form-field class="w-100">
+                                                <input type="password"
+                                                    [placeholder]="lang() == 'es'? 'Contraseña' : lang() == 'en'? 'Password' : 'Senha' "
+                                                    aria-label="Number" matInput [formControl]="passInput"
+                                                    [(ngModel)]="password">
+                                            </mat-form-field>
                                         </div>
                                         <div class="form-group">
-                                            <a (click)="idioma('es')" id="es">Español |</a>
-                                            <a (click)="idioma('en')" id="en">English |</a>
-                                            <a (click)="idioma('br')" id="br">Português</a>
-                                        </div>
-                                        <div class="form-group">
-                                            <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">
-                                                <i class="fas fa-sign-in-alt"></i>Iniciar Sesión</button>
-                                        </div>
-                                    </div>
-                                    <div *ngIf="lang() == 'en'">
-                                        <div class="form-group">
-                                            <label for="nombreUsuario">Username</label>
-                                            <input type="text" name="nombreUsuario" id="nombreUsuario"
-                                                class="form-control" [(ngModel)]="nombreUsuario" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password">Password</label>
-                                            <input type="password" name="password" id="password" class="form-control"
-                                                [(ngModel)]="password" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <a (click)="idioma('es')" id="es">Español |</a>
-                                            <a (click)="idioma('en')" id="en">English |</a>
-                                            <a (click)="idioma('br')" id="br">Português</a>
+                                            <a (click)="idioma('es')" id="es"><label *ngIf="lang() == 'es'">Español
+                                                |</label><label *ngIf="lang() == 'en'">Spanish |</label><label
+                                                *ngIf="lang() == 'br'">Espanhol |</label></a>
+                                        <a (click)="idioma('en')" id="en"><label *ngIf="lang() == 'es'">Inglés
+                                                |</label><label *ngIf="lang() == 'en'">English |</label><label
+                                                *ngIf="lang() == 'br'">Inglês |</label></a>
+                                        <a (click)="idioma('br')" id="br"><label *ngIf="lang() == 'es'">Portugues
+                                                |</label><label *ngIf="lang() == 'en'">Portuguese |</label><label
+                                                *ngIf="lang() == 'br'">Português |</label></a>
                                         </div>
                                         <div class="form-group">
                                             <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">
-                                                <i class="fas fa-sign-in-alt"></i>Log in</button>
-                                        </div>
-                                    </div>
-                                    <div *ngIf="lang() == 'br'">
-                                        <div class="form-group">
-                                            <label for="nombreUsuario">Nome de usuário</label>
-                                            <input type="text" name="nombreUsuario" id="nombreUsuario"
-                                                class="form-control" [(ngModel)]="nombreUsuario" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password">Senha</label>
-                                            <input type="password" name="password" id="password" class="form-control"
-                                                [(ngModel)]="password" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <a (click)="idioma('es')" id="es">Español |</a>
-                                            <a (click)="idioma('en')" id="en">English |</a>
-                                            <a (click)="idioma('br')" id="br">Português</a>
-                                        </div>
-                                        <div class="form-group">
-                                            <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">
-                                                <i class="fas fa-sign-in-alt"></i>Iniciar sessão</button>
+                                                <i class="fas fa-sign-in-alt"></i>
+                                                <label *ngIf="lang() == 'es'">Iniciar Sesión</label>
+                                                <label *ngIf="lang() == 'br'">Iniciar sessão</label>
+                                                <label *ngIf="lang() == 'en'">Log in</label>                           
+                                                </button>
                                         </div>
                                     </div>
                                 </form>

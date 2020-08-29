@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LoginUsuario } from '../models/login-usuario';
 import { TokenService } from '../services/token.service';
 import { ToastrService } from 'ngx-toastr';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,9 @@ export class LoginComponent implements OnInit {
   password: string;
   roles: string[] = [];
   errMsj: string;
+
+  userNameInput = new FormControl();
+  passInput = new FormControl();
   
 
   constructor(
@@ -29,7 +33,6 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("Login")
     if (this.tokenService.getToken()) {
       this.isLogged = true;
       this.isLoginFail = false;
@@ -37,12 +40,18 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  cargando:boolean = false;
   onLogin(): void {
+    
     this.loginUsuario = new LoginUsuario(this.nombreUsuario, this.password);
-    this.authService.login(this.loginUsuario).subscribe(
+    this.cargando = true;
+    this.passInput.disable();
+    this.userNameInput.disable();
+    this.authService.login(this.loginUsuario).subscribe( 
       data => {
-        this.isLogged = true;
-
+          this.isLogged = true;
+          this.cargando = false;
+          
         this.tokenService.setToken(data.token);
         this.tokenService.setUserName(data.nombreUsuario);
         this.tokenService.setAuthorities(data.authorities);
@@ -61,10 +70,14 @@ export class LoginComponent implements OnInit {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
         }
+        this.passInput.enable();
+    this.userNameInput.enable();
         this.router.navigate(['/cuestionario']);
       },
       err => {
-        this.isLogged = false;
+        if(err != null){
+          this.isLogged = false;
+          this.cargando = false;
         this.errMsj = err.error.message;
         if(this.lang() === "es"){
           this.toastr.error(this.errMsj, 'No autorizado', {
@@ -79,6 +92,9 @@ export class LoginComponent implements OnInit {
             timeOut: 3000,  positionClass: 'toast-top-center',
           });
         }
+        }
+        this.passInput.enable();
+        this.userNameInput.enable();
       }
     );
   } 
@@ -103,6 +119,5 @@ export class LoginComponent implements OnInit {
   lang():string{
     return this.authService.lang();
   }
-
 
 }

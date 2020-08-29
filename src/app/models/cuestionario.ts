@@ -4,6 +4,8 @@ export class Cuestionario {
     languaje:string;
     fechaRegistro:string;
     turno:string;
+
+    genero:String;
     nombre:string;
     apellido:string;
     fechaNacimiento:string;
@@ -29,6 +31,7 @@ export class Cuestionario {
         languaje:string,
         fechaRegistro:string,
         turno:string,
+        genero:string,
         nombre:string,
         apellido:string,
         fechaNacimiento:string,
@@ -53,6 +56,7 @@ export class Cuestionario {
         this.languaje=languaje;
         this.fechaRegistro =fechaRegistro;
         this.turno=turno;
+        this.genero = genero;
         this.nombre=nombre;
         this.apellido=apellido;
         this.fechaNacimiento=fechaNacimiento;

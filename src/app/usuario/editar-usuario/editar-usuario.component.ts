@@ -55,7 +55,7 @@ export class EditarUsuarioComponent implements OnInit {
 
   onUpdate(): void {
 
-    if (confirm("Desea editar el alumno")) {
+    if (confirm("Desea editar el usuario")) {
       const nombreUsuario = this.activatedRoute.snapshot.params.nombreUsuario;
 
       this.usuarioAct = new NuevoUsuario(this.usuario.nombre,
