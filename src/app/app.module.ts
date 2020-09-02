@@ -56,7 +56,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 // Import pdfmake-wrapper and the fonts to use
 import { PdfMakeWrapper } from 'pdfmake-wrapper';
-import pdfFonts from "pdfmake/build/vfs_fonts"; // fonts provided for pdfmake
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import { PadecimientoListaComponent } from './padecimientos/padecimiento-lista/padecimiento-lista.component'; // fonts provided for pdfmake
  
 // Set the fonts to use
 PdfMakeWrapper.setFonts(pdfFonts);
@@ -83,6 +84,7 @@ PdfMakeWrapper.setFonts(pdfFonts);
     EditarCuestionarioComponent,
     GraficaTabaquismoComponent,
     EstadisticasComponent,
+    PadecimientoListaComponent,
   ],
   imports: [
     BrowserModule,

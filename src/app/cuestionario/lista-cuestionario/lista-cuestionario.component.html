@@ -23,10 +23,17 @@
               <td>{{paciente.clavePaciente}}</td>
               <td>{{paciente.fecha_ingreso}}</td>
               <td>{{paciente.registrado_por}}</td>
-              <td>{{paciente.medico_tratante}}</td>
+              <td>
+              <label class="font-weight-bold">Nombre:</label><br>
+              {{paciente.medico_tratante.nombre}}<br>
+              <label class="font-weight-bold">Usuario:</label><br>
+              {{paciente.medico_tratante.nombreUsuario}}<br>
+              <label class="font-weight-bold">Email:</label><br>
+              {{paciente.medico_tratante.email}}<br>
+              </td>
               <td>{{paciente.nombre}}</td>
               <td>{{paciente.apellido}}</td>
-              <td>{{paciente.padecimientos}}</td>
+              <td>{{paciente.padecimientos[0].nombreEs}}</td>
               <td>{{paciente.terapeutica_indicada}}</td>
               <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button
                   class="btn btn-outline-info" routerLink="/editarCuestionario/{{paciente.nombre}}" ><i class="far fa-trash-alt"></i> Detalles</button></td>
@@ -35,6 +42,13 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div>
+        <button *ngIf="primero > 3" (click)="retrocede()"> Back</button>
+        <button>{{primero}}</button>
+        <button>{{segundo}}</button>
+        <button>{{tercero}}</button>
+        <button (click)="avanza()">Next</button>
       </div>
     </div>
   </div>

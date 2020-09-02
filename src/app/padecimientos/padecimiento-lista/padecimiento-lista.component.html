@@ -1,0 +1,44 @@
+<app-menu-adm-cuestionario></app-menu-adm-cuestionario>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="container">
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr class="color-theme-green">
+              <th scope="col">Catalog Key</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Cie 10</th>
+              <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Detalles</th>
+              <th scope="col"*ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pade of padecimientos" class="color-theme-dark-ligth">
+              <td>{{pade.catalogKey}}</td>
+              <td>{{pade.nombreEs}}</td>
+              <td>{{pade.cie10Es}}</td>           
+              <td *ngIf="roleType() == 'ROLE_ADMIN'"><button
+                  class="btn btn-outline-info"  ><i class="far fa-trash-alt"></i> Detalles</button></td>
+              <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
+                  ><i class="far fa-trash-alt"></i> Eliminar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <button *ngIf="primero > 3" (click)="retrocede()"> Back</button>
+        <button (click)="primeroButton()">{{primero}}</button>
+        <button (click)="segundoButton()">{{segundo}}</button>
+        <button (click)="terceroButton()">{{tercero}}</button>
+        <button (click)="cuartoButton()">{{cuarto}}</button>
+        <button (click)="quintoButton()">{{quinto}}</button>
+        <button (click)="sextoButton()">{{sexto}}</button>
+        <button (click)="septimoButton()">{{septimo}}</button>
+        <button (click)="octavoButton()">{{octavo}}</button>
+        <button (click)="novenoButton()">{{noveno}}</button>
+        <button (click)="avanza()">Next</button>
+      </div>
+    </div>
+  </div>
+</div>

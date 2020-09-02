@@ -22,7 +22,7 @@
                 <a class="nav-link" routerLink="/listaMedicamento"><i class="fa fa-medkit"></i> Medicamentos</a>
             </li>
             <li class="nav-item" *ngIf="roleType() == 'ROLE_ADMIN'">
-                <a class="nav-link" routerLink="/listaEnfermedades"><i class="fa fa-heartbeat"></i> Enfermedades</a>
+                <a class="nav-link" routerLink="/listaPadecimiento"><i class="fa fa-heartbeat"></i> Enfermedades</a>
             </li>
             <li class="nav-item" *ngIf="roleType() == 'ROLE_ADMIN' || roleType() == 'ROLE_MEDICO'">
                 <a class="nav-link" routerLink="/listaCuestionario"><i class="fa fa-book"></i> Cuestionario</a>

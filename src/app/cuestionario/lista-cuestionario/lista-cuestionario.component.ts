@@ -20,6 +20,7 @@ export class ListaCuestionarioComponent implements OnInit {
   roles: string[];
   isAdmin = false;
 
+
   constructor(
     private cuestionarioService: CuestionarioService,
     private toastr: ToastrService,
@@ -39,6 +40,30 @@ export class ListaCuestionarioComponent implements OnInit {
       } 
     );
   }
+
+
+    ///paginacion
+    primero:number = 1;
+    segundo:number = 2;
+    tercero: number = 3;
+
+    retrocede(){
+      this.primero = this.primero -3;
+      this.segundo = this.segundo -3;
+      this.tercero = this.tercero -3;
+    }
+
+    avanza(){
+      this.primero = this.primero + 3;
+      this.segundo = this.segundo + 3;
+      this.tercero = this.tercero + 3;
+
+    }
+
+
+
+
+
 
   cargarRegistros(): void {
     if (this.tokenService.getAuthorities()[0] == 'ROLE_ADMIN') {

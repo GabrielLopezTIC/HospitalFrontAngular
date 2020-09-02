@@ -22,6 +22,10 @@ export class PadecimientoService {
     return this.httpClient.get<Padecimiento[]>(this.padecimientoURL + "findAll");
   }
 
+  public findAllPagination(page:number,size:number,orderBy:string): Observable<Padecimiento[]> {
+    return this.httpClient.get<Padecimiento[]>(this.padecimientoURL + "findAll/page/"+page+"/size/"+size+"/orderCol/"+orderBy);
+  }
+
   public findAllIniciaCon(nombre: string, lang: string): Observable<Padecimiento[]> {
     return this.httpClient.get<Padecimiento[]>(this.padecimientoURL + "findAll/regex/" + nombre + "/lang/" + lang);
   }
