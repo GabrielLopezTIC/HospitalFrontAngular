@@ -1,6 +1,13 @@
 <app-menu-adm-cuestionario></app-menu-adm-cuestionario>
 <div class="row">
   <div class="col-sm-12">
+    
+    <div class="container">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Catalog Key" [(ngModel)]="catalogKey">
+      </mat-form-field>
+      <button class="btn btn-success" (click)="buscar()">Buscar</button>
+    </div>
     <div class="container">
       <div class="table-container">
         <table class="table">
@@ -10,35 +17,39 @@
               <th scope="col">Nombre</th>
               <th scope="col">Cie 10</th>
               <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Detalles</th>
-              <th scope="col"*ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
+              <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let pade of padecimientos" class="color-theme-dark-ligth">
               <td>{{pade.catalogKey}}</td>
               <td>{{pade.nombreEs}}</td>
-              <td>{{pade.cie10Es}}</td>           
-              <td *ngIf="roleType() == 'ROLE_ADMIN'"><button
-                  class="btn btn-outline-info"  ><i class="far fa-trash-alt"></i> Detalles</button></td>
-              <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
-                  ><i class="far fa-trash-alt"></i> Eliminar</button></td>
+              <td>{{pade.cie10Es}}</td>
+              <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-info"><i
+                    class="far fa-trash-alt"></i> Detalles</button></td>
+              <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"><i
+                    class="far fa-trash-alt"></i> Eliminar</button></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div>
-        <button *ngIf="primero > 3" (click)="retrocede()"> Back</button>
-        <button (click)="primeroButton()">{{primero}}</button>
-        <button (click)="segundoButton()">{{segundo}}</button>
-        <button (click)="terceroButton()">{{tercero}}</button>
-        <button (click)="cuartoButton()">{{cuarto}}</button>
-        <button (click)="quintoButton()">{{quinto}}</button>
-        <button (click)="sextoButton()">{{sexto}}</button>
-        <button (click)="septimoButton()">{{septimo}}</button>
-        <button (click)="octavoButton()">{{octavo}}</button>
-        <button (click)="novenoButton()">{{noveno}}</button>
-        <button (click)="avanza()">Next</button>
-      </div>
     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-3"></div>
+  <div class="col-sm-6">
+    <button *ngIf="paginas[0] > 9" (click)="retrocede()"> Back</button>
+    <button (click)="primeroButton()">{{paginas[0]}}</button>
+    <button (click)="segundoButton()">{{paginas[1]}}</button>
+    <button (click)="terceroButton()">{{paginas[2]}}</button>
+    <button (click)="cuartoButton()">{{paginas[3]}}</button>
+    <button (click)="quintoButton()">{{paginas[4]}}</button>
+    <button (click)="sextoButton()">{{paginas[5]}}</button>
+    <button (click)="septimoButton()">{{paginas[6]}}</button>
+    <button (click)="octavoButton()">{{paginas[7]}}</button>
+    <button (click)="novenoButton()">{{paginas[8]}}</button>
+    <button (click)="avanza()">Next</button>
   </div>
 </div>

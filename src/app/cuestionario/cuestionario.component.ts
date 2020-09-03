@@ -471,7 +471,7 @@ export class CuestionarioComponent implements OnInit {
     } },
     { content: data.clavePaciente, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
     { content: 'FECHA', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.fecha_ingreso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: data.fechaIngreso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
     { content: 'TURNO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -509,7 +509,7 @@ export class CuestionarioComponent implements OnInit {
     if (data.herbolaria === "POSITIVO") {
       toxicoman.push("HERBOLARIA");
     }
-    if (data.medicina_tradicional === "POSITIVO") {
+    if (data.medicinaTradicional === "POSITIVO") {
       toxicoman.push("MED. TRADICIONAL");
     }
 
@@ -527,7 +527,7 @@ export class CuestionarioComponent implements OnInit {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'MEDICO PRESCRIPTOR', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.medico_tratante.nombre, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }]);
+    { content: data.medicoTratante.nombre, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -615,7 +615,7 @@ export class CuestionarioComponent implements OnInit {
     bod.push([{ content: 'N° REGISTER', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.clavePaciente, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
     { content: 'DATE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.fecha_ingreso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: data.fechaIngreso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
     { content: 'TURN', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -653,7 +653,7 @@ export class CuestionarioComponent implements OnInit {
     if (data.herbolaria === "POSITIVE") {
       toxicoman.push("HERBOLARY");
     }
-    if (data.medicina_tradicional === "POSITIVE") {
+    if (data.medicinaTradicional === "POSITIVE") {
       toxicoman.push("MED. TRADITIONAL");
     }
 
@@ -759,7 +759,7 @@ export class CuestionarioComponent implements OnInit {
     bod.push([{ content: 'N° REGISTRO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.clavePaciente, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
     { content: 'DATA', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.fecha_ingreso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: data.fechaIngreso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
     { content: 'VIRAR', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -797,7 +797,7 @@ export class CuestionarioComponent implements OnInit {
     if (data.herbolaria === "POSITIVO") {
       toxicoman.push("HERBOLÁRIO");
     }
-    if (data.medicina_tradicional === "POSITIVO") {
+    if (data.medicinaTradicional === "POSITIVO") {
       toxicoman.push("MED. TRADICIONAL");
     }
 
@@ -815,7 +815,7 @@ export class CuestionarioComponent implements OnInit {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'MÉDICO DE RECEITA', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.medico_tratante.nombre, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }]);
+    { content: data.medicoTratante.nombre, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////

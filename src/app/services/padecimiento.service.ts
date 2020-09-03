@@ -42,7 +42,7 @@ export class PadecimientoService {
     return this.httpClient.put<any>(this.padecimientoURL + "update/" + nombre, padecimiento);
   }
 
-  public details(nombre: String): Observable<any> {
-    return this.httpClient.get<any>(this.padecimientoURL + "find/" + nombre);
+  public findByCatalogKey(clave: String): Observable<any> {
+    return this.httpClient.get<any>(this.padecimientoURL + "findByCatalogKey/" + clave);
   }
 }

@@ -69,6 +69,7 @@ export class ListaCuestionarioComponent implements OnInit {
     if (this.tokenService.getAuthorities()[0] == 'ROLE_ADMIN') {
       this.cuestionarioService.findAll().subscribe(
         data => {
+          console.log(data);
           this.pacientes = data;
         },
         error => {
