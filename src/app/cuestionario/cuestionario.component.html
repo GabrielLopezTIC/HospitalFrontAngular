@@ -4,7 +4,8 @@
 </div>
 
 <ng-template #loggedOut>
-    <div class="container d-flex justify-content-center">
+    <!--<div class="container d-flex justify-content-center">-->
+        <div class="container">
         <div class="card">
             <div class="card-body">
                 <div class="contenedor">
@@ -294,9 +295,8 @@
                                 <div class="col-sm-2">
                                     <mat-form-field class="iniFiltro">
                                         <mat-select *ngIf="lang() === 'es'" matSelect [placeholder]="lang() == 'es'? 'Letra' : 
-                                        lang() == 'en'? 'Letter' : 'Carta' "
-                                            [(ngModel)]="iniPade" name="iniPade" [value]="iniPade"
-                                            (selectionChange)="cargarPadecimientos(iniPade)">
+                                        lang() == 'en'? 'Letter' : 'Carta' " [(ngModel)]="iniPade" name="iniPade"
+                                            [value]="iniPade" (selectionChange)="cargarPadecimientos(iniPade)">
                                             <mat-option *ngFor="let op of inicialesPade" [value]="op">
                                                 {{op}}
                                             </mat-option>
@@ -305,10 +305,8 @@
                                 </div>
                                 <div class="col-sm-7">
                                     <mat-form-field class="example-full-width filterInput">
-                                        <input type="text" 
-                                        [placeholder]="lang() == 'es'? 'Diagnostico' : 
-                                        lang() == 'en'? 'Diagnostic' : 'Diagnóstico' " 
-                                        aria-label="Number" matInput
+                                        <input type="text" [placeholder]="lang() == 'es'? 'Diagnostico' : 
+                                        lang() == 'en'? 'Diagnostic' : 'Diagnóstico' " aria-label="Number" matInput
                                             [formControl]="myControlPade" [matAutocomplete]="autoPade"
                                             [(ngModel)]="selPade" oninput="this.value = this.value.toUpperCase()">
                                         <mat-spinner *ngIf="optionsPade.length === 0" matSuffix [diameter]="18"
@@ -338,10 +336,10 @@
                                     <div class="pade-container-list  mt-2">
                                         <table class="table color-theme-green">
                                             <tbody>
-                                                <tr *ngFor="let padecimiento of padecimientosList" class="itemsPade">
-                                                    <td>{{padecimiento}}</td>
+                                                <tr *ngFor="let pad of padecimientosList" class="itemsPade">
+                                                    <td>{{pad}}</td>
                                                     <td><button class="btn btn-outline-danger"
-                                                            (click)="borrarPade(padecimiento)">
+                                                            (click)="borrarPade(pade)">
                                                             <i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                                     </td>
                                                 </tr>
@@ -351,14 +349,79 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <mat-form-field class="iniFiltro">
+                                        <mat-select *ngIf="lang() === 'es'" matSelect [placeholder]="lang() == 'es'? 'SOC' : 
+                                                lang() == 'en'? 'SOC' : 'SOC' " [(ngModel)]="socMedraSel"
+                                            name="socMedraSel" [value]="socMedraSel"
+                                            (selectionChange)="cargarMedra(socMedraSel)">
+                                            <mat-option *ngFor="let op of socMedra" [value]="op">
+                                                {{op}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-7">
+                                    <mat-form-field class="example-full-width filterInput">
+                                        <input type="text" [placeholder]="lang() == 'es'? 'MedDRA' : 
+                                                lang() == 'en'? 'MedDRA' : 'MedDRA' " aria-label="Number" matInput
+                                            [formControl]="myControlMedra" [matAutocomplete]="autoMedra"
+                                            [(ngModel)]="selMedra" oninput="this.value = this.value.toUpperCase()">
+                                        <mat-spinner *ngIf="optionsMedra.length === 0" matSuffix [diameter]="18"
+                                            style="float: right; margin-left: 8px"></mat-spinner>
+                                        <button mat-button *ngIf="selMedra" matSuffix mat-icon-button aria-label="Clear"
+                                            (click)="selMedra=''">
+                                            <mat-icon>x</mat-icon>
+                                        </button>
+                                        <mat-autocomplete #autoMedra="matAutocomplete">
+                                            <mat-option *ngFor="let option of filteredOptionsMedra | async"
+                                                [value]="option" [matTooltip]="option">
+                                                {{option}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <button class="btn btn-outline-success" (click)="agregarMedra(selMedra)">
+                                        <label *ngIf="lang() === 'es'">Añadir</label>
+                                        <label *ngIf="lang() === 'en'">Add</label>
+                                        <label *ngIf="lang() === 'br'">Adicionar</label>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="pade-container-list  mt-2">
+                                        <table class="table color-theme-green">
+                                            <tbody>
+                                                <tr *ngFor="let med of medraList" class="itemsPade">
+                                                    <td>{{med}}</td>
+                                                    <td><button class="btn btn-outline-danger"
+                                                            (click)="borrarMedra(med)">
+                                                            <i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
                         <div class="col-sm-12">
                             <div class="row">
                                 <div class="col-sm-2">
                                     <mat-form-field class="iniFiltro">
                                         <mat-select matSelect [placeholder]="lang() == 'es'? 'Letra' : 
-                                        lang() == 'en'? 'Letter' : 'Carta' " 
-                                            [(ngModel)]="iniTerap" name="iniTerap" [value]="iniTerap"
-                                            (selectionChange)="cargarMedicamentos(iniTerap)">
+                                        lang() == 'en'? 'Letter' : 'Carta' " [(ngModel)]="iniTerap" name="iniTerap"
+                                            [value]="iniTerap" (selectionChange)="cargarMedicamentos(iniTerap)">
                                             <mat-option *ngFor="let op of inicialesPade" [value]="op">
                                                 {{op}}
                                             </mat-option>
@@ -368,8 +431,7 @@
                                 <div class="col-sm-7">
                                     <mat-form-field class="example-full-width filterInput">
                                         <input type="text" [placeholder]="lang() == 'es'? 'Terapeutica' : 
-                                        lang() == 'en'? 'Therapy' : 'Terapia' "
-                                        aria-label="Number" matInput
+                                        lang() == 'en'? 'Therapy' : 'Terapia' " aria-label="Number" matInput
                                             [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="selTerap"
                                             oninput="this.value = this.value.toUpperCase()">
                                         <mat-spinner *ngIf="options.length === 0" matSuffix [diameter]="18"
@@ -409,7 +471,7 @@
                                                                         <input *ngIf="lang() === 'es'" matInput
                                                                             type="text" [(ngModel)]="terap.distintivo"
                                                                             [placeholder]="lang() == 'es'? 'Distintivo' : 
-                                                                            lang() == 'en'? 'Disctintive' : 'Distintivo' " 
+                                                                            lang() == 'en'? 'Disctintive' : 'Distintivo' "
                                                                             oninput="this.value = this.value.toUpperCase()">
                                                                         <button mat-button *ngIf="terap.distintivo"
                                                                             matSuffix mat-icon-button aria-label="Clear"
@@ -423,7 +485,7 @@
                                                                         <input *ngIf="lang() === 'es'" matInput
                                                                             type="text" [(ngModel)]="terap.presentacion"
                                                                             [placeholder]="lang() == 'es'? 'Presentación' : 
-                                        lang() == 'en'? 'Presentation' : 'Apresentação' " 
+                                        lang() == 'en'? 'Presentation' : 'Apresentação' "
                                                                             oninput="this.value = this.value.toUpperCase()">
                                                                         <button mat-button *ngIf="terap.presentacion"
                                                                             matSuffix mat-icon-button aria-label="Clear"
@@ -468,7 +530,7 @@
                                                                             type="text" [(ngModel)]="terap.intervalo"
                                                                             [placeholder]="lang() == 'es'? 'Intervalo' : 
                                                                             lang() == 'en'? 'Interval' : 'Intervalo' "
-                                                                            oninput="this.value = this.value.toUpperCase()">                                                                       
+                                                                            oninput="this.value = this.value.toUpperCase()">
                                                                         <button mat-button *ngIf="terap.intervalo"
                                                                             matSuffix mat-icon-button aria-label="Clear"
                                                                             (click)="terap.intervalo=''">
@@ -481,7 +543,7 @@
                                                                         <input *ngIf="lang() === 'es'" matInput
                                                                             type="date" [(ngModel)]="terap.fInicio"
                                                                             [placeholder]="lang() == 'es'? 'Fecha de inicio' : 
-                                                                            lang() == 'en'? 'Initial date' : 'Data inicial' ">     
+                                                                            lang() == 'en'? 'Initial date' : 'Data inicial' ">
                                                                     </mat-form-field>
                                                                 </div>
                                                             </div>
@@ -491,7 +553,7 @@
                                                                         <input *ngIf="lang() === 'es'" matInput
                                                                             type="date" [(ngModel)]="terap.fTermino"
                                                                             [placeholder]="lang() == 'es'? 'Fecha termino' : 
-                                                                            lang() == 'en'? 'End date' : 'Date final' ">                                                                      
+                                                                            lang() == 'en'? 'End date' : 'Date final' ">
                                                                     </mat-form-field>
                                                                 </div>
                                                                 <div class="col-sm-4">
@@ -499,7 +561,7 @@
                                                                         <input *ngIf="lang() === 'es'" matInput
                                                                             type="date" [(ngModel)]="terap.caducidad"
                                                                             [placeholder]="lang() == 'es'? 'Caducidad' : 
-                                                                            lang() == 'en'? 'Expiration' : 'Expiração' ">                                                                      
+                                                                            lang() == 'en'? 'Expiration' : 'Expiração' ">
                                                                     </mat-form-field>
                                                                 </div>
                                                                 <div class="col-sm-4">
@@ -507,7 +569,7 @@
                                                                         <input *ngIf="lang() === 'es'" matInput
                                                                             type="text" [(ngModel)]="terap.nLote"
                                                                             [placeholder]="lang() == 'es'? 'N° Lote' : 
-                                                                            lang() == 'en'? 'Lot N°' : 'N° do lote' ">                                                                   
+                                                                            lang() == 'en'? 'Lot N°' : 'N° do lote' ">
                                                                         <button mat-button *ngIf="terap.nLote" matSuffix
                                                                             mat-icon-button aria-label="Clear"
                                                                             (click)="terap.nLote=''">

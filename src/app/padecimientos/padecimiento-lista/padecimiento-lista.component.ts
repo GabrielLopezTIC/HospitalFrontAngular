@@ -14,6 +14,7 @@ export class PadecimientoListaComponent implements OnInit {
   paginas: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   padecimientos: Padecimiento[];
   catalogKey:string;
+  totalPages:number;
 
   constructor(
     private padecimientoService: PadecimientoService,
@@ -53,6 +54,7 @@ export class PadecimientoListaComponent implements OnInit {
         data => {
           console.log(data);
           this.padecimientos = data['content'];
+          this.totalPages = data['totalPages'];
         },
         error => {
           console.log(error);

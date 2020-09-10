@@ -2,6 +2,15 @@
 <div class="row">
   <div class="col-sm-12">
     <div class="container">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Catalog Key" [(ngModel)]="clavePaciente">
+        <button mat-button *ngIf="clavePaciente" matSuffix mat-icon-button aria-label="Clear" (click)="clavePaciente=''">
+          <mat-icon>x</mat-icon>
+        </button>
+      </mat-form-field>
+      <button class="btn btn-success" (click)="buscar()">Buscar</button>
+    </div>
+    <div class="container">
       <div class="table-container">
         <table class="table">
           <thead>
@@ -15,42 +24,52 @@
               <th scope="col">Padecimientos</th>
               <th scope="col">Terapeutica indicada</th>
               <th scope="col" *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'">Detalles</th>
-              <th scope="col"*ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
+              <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let paciente of pacientes" class="color-theme-dark-ligth">
+            <tr *ngFor="let paciente of cuestionarios" class="color-theme-dark-ligth">
               <td>{{paciente.clavePaciente}}</td>
               <td>{{paciente.fechaIngreso}}</td>
               <td>{{paciente.registradoPor}}</td>
               <td>
-              <label class="font-weight-bold">Nombre:</label><br>
-              {{paciente.medicoTratante.nombre}}<br>
-              <label class="font-weight-bold">Usuario:</label><br>
-              {{paciente.medicoTratante.nombreUsuario}}<br>
-              <label class="font-weight-bold">Email:</label><br>
-              {{paciente.medicoTratante.email}}<br>
+                <label class="font-weight-bold">Nombre:</label><br>
+                {{paciente.medicoTratante.nombre}}<br>
+                <label class="font-weight-bold">Usuario:</label><br>
+                {{paciente.medicoTratante.nombreUsuario}}<br>
+                <label class="font-weight-bold">Email:</label><br>
+                {{paciente.medicoTratante.email}}<br>
               </td>
               <td>{{paciente.nombre}}</td>
               <td>{{paciente.apellido}}</td>
               <td>{{paciente.padecimientos[0].nombreEs}}</td>
-              <td><label *ngFor="let terap of paciente.terapeuticas" >{{terap.medicamento.productName}}</label></td>
-              <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button
-                  class="btn btn-outline-info" routerLink="/editarCuestionario/{{paciente.nombre}}" ><i class="far fa-trash-alt"></i> Detalles</button></td>
+              <td><label *ngFor="let terap of paciente.terapeuticas">{{terap.medicamento.productName}}</label></td>
+              <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-info"
+                  routerLink="/editarCuestionario/{{paciente.clavePaciente}}"><i class="far fa-trash-alt"></i>
+                  Detalles</button></td>
               <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
-                  (click)="borrar(paciente.nombre)"><i class="far fa-trash-alt"></i> Eliminar</button></td>
+                  (click)="borrar(paciente.clavePaciente)"><i class="far fa-trash-alt"></i> Eliminar</button></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div>
-        <button *ngIf="primero > 3" (click)="retrocede()"> Back</button>
-        <button>{{primero}}</button>
-        <button>{{segundo}}</button>
-        <button>{{tercero}}</button>
-        <button (click)="avanza()">Next</button>
-      </div>
     </div>
   </div>
 </div>
-
+<div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-3"></div>
+  <div class="col-sm-6">
+    <button *ngIf="paginas[0] > 9" (click)="retrocede()"> Back</button>
+    <button *ngIf="totalPages >= paginas[0]" (click)="primeroButton()">{{paginas[0]}}</button>
+    <button *ngIf="totalPages >= paginas[1]" (click)="segundoButton()">{{paginas[1]}}</button>
+    <button *ngIf="totalPages >= paginas[2]" (click)="terceroButton()">{{paginas[2]}}</button>
+    <button *ngIf="totalPages >= paginas[3]" (click)="cuartoButton()">{{paginas[3]}}</button>
+    <button *ngIf="totalPages >= paginas[4]" (click)="quintoButton()">{{paginas[4]}}</button>
+    <button *ngIf="totalPages >= paginas[5]" (click)="sextoButton()">{{paginas[5]}}</button>
+    <button *ngIf="totalPages >= paginas[6]" (click)="septimoButton()">{{paginas[6]}}</button>
+    <button *ngIf="totalPages >= paginas[7]" (click)="octavoButton()">{{paginas[7]}}</button>
+    <button *ngIf="totalPages >= paginas[8]" (click)="novenoButton()">{{paginas[8]}}</button>
+    <button *ngIf="totalPages > paginas[8]" (click)="avanza()">Next</button>
+  </div>
+</div>

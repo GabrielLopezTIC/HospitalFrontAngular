@@ -11,10 +11,13 @@ import { TokenService } from 'src/app/services/token.service';
 })
 export class ListaUsuarioComponent implements OnInit {
 
+  paginas: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   usuarios: Usuario[] = [];
   roles: string[];
   isAdmin = false;
   clavePaciente:string;
+  nombreUsuario:string;
+  totalPages:number;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -23,7 +26,7 @@ export class ListaUsuarioComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.cargarUsuarios();
+    this.cargarRegistros(this.paginas[0] - 1, 10, "nombreUsuario");
     this.roles = this.tokenService.getAuthorities();
     this.roles.forEach(
       rol => {
@@ -33,11 +36,33 @@ export class ListaUsuarioComponent implements OnInit {
     );
   }
 
-  cargarUsuarios(): void {
+  retrocede() {
+    for (let i = 0; i < this.paginas.length; i++)
+      this.paginas[i] -= 9;
+  }
+
+  primeroButton() { this.cargarRegistros(this.paginas[0] - 1, 10, "nombreUsuario"); }
+  segundoButton() { this.cargarRegistros(this.paginas[1] - 1, 10, "nombreUsuario"); }
+  terceroButton() { this.cargarRegistros(this.paginas[2] - 1, 10, "nombreUsuario"); }
+  cuartoButton() { this.cargarRegistros(this.paginas[3] - 1, 10, "nombreUsuario"); }
+  quintoButton() { this.cargarRegistros(this.paginas[4] - 1, 10, "nombreUsuario"); }
+  sextoButton() { this.cargarRegistros(this.paginas[5] - 1, 10, "nombreUsuario"); }
+  septimoButton() { this.cargarRegistros(this.paginas[6] - 1, 10, "nombreUsuario"); }
+  octavoButton() { this.cargarRegistros(this.paginas[7] - 1, 10, "nombreUsuario"); }
+  novenoButton() { this.cargarRegistros(this.paginas[8] - 1, 10, "nombreUsuario"); }
+
+  avanza() {
+    for (let i = 0; i < this.paginas.length; i++)
+      this.paginas[i] += 9;
+  }
+
+
+  cargarRegistros(page: number, size: number, orderBy: string): void {
     if(this.roleType() == "ROLE_ADMIN"){
-      this.usuarioService.findAll().subscribe(
+      this.usuarioService.findAllPagination(page, size, orderBy).subscribe(
         data => {
-          this.usuarios = data;
+          this.usuarios = data['content'];
+          this.totalPages = data['totalPages'];
         },
         error =>{
           this.toastr.error("Tu sesión expiró o no tienes los permisos para ver esto", 'Fail', {
@@ -46,9 +71,10 @@ export class ListaUsuarioComponent implements OnInit {
         }
       );
     }else if(this.roleType() == "ROLE_MEDICO"){
-      this.usuarioService.findAllBySup(this.tokenService.getUserName()).subscribe(
+      this.usuarioService.findAllPaginationByUserAnSub(this.tokenService.getUserName(),page, size, orderBy).subscribe(
         data => {
-          this.usuarios = data;
+          this.usuarios = data['content'];
+          this.totalPages = data['totalPages'];
         },
         error =>{
           this.toastr.error("Tu sesión expiró o no tienes los permisos para ver esto", 'Fail', {
@@ -57,12 +83,29 @@ export class ListaUsuarioComponent implements OnInit {
         }
       );
     }
-
-
-
-
-    
   }
+
+  buscar(){
+    this.usuarioService.details(this.nombreUsuario).subscribe(
+      data => {
+        this.usuarios = [];
+        this.usuarios.push(data);
+      },
+      error => {
+        this.toastr.error(error.error.mensaje, 'Tu sesion expiró o no tienes los permisos para ver esto', {
+          timeOut: 3000, positionClass: 'toast-top-center',
+        });
+      }
+    );
+  }
+
+
+
+
+
+
+
+
 
   borrar(nombreUsuario:String): void{
 
@@ -72,7 +115,7 @@ export class ListaUsuarioComponent implements OnInit {
         this.toastr.success('Usuario Eliminado', 'OK', {
           timeOut: 3000, positionClass: 'toast-top-center'
         });
-        this.cargarUsuarios();
+        this.cargarRegistros(this.paginas[0] - 1, 10, "nombreUsuario");
       },
       err => {
         this.toastr.error(err.error.mensaje, 'Fail', {

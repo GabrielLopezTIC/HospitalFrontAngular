@@ -4,7 +4,6 @@ export class Cuestionario {
     languaje:string;
     fechaRegistro:string;
     turno:string;
-
     genero:String;
     nombre:string;
     apellido:string;
@@ -21,6 +20,7 @@ export class Cuestionario {
     herbolaria:string;
     medicinaTradicional:string;
     padecimientos:string[];
+    listaMedra:string[];
     terapeuticas:TerapItem[];
     obsClin:string;
     datosLabo:string;
@@ -47,6 +47,7 @@ export class Cuestionario {
         herbolaria:string,
         medicinaTradicional:string,
         padecimientos:string[],
+        listaMedra:string[],
         terapeuticas:TerapItem[],
         obsClin:string,
         datosLabo:string,
@@ -72,6 +73,7 @@ export class Cuestionario {
         this.herbolaria=herbolaria;
         this.medicinaTradicional=medicinaTradicional;
         this.padecimientos=padecimientos;
+        this.listaMedra = listaMedra;
         this.terapeuticas=terapeuticas;
         this.obsClin=obsClin;
         this.datosLabo=datosLabo;

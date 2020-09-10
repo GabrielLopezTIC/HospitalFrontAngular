@@ -16,9 +16,13 @@ import * as moment from 'moment';
 })
 export class ListaCuestionarioComponent implements OnInit {
 
-  pacientes: Cuestionario[];
+
+  paginas: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  cuestionarios: Cuestionario[];
   roles: string[];
   isAdmin = false;
+  clavePaciente:string;
+  totalPages:number;
 
 
   constructor(
@@ -30,7 +34,7 @@ export class ListaCuestionarioComponent implements OnInit {
   //moment:moment.Moment;
 
   ngOnInit() {
-    this.cargarRegistros();
+    this.cargarRegistros(this.paginas[0] - 1, 10, "clavePaciente");
 
     this.roles = this.tokenService.getAuthorities();
     this.roles.forEach(
@@ -40,37 +44,35 @@ export class ListaCuestionarioComponent implements OnInit {
       } 
     );
   }
+  retrocede() {
+    for (let i = 0; i < this.paginas.length; i++)
+      this.paginas[i] -= 9;
+  }
 
+  primeroButton() { this.cargarRegistros(this.paginas[0] - 1, 10, "clavePaciente"); }
+  segundoButton() { this.cargarRegistros(this.paginas[1] - 1, 10, "clavePaciente"); }
+  terceroButton() { this.cargarRegistros(this.paginas[2] - 1, 10, "clavePaciente"); }
+  cuartoButton() { this.cargarRegistros(this.paginas[3] - 1, 10, "clavePaciente"); }
+  quintoButton() { this.cargarRegistros(this.paginas[4] - 1, 10, "clavePaciente"); }
+  sextoButton() { this.cargarRegistros(this.paginas[5] - 1, 10, "clavePaciente"); }
+  septimoButton() { this.cargarRegistros(this.paginas[6] - 1, 10, "clavePaciente"); }
+  octavoButton() { this.cargarRegistros(this.paginas[7] - 1, 10, "clavePaciente"); }
+  novenoButton() { this.cargarRegistros(this.paginas[8] - 1, 10, "clavePaciente"); }
 
-    ///paginacion
-    primero:number = 1;
-    segundo:number = 2;
-    tercero: number = 3;
-
-    retrocede(){
-      this.primero = this.primero -3;
-      this.segundo = this.segundo -3;
-      this.tercero = this.tercero -3;
-    }
-
-    avanza(){
-      this.primero = this.primero + 3;
-      this.segundo = this.segundo + 3;
-      this.tercero = this.tercero + 3;
-
-    }
-
-
-
+  avanza() {
+    for (let i = 0; i < this.paginas.length; i++)
+      this.paginas[i] += 9;
+  }
 
 
 
-  cargarRegistros(): void {
+  cargarRegistros(page: number, size: number, orderBy: string): void {
     if (this.tokenService.getAuthorities()[0] == 'ROLE_ADMIN') {
-      this.cuestionarioService.findAll().subscribe(
+      this.cuestionarioService.findAllPagination(page, size, orderBy).subscribe(
         data => {
-          console.log(data);
-          this.pacientes = data;
+          this.cuestionarios = data['content'];
+          this.totalPages = data['totalPages'];
+          console.log(this.totalPages);
         },
         error => {
           console.log(error);
@@ -80,9 +82,11 @@ export class ListaCuestionarioComponent implements OnInit {
         }
       );
     } else {
-      this.cuestionarioService.findAllByName(this.tokenService.getUserName()).subscribe(
+      this.cuestionarioService.findAllPaginationByMedico(this.tokenService.getUserName(),page,size,orderBy).subscribe(
         data => {
-          this.pacientes = data;
+          console.log(data);
+          this.cuestionarios = data['content'];
+          this.totalPages = data['totalPages'];
         },
         error => {
           console.log(error);
@@ -96,6 +100,23 @@ export class ListaCuestionarioComponent implements OnInit {
 
   }
 
+  buscar(){
+    this.cuestionarioService.details(this.clavePaciente).subscribe(
+      data => {
+        console.log(data);
+        this.cuestionarios = [];
+        this.cuestionarios.push(data);
+        console.log(this.cuestionarios);
+      },
+      error => {
+        console.log(error);
+        this.toastr.error(error.error.mensaje, 'Tu sesion expiró o no tienes los permisos para ver esto', {
+          timeOut: 3000, positionClass: 'toast-top-center',
+        });
+      }
+    );
+  }
+
   borrar(nombre: String): void {
     if (confirm("Borrar registro de paciente: " + nombre) === true) {
       this.cuestionarioService.elimina(nombre).subscribe(
@@ -103,7 +124,7 @@ export class ListaCuestionarioComponent implements OnInit {
           this.toastr.success('Paciente Eliminado', 'OK', {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
-          this.cargarRegistros();
+          this.cargarRegistros(this.paginas[0] - 1, 10, "catalogKey");
         },
         err => {
           this.toastr.error(err.error.mensaje, 'Fail', {
