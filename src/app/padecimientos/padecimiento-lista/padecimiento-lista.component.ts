@@ -12,7 +12,7 @@ import { PadecimientoService } from 'src/app/services/padecimiento.service';
 export class PadecimientoListaComponent implements OnInit {
 
   paginas: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  padecimientos: Padecimiento[];
+  padecimientos: Padecimiento[] = [];
   catalogKey:string;
   totalPages:number;
 
@@ -52,12 +52,10 @@ export class PadecimientoListaComponent implements OnInit {
     if (this.tokenService.getAuthorities()[0] == 'ROLE_ADMIN') {
       this.padecimientoService.findAllPagination(page, size, orderBy).subscribe(
         data => {
-          console.log(data);
           this.padecimientos = data['content'];
           this.totalPages = data['totalPages'];
         },
         error => {
-          console.log(error);
           this.toastr.error(error.error.mensaje, 'Tu sesion expiró o no tienes los permisos para ver esto', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
@@ -69,35 +67,33 @@ export class PadecimientoListaComponent implements OnInit {
   buscar(){
     this.padecimientoService.findByCatalogKey(this.catalogKey).subscribe(
       data => {
-        console.log(data);
         this.padecimientos = data;
       },
       error => {
-        console.log(error);
-        this.toastr.error(error.error.mensaje, 'Tu sesion expiró o no tienes los permisos para ver esto', {
+        this.toastr.error("No se encontro padecimiento", '', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
     );
   }
-/*
-  borrar(clave: String): void {
-     if (confirm("Borrar padecimiento") === true) {
-       this.cuestionarioService.elimina(nombre).subscribe(
-         data => {
-           this.toastr.success('Paciente Eliminado', 'OK', {
-             timeOut: 3000, positionClass: 'toast-top-center'
-           });
-           this.cargarRegistros();
-         },
-         err => {
-           this.toastr.error(err.error.mensaje, 'Fail', {
-             timeOut: 3000, positionClass: 'toast-top-center',
-           });
-         }
-       ); 
-     }
-   }*/
+
+  borrar(catalogKey:string): void{
+    if(confirm("Borrar registro de "+catalogKey) === true){
+    this.padecimientoService.elimina(catalogKey).subscribe(
+      data => {
+        this.toastr.success('Padecimiento Eliminado', 'OK', {
+          timeOut: 3000, positionClass: 'toast-top-center'
+        });
+        this.cargarRegistros(this.paginas[0] - 1, 10, "catalogKey");
+      },
+      err => {
+        this.toastr.error("Error a borrar padecimiento", 'Fail', {
+          timeOut: 3000, positionClass: 'toast-top-center',
+        });
+      }
+    );
+    }
+  }
 
   roleType(): string {
     return this.tokenService.getAuthorities()[0];

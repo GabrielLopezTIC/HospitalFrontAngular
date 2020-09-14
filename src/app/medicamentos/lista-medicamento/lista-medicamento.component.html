@@ -13,6 +13,10 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr *ngIf="medicamentos.length == 0">
+                            <td colspan="11"><mat-spinner matSuffix [diameter]="20"
+                              style="float: center; margin-left: 8px"></mat-spinner></td>
+                          </tr>
                         <tr *ngFor="let medicamento of medicamentos" class="color-theme-dark-ligth">
                             <td>{{medicamento.productName}}</td>
                             <td>{{medicamento.rmpVersion}}</td>

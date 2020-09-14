@@ -8,80 +8,127 @@
         <div class="card">
             <div class="card-body">
                 <form #f="ngForm" (ngSubmit)="onRegister()" novalidate>
-                    <div class="form-group">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control"
-                            [(ngModel)]="productName" required>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" name="nombre" id="nombre" class="form-control"
+                                    [(ngModel)]="productName" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="nombre">MRP DCP</label>
+                                <input type="text" name="nombre" id="mrpDcp" class="form-control"
+                                    [(ngModel)]="mrpDcp" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="nombre">Legal Basis</label>
+                                <input type="text" name="nombre" id="legalBasis" class="form-control"
+                                    [(ngModel)]="legalBasis" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="nombre">RMP Versión</label>
+                                <input type="text" name="nombre" id="rmpVersion" class="form-control"
+                                    [(ngModel)]="rmpVersion" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="nombre">MRP DCP</label>
-                        <input type="text" name="nombre" id="mrpDcp" class="form-control"
-                            [(ngModel)]="mrpDcp" required>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3>Important Id Risk</h3>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="nombre">Legal Basis</label>
-                        <input type="text" name="nombre" id="legalBasis" class="form-control"
-                            [(ngModel)]="legalBasis" required>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="nombre">Safety Concerns Es</label>
+                                <input type="text" name="nombre" id="riskIdSafEs" class="form-control"
+                                    [(ngModel)]="importantIdRisk_safetyConcernsEs" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="nombre">Safety Concerns En</label>
+                                <input type="text" name="nombre" id="riskIdSafEn" class="form-control"
+                                    [(ngModel)]="importantIdRisk_safetyConcernsEn" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="nombre">Safety Concerns Br</label>
+                                <input type="text" name="nombre" id="riskIdSafBr" class="form-control"
+                                    [(ngModel)]="importantIdRisk_safetyConcernsBr" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="nombre">RMP Versión</label>
-                        <input type="text" name="nombre" id="rmpVersion" class="form-control"
-                            [(ngModel)]="rmpVersion" required>
+                    <div class="row">
+                        <div class="col-sm-12"><h3>Important Potential Risk</h3></div>
                     </div>
-                    <h3>Important Id Risk</h3>
-                    <div class="form-group">
-                        <label for="nombre">Safety Concerns Es</label>
-                        <input type="text" name="nombre" id="riskIdSafEs" class="form-control"
-                            [(ngModel)]="importantIdRisk_safetyConcernsEs" required>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="nombre">Safety Concerns Es</label>
+                                <input type="text" name="nombre" id="riskIdSafEs" class="form-control"
+                                    [(ngModel)]="importantPotentialRisk_safetyConcernsEs" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="nombre">Safety Concerns En</label>
+                                <input type="text" name="nombre" id="riskIdSafEn" class="form-control"
+                                    [(ngModel)]="importantPotentialRisk_safetyConcernsEn" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="nombre">Safety Concerns Br</label>
+                                <input type="text" name="nombre" id="riskIdSafBr" class="form-control"
+                                    [(ngModel)]="importantPotentialRisk_safetyConcernsBr" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="nombre">Safety Concerns En</label>
-                        <input type="text" name="nombre" id="riskIdSafEn" class="form-control"
-                            [(ngModel)]="importantIdRisk_safetyConcernsEn" required>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3>Missing Info</h3>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="nombre">Safety Concerns Br</label>
-                        <input type="text" name="nombre" id="riskIdSafBr" class="form-control"
-                            [(ngModel)]="importantIdRisk_safetyConcernsBr" required>
-                    </div>
-
-                    <h3>Important Potential Risk</h3>
-                    <div class="form-group">
-                        <label for="nombre">Safety Concerns Es</label>
-                        <input type="text" name="nombre" id="riskIdSafEs" class="form-control"
-                            [(ngModel)]="importantPotentialRisk_safetyConcernsEs" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nombre">Safety Concerns En</label>
-                        <input type="text" name="nombre" id="riskIdSafEn" class="form-control"
-                            [(ngModel)]="importantPotentialRisk_safetyConcernsEn" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nombre">Safety Concerns Br</label>
-                        <input type="text" name="nombre" id="riskIdSafBr" class="form-control"
-                            [(ngModel)]="importantPotentialRisk_safetyConcernsBr" required>
-                    </div>
-
-                    <h3>Missing Info</h3>
-                    <div class="form-group">
-                        <label for="nombre">Safety Concerns Es</label>
-                        <input type="text" name="nombre" id="riskIdSafEs" class="form-control"
-                            [(ngModel)]="missingInfo_safetyConcernsEs" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nombre">Safety Concerns En</label>
-                        <input type="text" name="nombre" id="riskIdSafEn" class="form-control"
-                            [(ngModel)]="missingInfo_safetyConcernsEn" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nombre">Safety Concerns Br</label>
-                        <input type="text" name="nombre" id="riskIdSafBr" class="form-control"
-                            [(ngModel)]="missingInfo_safetyConcernsBr" required>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-outline-success btn-block"
-                            [disabled]="!f.valid || !(password === passwordConf) || !(rolSelec != null)">
-                            <i class="fas fa-sign-in-alt"></i> Crear Cuenta</button>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="nombre">Safety Concerns Es</label>
+                                <input type="text" name="nombre" id="riskIdSafEs" class="form-control"
+                                    [(ngModel)]="missing_info_safetyConcernsEs" required>
+                                                
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="nombre">Safety Concerns En</label>
+                                <input type="text" name="nombre" id="riskIdSafEn" class="form-control"
+                                    [(ngModel)]="missing_info_safetyConcernsEn" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="nombre">Safety Concerns Br</label>
+                                <input type="text" name="nombre" id="riskIdSafBr" class="form-control"
+                                    [(ngModel)]="missing_info_safetyConcernsBr" required>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <button class="btn btn-outline-success btn-block"
+                                    [disabled]="!f.valid">
+                                    <i class="fas fa-sign-in-alt"></i> Crear Cuenta</button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

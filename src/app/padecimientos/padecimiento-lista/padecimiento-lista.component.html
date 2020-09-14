@@ -1,41 +1,42 @@
-<app-menu-adm-cuestionario></app-menu-adm-cuestionario>
+<app-menu-padecimiento></app-menu-padecimiento>
 <div class="row">
-  <div class="col-sm-12">
-
-    <div class="container">
-      <mat-form-field>
-        <input matInput type="text" placeholder="Catalog Key" [(ngModel)]="catalogKey">
-        <button mat-button *ngIf="catalogKey" matSuffix mat-icon-button aria-label="Clear" (click)="catalogKey=''">
-          <mat-icon>x</mat-icon>
-        </button>
-      </mat-form-field>
-      <button class="btn btn-success" (click)="buscar()">Buscar</button>
-    </div>
-    <div class="container">
-      <div class="table-container">
-        <table class="table">
-          <thead>
-            <tr class="color-theme-green">
-              <th scope="col">Catalog Key</th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Cie 10</th>
-              <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Detalles</th>
-              <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let pade of padecimientos" class="color-theme-dark-ligth">
-              <td>{{pade.catalogKey}}</td>
-              <td>{{pade.nombreEs}}</td>
-              <td>{{pade.cie10Es}}</td>
-              <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-info"><i
-                    class="far fa-trash-alt"></i> Detalles</button></td>
-              <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"><i
-                    class="far fa-trash-alt"></i> Eliminar</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div class="col-sm-12"></div>
+  <div class="container">
+    <mat-form-field>
+      <input matInput type="text" oninput="this.value = this.value.replace(/ /g, '')" placeholder="Catalog Key"
+        [(ngModel)]="catalogKey">
+      <button mat-button *ngIf="catalogKey" matSuffix mat-icon-button aria-label="Clear" (click)="catalogKey=''">
+        <mat-icon>x</mat-icon>
+      </button>
+    </mat-form-field>
+    <button class="btn btn-success" (click)="buscar()">Buscar</button>
+  </div>
+  <div class="container">
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr class="color-theme-green">
+            <th scope="col">Catalog Key</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Cie 10</th>
+            <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="padecimientos.length == 0">
+            <td colspan="11">
+              <mat-spinner matSuffix [diameter]="20" style="float: center; margin-left: 8px"></mat-spinner>
+            </td>
+          </tr>
+          <tr *ngFor="let pade of padecimientos" class="color-theme-dark-ligth">
+            <td>{{pade.catalogKey}}</td>
+            <td>{{pade.nombreEs}}</td>
+            <td>{{pade.cie10Es}}</td>
+            <td *ngIf="roleType() == 'ROLE_ADMIN'"><button (click)="borrar(pade.catalogKey)"
+                class="btn btn-outline-danger"><i class="far fa-trash-alt"></i> Eliminar</button></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

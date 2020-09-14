@@ -59,7 +59,7 @@ import { PdfMakeWrapper } from 'pdfmake-wrapper';
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { PadecimientoListaComponent } from './padecimientos/padecimiento-lista/padecimiento-lista.component';
 import { NuevoPadecimientoComponent } from './padecimientos/nuevo-padecimiento/nuevo-padecimiento.component';
-import { EditarPadecimientoComponent } from './padecimientos/editar-padecimiento/editar-padecimiento.component'; // fonts provided for pdfmake
+import { MenuPadecimientoComponent } from './menu-padecimiento/menu-padecimiento.component'; // fonts provided for pdfmake
  
 // Set the fonts to use
 PdfMakeWrapper.setFonts(pdfFonts);
@@ -88,7 +88,8 @@ PdfMakeWrapper.setFonts(pdfFonts);
     EstadisticasComponent,
     PadecimientoListaComponent,
     NuevoPadecimientoComponent,
-    EditarPadecimientoComponent,
+    MenuPadecimientoComponent,
+    NuevoPadecimientoComponent
   ],
   imports: [
     BrowserModule,

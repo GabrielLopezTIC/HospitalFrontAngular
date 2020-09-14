@@ -92,7 +92,7 @@ export class ListaUsuarioComponent implements OnInit {
         this.usuarios.push(data);
       },
       error => {
-        this.toastr.error(error.error.mensaje, 'Tu sesion expiró o no tienes los permisos para ver esto', {
+        this.toastr.error("Usuario no encontrado", '', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }

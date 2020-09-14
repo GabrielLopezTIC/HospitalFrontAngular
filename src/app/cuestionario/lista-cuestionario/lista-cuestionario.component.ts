@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import * as moment from 'moment';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class ListaCuestionarioComponent implements OnInit {
 
 
   paginas: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  cuestionarios: Cuestionario[];
+  cuestionarios: Cuestionario[] = [];
   roles: string[];
   isAdmin = false;
   clavePaciente:string;
@@ -28,7 +29,8 @@ export class ListaCuestionarioComponent implements OnInit {
   constructor(
     private cuestionarioService: CuestionarioService,
     private toastr: ToastrService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private language: AuthService
   ) { }
 
   //moment:moment.Moment;
@@ -139,5 +141,8 @@ export class ListaCuestionarioComponent implements OnInit {
     return this.tokenService.getAuthorities()[0];
   }
 
+  public lang(): string {
+    return this.language.lang();
+  }
 
 }

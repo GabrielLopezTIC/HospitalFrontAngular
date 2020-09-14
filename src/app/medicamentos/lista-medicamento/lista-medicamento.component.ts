@@ -11,7 +11,7 @@ import { TokenService } from 'src/app/services/token.service';
 })
 export class ListaMedicamentoComponent implements OnInit {
 
-  medicamentos:Medicamento[];
+  medicamentos:Medicamento[] = [];
 
   constructor(
     private authService:AuthService,

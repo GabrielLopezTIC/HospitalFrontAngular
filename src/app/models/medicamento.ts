@@ -15,6 +15,10 @@ export class Medicamento {
     missingInfoEn: string;
     missingInfoBr: string;
 
+    contraindicaciones:Contraindicacion[];
+
+
+
     constructor( productName: string,
         mrpDcp: string,
         legalBasis: string,
@@ -27,7 +31,8 @@ export class Medicamento {
         importantPotentialRiskBr: string,
         missingInfoEs: string,
         missingInfoEn: string,
-        missingInfoBr: string
+        missingInfoBr: string,
+        contraindicaciones:Contraindicacion[]
         ){
             this.productName= productName;
             this.mrpDcp= mrpDcp;
@@ -42,5 +47,13 @@ export class Medicamento {
             this.missingInfoEs= missingInfoEs;
             this.missingInfoEn= missingInfoEn;
             this.missingInfoBr= missingInfoBr;
+            this.contraindicaciones=contraindicaciones;
         }
+}
+
+export class Contraindicacion{
+    nombreProducto:string;
+    alta:string;
+    media:string;
+    baja:string;
 }

@@ -31,3 +31,17 @@
   .container{
     width: 100% !important;
   }
+
+  .border-top-0{
+    border-width:3px !important;
+  }
+
+
+  .principal {
+    display: flex;
+    align-items: center;
+}
+.card {
+  width: 90% !important;
+    margin: 0 auto !important; /* requerido para alineación horizontal */
+}
