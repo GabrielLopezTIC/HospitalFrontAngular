@@ -1,155 +1,161 @@
 <app-menu-adm-cuestionario></app-menu-adm-cuestionario>
 <div class="row">
   <div class="col-sm-12">
-    <div class="container">
-      <mat-form-field>
-        <input matInput type="text" [placeholder]="lang() == 'es'? 'Clave de catalogo': lang() == 'en'? 'Catalog key' : 'Chave de catálogo'" [(ngModel)]="clavePaciente">
-        <button mat-button *ngIf="clavePaciente" matSuffix mat-icon-button aria-label="Clear" (click)="clavePaciente=''">
-          <mat-icon>x</mat-icon>
+    <div class="contenedor mr-3 ml-3">
+      <div class="mr-2">
+        <mat-form-field>
+          <input matInput type="text"
+            [placeholder]="lang() == 'es'? 'Clave de catalogo': lang() == 'en'? 'Catalog key' : 'Chave de catálogo'"
+            [(ngModel)]="clavePaciente">
+          <button mat-button *ngIf="clavePaciente" matSuffix mat-icon-button aria-label="Clear"
+            (click)="clavePaciente=''">
+            <mat-icon>x</mat-icon>
+          </button>
+        </mat-form-field>
+        <button class="ml-1 btn btn-success ml-2" (click)="buscar()">
+          <label *ngIf="lang()=='es'">Buscar</label>
+          <label *ngIf="lang()=='en'">Search</label>
+          <label *ngIf="lang()=='br'">Procurar</label>
         </button>
-      </mat-form-field>
-      <button class="ml-1 btn btn-success" (click)="buscar()" >
-        <label *ngIf="lang()=='es'">Buescar</label>
-        <label *ngIf="lang()=='en'">Search</label>
-        <label *ngIf="lang()=='br'">Procurar</label>
-      </button>
-    </div>
-    <div class="container">
-      <div class="table-container">
-        <table class="table">
-          <thead>
-            <tr class="color-theme-green">
-              <th scope="col">
-                <label *ngIf="lang()=='es'">Clave</label>
-                <label *ngIf="lang()=='en'">Key</label>
-                <label *ngIf="lang()=='br'">Chave</label>
-              </th>
-              <th scope="col">
-                <label *ngIf="lang()=='es'">Fecha de registro</label>
-                <label *ngIf="lang()=='en'">Registration date</label>
-                <label *ngIf="lang()=='br'">Data de registro</label>
+      </div>
+      <div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr class="color-theme-green">
+                <th scope="col">
+                  <label *ngIf="lang()=='es'">Clave</label>
+                  <label *ngIf="lang()=='en'">Key</label>
+                  <label *ngIf="lang()=='br'">Chave</label>
                 </th>
-              <th scope="col">
-                <label *ngIf="lang()=='es'">Registrado o actualizado por:</label>
-                <label *ngIf="lang()=='en'">Registered or updated by:</label>
-                <label *ngIf="lang()=='br'">Registrado ou atualizado por:</label>
+                <th scope="col">
+                  <label *ngIf="lang()=='es'">Fecha de registro</label>
+                  <label *ngIf="lang()=='en'">Registration date</label>
+                  <label *ngIf="lang()=='br'">Data de registro</label>
                 </th>
-              <th scope="col">
-                <label *ngIf="lang()=='es'">Medico tratante</label>
-                <label *ngIf="lang()=='en'">Prescribing doctor</label>
-                <label *ngIf="lang()=='br'">Médico prescritor</label>
+                <th scope="col">
+                  <label *ngIf="lang()=='es'">Registrado o actualizado por:</label>
+                  <label *ngIf="lang()=='en'">Registered or updated by:</label>
+                  <label *ngIf="lang()=='br'">Registrado ou atualizado por:</label>
                 </th>
-              <th scope="col">
-                <label *ngIf="lang()=='es'">Nombre paciente</label>
-                <label *ngIf="lang()=='en'">Patient name</label>
-                <label *ngIf="lang()=='br'">Nome do paciente</label>
+                <th scope="col">
+                  <label *ngIf="lang()=='es'">Medico tratante</label>
+                  <label *ngIf="lang()=='en'">Prescribing doctor</label>
+                  <label *ngIf="lang()=='br'">Médico prescritor</label>
                 </th>
-              <th scope="col">
-                <label *ngIf="lang()=='es'">Apellido</label>
-                <label *ngIf="lang()=='en'">Last name</label>
-                <label *ngIf="lang()=='br'">Sobrenome</label>
+                <th scope="col">
+                  <label *ngIf="lang()=='es'">Nombre paciente</label>
+                  <label *ngIf="lang()=='en'">Patient name</label>
+                  <label *ngIf="lang()=='br'">Nome do paciente</label>
                 </th>
-              <th scope="col">
-                <label *ngIf="lang()=='es'">Padecimientos</label>
-                <label *ngIf="lang()=='en'">Diagnostic´s</label>
-                <label *ngIf="lang()=='br'">Doenças</label></th>
-              <th scope="col">
+                <th scope="col">
+                  <label *ngIf="lang()=='es'">Apellido</label>
+                  <label *ngIf="lang()=='en'">Last name</label>
+                  <label *ngIf="lang()=='br'">Sobrenome</label>
+                </th>
+                <th scope="col">
+                  <label *ngIf="lang()=='es'">Padecimientos</label>
+                  <label *ngIf="lang()=='en'">Diagnostic´s</label>
+                  <label *ngIf="lang()=='br'">Doenças</label></th>
+                <th scope="col">
                   <label *ngIf="lang()=='es'">MedDRA</label>
                   <label *ngIf="lang()=='en'">MedDRA</label>
                   <label *ngIf="lang()=='br'">medDRA</label></th>
-              <th scope="col">
-                <label *ngIf="lang()=='es'">Terapeutica indicada</label>
-                <label *ngIf="lang()=='en'">Indicated therapeutic</label>
-                <label *ngIf="lang()=='br'">Terapêutica indicada</label>
+                <th scope="col">
+                  <label *ngIf="lang()=='es'">Terapeutica indicada</label>
+                  <label *ngIf="lang()=='en'">Indicated therapeutic</label>
+                  <label *ngIf="lang()=='br'">Terapêutica indicada</label>
                 </th>
-              <th scope="col" *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'">
-                <label *ngIf="lang()=='es'">Detalles</label>
-                <label *ngIf="lang()=='en'">Details</label>
-                <label *ngIf="lang()=='br'">Detalhes</label>
-               </th>
-              <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">
-                <label *ngIf="lang()=='es'">Borrar</label>
-                <label *ngIf="lang()=='en'">Delete</label>
-                <label *ngIf="lang()=='br'">Remover</label>
-                </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="cuestionarios.length == 0">
-              <td colspan="11"><mat-spinner matSuffix [diameter]="20"
-                style="float: center; margin-left: 8px"></mat-spinner></td>
-            </tr>
-            <tr *ngFor="let paciente of cuestionarios" class="color-theme-dark-ligth">
-              <td>{{paciente.clavePaciente}}</td>
-              <td>{{paciente.fechaIngreso}}</td>
-              <td>{{paciente.registradoPor}}</td>
-              <td>
-                <label *ngIf="lang()=='es'" class="font-weight-bold">Nombre:</label>
-                <label *ngIf="lang()=='en'" class="font-weight-bold">Name:</label>
-                <label *ngIf="lang()=='br'" class="font-weight-bold">Nome:</label><br>
-
-                {{paciente.medicoTratante.nombre}}<br>
-                <label  *ngIf="lang()=='es'" class="font-weight-bold">Usuario:</label>
-                <label  *ngIf="lang()=='en'" class="font-weight-bold">User:</label>
-                <label  *ngIf="lang()=='br'" class="font-weight-bold">Usuário:</label><br>
-
-                {{paciente.medicoTratante.nombreUsuario}}<br>
-                <label *ngIf="lang()=='es'" class="font-weight-bold">Email:</label>
-                <label *ngIf="lang()=='en'" class="font-weight-bold">Email:</label>
-                <label *ngIf="lang()=='br'" class="font-weight-bold">Email:</label><br>
-                {{paciente.medicoTratante.email}}<br>
-              </td> 
-              <td>{{paciente.nombre}}</td>
-              <td>{{paciente.apellido}}</td>
-              <td>
-                <label *ngFor="let pade of paciente.padecimientos">
-                  <p *ngIf="lang()=='es'">{{pade.nombreEs}}</p>
-                  <p *ngIf="lang()=='en'">{{pade.nombreEn}}</p>
-                  <p *ngIf="lang()=='br'">{{pade.nombreBr}}</p>
-                </label>
-              </td>
-              <td>
-                <label *ngFor="let medra of paciente.medraList">
-                  <p *ngIf="lang()=='es'">{{medra.medDraEs}}</p>
-                  <p *ngIf="lang()=='en'">{{medra.medDraEn}}</p>
-                  <p *ngIf="lang()=='br'">{{medra.medDraBr}}</p>
-                </label> 
-              </td>
-              <td>
-                <label *ngFor="let terap of paciente.terapeuticas">{{terap.medicamento.productName}}</label>
-              </td>
-              <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-info"
-                  routerLink="/editarCuestionario/{{paciente.clavePaciente}}"><i class="far fa-trash-alt"></i>
+                <th scope="col" *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'">
                   <label *ngIf="lang()=='es'">Detalles</label>
                   <label *ngIf="lang()=='en'">Details</label>
-                  <label *ngIf="lang()=='br'">Detalhes</label></button></td> 
-              <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
-                  (click)="borrar(paciente.clavePaciente)"><i class="far fa-trash-alt"></i><label *ngIf="lang()=='es'">Borrar</label>
+                  <label *ngIf="lang()=='br'">Detalhes</label>
+                </th>
+                <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">
+                  <label *ngIf="lang()=='es'">Borrar</label>
                   <label *ngIf="lang()=='en'">Delete</label>
-                  <label *ngIf="lang()=='br'">Remover</label></button></td>
-            </tr>
-          </tbody>
-        </table>
+                  <label *ngIf="lang()=='br'">Remover</label>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="cuestionarios.length == 0">
+                <td colspan="11">
+                  <mat-spinner matSuffix [diameter]="20" style="float: center; margin-left: 8px"></mat-spinner>
+                </td>
+              </tr>
+              <tr *ngFor="let paciente of cuestionarios" class="color-theme-dark-ligth">
+                <td>{{paciente.clavePaciente}}</td>
+                <td>{{paciente.fechaIngreso}}</td>
+                <td>{{paciente.registradoPor}}</td>
+                <td>
+                  <label *ngIf="lang()=='es'" class="font-weight-bold">Nombre:</label>
+                  <label *ngIf="lang()=='en'" class="font-weight-bold">Name:</label>
+                  <label *ngIf="lang()=='br'" class="font-weight-bold">Nome:</label><br>
+
+                  {{paciente.medicoTratante.nombre}}<br>
+                  <label *ngIf="lang()=='es'" class="font-weight-bold">Usuario:</label>
+                  <label *ngIf="lang()=='en'" class="font-weight-bold">User:</label>
+                  <label *ngIf="lang()=='br'" class="font-weight-bold">Usuário:</label><br>
+
+                  {{paciente.medicoTratante.nombreUsuario}}<br>
+                  <label *ngIf="lang()=='es'" class="font-weight-bold">Email:</label>
+                  <label *ngIf="lang()=='en'" class="font-weight-bold">Email:</label>
+                  <label *ngIf="lang()=='br'" class="font-weight-bold">Email:</label><br>
+                  {{paciente.medicoTratante.email}}<br>
+                </td>
+                <td>{{paciente.nombre}}</td>
+                <td>{{paciente.apellido}}</td>
+                <td>
+                  <label *ngFor="let pade of paciente.padecimientos">
+                    <p *ngIf="lang()=='es'">{{pade.nombreEs}}</p>
+                    <p *ngIf="lang()=='en'">{{pade.nombreEn}}</p>
+                    <p *ngIf="lang()=='br'">{{pade.nombreBr}}</p>
+                  </label>
+                </td>
+                <td>
+                  <label *ngFor="let medra of paciente.medraList">
+                    <p *ngIf="lang()=='es'">{{medra.medDraEs}}</p>
+                    <p *ngIf="lang()=='en'">{{medra.medDraEn}}</p>
+                    <p *ngIf="lang()=='br'">{{medra.medDraBr}}</p>
+                  </label>
+                </td>
+                <td>
+                  <label *ngFor="let terap of paciente.terapeuticas">{{terap.medicamento.productName}}</label>
+                </td>
+                <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button
+                    class="btn btn-outline-info" routerLink="/editarCuestionario/{{paciente.clavePaciente}}"><i
+                      class="far fa-trash-alt"></i>
+                    <label *ngIf="lang()=='es'">Detalles</label>
+                    <label *ngIf="lang()=='en'">Details</label>
+                    <label *ngIf="lang()=='br'">Detalhes</label></button></td>
+                <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
+                    (click)="borrar(paciente.clavePaciente)"><i class="far fa-trash-alt"></i><label
+                      *ngIf="lang()=='es'">Borrar</label>
+                    <label *ngIf="lang()=='en'">Delete</label>
+                    <label *ngIf="lang()=='br'">Remover</label></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-8"></div>
+        <div class="col-sm-4">
+          <label class="mr-2">Pag.</label>
+          <button *ngIf="paginas[0] > 9" (click)="retrocede()"> Back</button>
+          <button *ngIf="totalPages >= paginas[0]" (click)="primeroButton()">{{paginas[0]}}</button>
+          <button *ngIf="totalPages >= paginas[1]" (click)="segundoButton()">{{paginas[1]}}</button>
+          <button *ngIf="totalPages >= paginas[2]" (click)="terceroButton()">{{paginas[2]}}</button>
+          <button *ngIf="totalPages >= paginas[3]" (click)="cuartoButton()">{{paginas[3]}}</button>
+          <button *ngIf="totalPages >= paginas[4]" (click)="quintoButton()">{{paginas[4]}}</button>
+          <button *ngIf="totalPages >= paginas[5]" (click)="sextoButton()">{{paginas[5]}}</button>
+          <button *ngIf="totalPages >= paginas[6]" (click)="septimoButton()">{{paginas[6]}}</button>
+          <button *ngIf="totalPages >= paginas[7]" (click)="octavoButton()">{{paginas[7]}}</button>
+          <button *ngIf="totalPages >= paginas[8]" (click)="novenoButton()">{{paginas[8]}}</button>
+          <button *ngIf="totalPages > paginas[8]" (click)="avanza()">Next</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
-<div class="row">
-  <div class="col-sm-3"></div>
-  <div class="col-sm-3"></div>
-  <div class="col-sm-6">
-    <button *ngIf="paginas[0] > 9" (click)="retrocede()"> Back</button>
-    <button *ngIf="totalPages >= paginas[0]" (click)="primeroButton()">{{paginas[0]}}</button>
-    <button *ngIf="totalPages >= paginas[1]" (click)="segundoButton()">{{paginas[1]}}</button>
-    <button *ngIf="totalPages >= paginas[2]" (click)="terceroButton()">{{paginas[2]}}</button>
-    <button *ngIf="totalPages >= paginas[3]" (click)="cuartoButton()">{{paginas[3]}}</button>
-    <button *ngIf="totalPages >= paginas[4]" (click)="quintoButton()">{{paginas[4]}}</button>
-    <button *ngIf="totalPages >= paginas[5]" (click)="sextoButton()">{{paginas[5]}}</button>
-    <button *ngIf="totalPages >= paginas[6]" (click)="septimoButton()">{{paginas[6]}}</button>
-    <button *ngIf="totalPages >= paginas[7]" (click)="octavoButton()">{{paginas[7]}}</button>
-    <button *ngIf="totalPages >= paginas[8]" (click)="novenoButton()">{{paginas[8]}}</button>
-    <button *ngIf="totalPages > paginas[8]" (click)="avanza()">Next</button>
-  </div>
-</div>
-
-  

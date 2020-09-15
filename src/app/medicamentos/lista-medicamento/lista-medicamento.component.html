@@ -1,35 +1,77 @@
 <app-menu-adm-medicamento></app-menu-adm-medicamento>
 <div class="row">
     <div class="col-sm-12">
-        <div class="container">
+        <div class="contenedor mr-3 ml-3">
+            <div class="ml-2">
+                <mat-form-field>
+                    <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                        placeholder="Catalog Key" [(ngModel)]="nombre">
+                    <button mat-button *ngIf="nombre" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="nombre=''">
+                        <mat-icon>x</mat-icon>
+                    </button>
+                </mat-form-field>
+                <button class="btn btn-success ml-2" (click)="buscar()">Buscar</button>
+            </div>
+
             <div class="table-container">
                 <table class="table">
                     <thead>
                         <tr class="color-theme-green">
                             <th scope="col">Nombre</th>
+                            <th scope="col">Legal Basis</th>
                             <th scope="col">RMP Version</th>
-                            <th scope="col" *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'">Detalles</th>
+                            <th scope="col">MRP DCP</th>
+                            <th scope="col">Riesgos importantes</th>
+                            <th scope="col">Riesgos potenciales importantes</th>
+                            <th scope="col">Informacion faltante</th>
+                            <th scope="col" *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'">Detalles
+                            </th>
                             <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngIf="medicamentos.length == 0">
-                            <td colspan="11"><mat-spinner matSuffix [diameter]="20"
-                              style="float: center; margin-left: 8px"></mat-spinner></td>
-                          </tr>
+                            <td colspan="11">
+                                <mat-spinner matSuffix [diameter]="20" style="float: center; margin-left: 8px">
+                                </mat-spinner>
+                            </td>
+                        </tr>
                         <tr *ngFor="let medicamento of medicamentos" class="color-theme-dark-ligth">
                             <td>{{medicamento.productName}}</td>
+                            <td>{{medicamento.legalBasis}}</td>
                             <td>{{medicamento.rmpVersion}}</td>
+                            <td>{{medicamento.mrpDcp}}</td>
+                            <td>{{medicamento.importantRiskEs}}</td>
+                            <td>{{medicamento.importantPotentialRiskEs}}</td>
+                            <td>{{medicamento.missingInfoEs}}</td>
                             <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button
-                                    class="btn btn-outline-info"><i
-                                        class="far fa-trash-alt"></i> Detalles</button></td>
+                                    class="btn btn-outline-info"><i class="far fa-trash-alt"></i> Detalles</button></td>
                             <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
-                                    (click)="borrar(medicamento.productName)"><i class="far fa-trash-alt"></i> Eliminar</button>
+                                    (click)="borrar(medicamento.productName)"><i class="far fa-trash-alt"></i>
+                                    Eliminar</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <div class="row">
+                <div class="col-sm-8"></div>
+                <div class="col-sm-4">
+                  <label class="mr-2">Pag.</label>
+                  <button *ngIf="paginas[0] > 9" (click)="retrocede()"> Back</button>
+                  <button *ngIf="totalPages >= paginas[0]" (click)="primeroButton()">{{paginas[0]}}</button>
+                  <button *ngIf="totalPages >= paginas[1]" (click)="segundoButton()">{{paginas[1]}}</button>
+                  <button *ngIf="totalPages >= paginas[2]" (click)="terceroButton()">{{paginas[2]}}</button>
+                  <button *ngIf="totalPages >= paginas[3]" (click)="cuartoButton()">{{paginas[3]}}</button>
+                  <button *ngIf="totalPages >= paginas[4]" (click)="quintoButton()">{{paginas[4]}}</button>
+                  <button *ngIf="totalPages >= paginas[5]" (click)="sextoButton()">{{paginas[5]}}</button>
+                  <button *ngIf="totalPages >= paginas[6]" (click)="septimoButton()">{{paginas[6]}}</button>
+                  <button *ngIf="totalPages >= paginas[7]" (click)="octavoButton()">{{paginas[7]}}</button>
+                  <button *ngIf="totalPages >= paginas[8]" (click)="novenoButton()">{{paginas[8]}}</button>
+                  <button *ngIf="totalPages > paginas[8]" (click)="avanza()">Next</button>
+                </div>
+              </div>
         </div>
     </div>
-    </div>
+</div>

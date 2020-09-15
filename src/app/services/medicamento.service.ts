@@ -25,6 +25,9 @@ export class MedicamentoService {
     return this.httpClient.get<Medicamento[]>(this.medicamentoURL + "findAll/regex/" + nombre + "/lang/" + lang);
   }
 
+  public findAllPagination(page:number,size:number,orderBy:string): Observable<Medicamento[]> {
+    return this.httpClient.get<Medicamento[]>(this.medicamentoURL + "findAll/ini/"+page+"/end/"+size+"/orderCol/"+orderBy);
+  }
 
   
   public nuevo(nuevoMedicamento: Medicamento ): Observable<any> {

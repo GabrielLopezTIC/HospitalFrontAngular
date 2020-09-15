@@ -15,9 +15,9 @@ table {
     color:black;
   }
   
-  .container{
-    display: flex;
-    align-items: center;
+  .contenedor{
+    background-color: white;
+    border-radius: 5px;
   }
 
 

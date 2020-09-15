@@ -1,69 +1,73 @@
 <app-menuAdmUsers></app-menuAdmUsers>
 <div class="row">
   <div class="col-sm-12 ">
-    <div class="container">
-      <mat-form-field>
-        <input matInput type="text" placeholder="Nombre de usuario" [(ngModel)]="nombreUsuario">
-        <button mat-button *ngIf="nombreUsuario" matSuffix mat-icon-button aria-label="Clear" (click)="nombreUsuario=''">
-          <mat-icon>x</mat-icon>
-        </button>
-      </mat-form-field>
-      <button class="btn btn-success" (click)="buscar()">Buscar</button>
-    </div>
-    <div class="container">
-      <div class="table-container">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Nombre</th>
-              <th scope="col">Nombre de usuario</th>
-              <th scope="col">Email</th>
-              <th scope="col">Rol</th>
-              <th scope="col">Sup</th>
-              <th scope="col">Sub</th>
-              <th scope="col" *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') ">Editar</th>
-              <th scope="col" *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') ">Borrar</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="usuarios.length == 0">
-              <td colspan="11"><mat-spinner matSuffix [diameter]="20"
-                style="float: center; margin-left: 8px"></mat-spinner></td>
-            </tr>
-            <tr *ngFor="let usuario of usuarios" class="color-theme-dark-ligth">
-              <td>{{usuario.nombre}}</td>
-              <td>{{usuario.nombreUsuario}}</td>
-              <td>{{usuario.email}}</td>
-              <td>{{usuario.roles[0].rolNombre}}</td>
-              <td>{{usuario.sup}}</td>
-              <td>{{usuario.sub}}</td>
-              <td *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') "><button
-                  class="btn btn-outline-info" routerLink="/editarUsuario/{{usuario.nombreUsuario}}"><i
-                    class="far fa-trash-alt"></i> Editar</button></td>
-              <td *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO')"><button
-                  *ngIf="usuario.nombreUsuario != username()" class="btn btn-outline-danger"
-                  (click)="borrar(usuario.nombreUsuario)"><i class="far fa-trash-alt"></i> Eliminar</button></td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="contenedor ml-3 mr-3">
+      <div class="ml-2">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Nombre de usuario" [(ngModel)]="nombreUsuario">
+          <button mat-button *ngIf="nombreUsuario" matSuffix mat-icon-button aria-label="Clear"
+            (click)="nombreUsuario=''">
+            <mat-icon>x</mat-icon>
+          </button>
+        </mat-form-field>
+        <button class="btn btn-success ml-2" (click)="buscar()">Buscar</button>
+      </div>
+      <div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Nombre de usuario</th>
+                <th scope="col">Email</th>
+                <th scope="col">Rol</th>
+                <th scope="col">Sup</th>
+                <th scope="col">Sub</th>
+                <th scope="col" *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') ">Editar</th>
+                <th scope="col" *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') ">Borrar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="usuarios.length == 0">
+                <td colspan="11">
+                  <mat-spinner matSuffix [diameter]="20" style="float: center; margin-left: 8px"></mat-spinner>
+                </td>
+              </tr>
+              <tr *ngFor="let usuario of usuarios" class="color-theme-dark-ligth">
+                <td>{{usuario.nombre}}</td>
+                <td>{{usuario.nombreUsuario}}</td>
+                <td>{{usuario.email}}</td>
+                <td>{{usuario.roles[0].rolNombre}}</td>
+                <td>{{usuario.sup}}</td>
+                <td>{{usuario.sub}}</td>
+                <td *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') "><button
+                    class="btn btn-outline-info" routerLink="/editarUsuario/{{usuario.nombreUsuario}}"><i
+                      class="far fa-trash-alt"></i> Editar</button></td>
+                <td *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO')"><button
+                    *ngIf="usuario.nombreUsuario != username()" class="btn btn-outline-danger"
+                    (click)="borrar(usuario.nombreUsuario)"><i class="far fa-trash-alt"></i> Eliminar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-8"></div>
+        <div class="col-sm-4">
+          <label class="mr-1">Pag. </label>
+          <button *ngIf="paginas[0] > 9" (click)="retrocede()"> Back</button>
+          <button *ngIf="totalPages >= paginas[0]" (click)="primeroButton()">{{paginas[0]}}</button>
+          <button *ngIf="totalPages >= paginas[1]" (click)="segundoButton()">{{paginas[1]}}</button>
+          <button *ngIf="totalPages >= paginas[2]" (click)="terceroButton()">{{paginas[2]}}</button>
+          <button *ngIf="totalPages >= paginas[3]" (click)="cuartoButton()">{{paginas[3]}}</button>
+          <button *ngIf="totalPages >= paginas[4]" (click)="quintoButton()">{{paginas[4]}}</button>
+          <button *ngIf="totalPages >= paginas[5]" (click)="sextoButton()">{{paginas[5]}}</button>
+          <button *ngIf="totalPages >= paginas[6]" (click)="septimoButton()">{{paginas[6]}}</button>
+          <button *ngIf="totalPages >= paginas[7]" (click)="octavoButton()">{{paginas[7]}}</button>
+          <button *ngIf="totalPages >= paginas[8]" (click)="novenoButton()">{{paginas[8]}}</button>
+          <button *ngIf="totalPages > paginas[8]" (click)="avanza()">Next</button>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-3"></div>
-  <div class="col-sm-3"></div>
-  <div class="col-sm-6">
-    <button *ngIf="paginas[0] > 9" (click)="retrocede()"> Back</button>
-    <button *ngIf="totalPages >= paginas[0]" (click)="primeroButton()">{{paginas[0]}}</button>
-    <button *ngIf="totalPages >= paginas[1]" (click)="segundoButton()">{{paginas[1]}}</button>
-    <button *ngIf="totalPages >= paginas[2]" (click)="terceroButton()">{{paginas[2]}}</button>
-    <button *ngIf="totalPages >= paginas[3]" (click)="cuartoButton()">{{paginas[3]}}</button>
-    <button *ngIf="totalPages >= paginas[4]" (click)="quintoButton()">{{paginas[4]}}</button>
-    <button *ngIf="totalPages >= paginas[5]" (click)="sextoButton()">{{paginas[5]}}</button>
-    <button *ngIf="totalPages >= paginas[6]" (click)="septimoButton()">{{paginas[6]}}</button>
-    <button *ngIf="totalPages >= paginas[7]" (click)="octavoButton()">{{paginas[7]}}</button>
-    <button *ngIf="totalPages >= paginas[8]" (click)="novenoButton()">{{paginas[8]}}</button>
-    <button *ngIf="totalPages > paginas[8]" (click)="avanza()">Next</button>
   </div>
 </div>

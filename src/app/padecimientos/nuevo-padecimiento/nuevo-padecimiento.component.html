@@ -3,45 +3,72 @@
     <div class="card">
         <div class="card-body">
             <form #f="ngForm" (ngSubmit)="onRegister()" novalidate>
-               <div class="form-group">
-                    <label for="nombre">Clave de catalogo</label>
-                    <input type="text" oninput="this.value = this.value.replace(/ /g, '').toUpperCase()" name="catalogKey"
-                        id="catalogKey" class="form-control" [(ngModel)]="catalogKey" required>
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6"><h2>Registro de nuevos padecimientos</h2></div>
+                    <div class="col-sm-3"></div>
                 </div>
-                <div class="form-group">
-                    <label for="nombre">Nombre español</label>
-                    <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombeEs" id="nombreEs"
-                        class="form-control" [(ngModel)]="nombreEs" required>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="nombre">Clave de catalogo</label>
+                            <input type="text" oninput="this.value = this.value.replace(/ /g, '').toUpperCase()" name="catalogKey"
+                                id="catalogKey" class="form-control" [(ngModel)]="catalogKey" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="nombre">Nombre español</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombeEs" id="nombreEs"
+                                class="form-control" [(ngModel)]="nombreEs" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="nombre">Nombre Inglés</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombreEn" id="nombreEn"
+                                class="form-control" [(ngModel)]="nombreEn" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="nombre">Nombre Portugues</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombreBr" id="nombreBr"
+                                class="form-control" [(ngModel)]="nombreBr" required>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="nombre">Nombre Inglés</label>
-                    <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombreEn" id="nombreEn"
-                        class="form-control" [(ngModel)]="nombreEn" required>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="nombre">CIE10 Español</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="cie10Es" id="cie10Es"
+                                class="form-control" [(ngModel)]="cie10Es" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="nombre">CIE10 Inglés</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="cie10En" id="cie10En"
+                                class="form-control" [(ngModel)]="cie10En" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="nombre">CIE10 Portugues</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="cie10Br" id="cie10Br"
+                                class="form-control" [(ngModel)]="cie10Br" required>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="nombre">Nombre Portugues</label>
-                    <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombreBr" id="nombreBr"
-                        class="form-control" [(ngModel)]="nombreBr" required>
-                </div>
-                <div class="form-group">
-                    <label for="nombre">CIE10 Español</label>
-                    <input type="text" oninput="this.value = this.value.toUpperCase()" name="cie10Es" id="cie10Es"
-                        class="form-control" [(ngModel)]="cie10Es" required>
-                </div>
-                <div class="form-group">
-                    <label for="nombre">CIE10 Inglés</label>
-                    <input type="text" oninput="this.value = this.value.toUpperCase()" name="cie10En" id="cie10En"
-                        class="form-control" [(ngModel)]="cie10En" required>
-                </div>
-                <div class="form-group">
-                    <label for="nombre">CIE10 Portugues</label>
-                    <input type="text" oninput="this.value = this.value.toUpperCase()" name="cie10Br" id="cie10Br"
-                        class="form-control" [(ngModel)]="cie10Br" required>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">
-                        <i class="fas fa-sign-in-alt"></i> Crear Padecimiento</button>
-                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">
+                                <i class="fas fa-sign-in-alt"></i> Crear Padecimiento</button>
+                        </div>
+                    </div>
+                </div>           
             </form>
         </div>
     </div>

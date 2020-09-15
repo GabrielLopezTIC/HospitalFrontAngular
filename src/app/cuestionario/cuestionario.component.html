@@ -147,21 +147,21 @@
                             <label *ngIf="lang() === 'es'">Alcoholismo:</label>
                             <label *ngIf="lang() === 'en'">Alcoholism:</label>
                             <label *ngIf="lang() === 'br'">Alcoolismo:</label>
-                            <mat-radio-group name="opcionesAlcohol" [(ngModel)]="opAlcoholSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opciones" [value]="op"
+                            <mat-radio-group name="opAlc" [(ngModel)]="opAlcoholSel">
+                                <mat-radio-button *ngFor="let op of opciones" name="opAlc" [value]="op.clave"
                                     style="margin: 10px">
-                                    {{op}}
+                                    {{op.valor}}
                                 </mat-radio-button>
-                            </mat-radio-group>
+                            </mat-radio-group>                        
                         </div>
                         <div class="col-sm-4">
                             <label *ngIf="lang() === 'es'">Tabaquismo:</label>
                             <label *ngIf="lang() === 'en'">Smoking:</label>
                             <label *ngIf="lang() === 'br'">Fumar:</label>
                             <mat-radio-group name="opcionesTab" [(ngModel)]="opTabSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opciones" [value]="op"
+                                <mat-radio-button *ngFor="let op of opciones" name="opcionesTab" [value]="op.clave"
                                     style="margin: 10px">
-                                    {{op}}
+                                    {{op.valor}}
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
@@ -170,9 +170,9 @@
                             <label *ngIf="lang() === 'en'">Drugs:</label>
                             <label *ngIf="lang() === 'br'">Drogas:</label>
                             <mat-radio-group name="opcionesDrog" [(ngModel)]="opDrogSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opciones" [value]="op"
+                                <mat-radio-button *ngFor="let op of opciones" name="opcionesDrog" [value]="op.clave"
                                     style="margin: 10px">
-                                    {{op}}
+                                    {{op.valor}}
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
@@ -184,9 +184,9 @@
                             <label *ngIf="lang() === 'en'">Supplements:</label>
                             <label *ngIf="lang() === 'br'">Suplementos:</label>
                             <mat-radio-group name="opcionesSupl" [(ngModel)]="opSuplSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opciones" [value]="op"
+                                <mat-radio-button *ngFor="let op of opciones" name="opcionesSupl" [value]="op.clave"
                                     style="margin: 10px">
-                                    {{op}}
+                                    {{op.valor}}
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
@@ -195,9 +195,9 @@
                             <label *ngIf="lang() === 'en'">Herbalist:</label>
                             <label *ngIf="lang() === 'br'">Herbalist:</label>
                             <mat-radio-group name="opcionesHerb" [(ngModel)]="opHerbSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opciones" [value]="op"
+                                <mat-radio-button *ngFor="let op of opciones" name="opcionesHerb" [value]="op.clave"
                                     style="margin: 10px">
-                                    {{op}}
+                                    {{op.valor}}
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
@@ -206,9 +206,9 @@
                             <label *ngIf="lang() === 'en'">Trad. medicine:</label>
                             <label *ngIf="lang() === 'br'">Med. tradicion.:</label>
                             <mat-radio-group name="opcionesMedTrad" [(ngModel)]="opMedTradSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opciones" [value]="op"
+                                <mat-radio-button *ngFor="let op of opciones" name="opcionesMedTrad" [value]="op.clave"
                                     style="margin: 10px">
-                                    {{op}}
+                                    {{op.valor}}
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
@@ -270,7 +270,7 @@
                                                 <tr *ngFor="let pad of padecimientosList" class="itemsPade">
                                                     <td>{{pad}}</td>
                                                     <td><button class="btn btn-outline-danger"
-                                                            (click)="borrarPade(pade)">
+                                                            (click)="borrarPade(pad)">
                                                             <i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                                     </td>
                                                 </tr>
@@ -546,7 +546,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row border border-top-0 border-success mt2">
+                    <div class="row border border-top-0 border-success mt3">
                         <div class="col-sm-12">
                             <h2 *ngIf="lang()=='es'">Información Adicional</h2>
                             <h2 *ngIf="lang()=='en'">Additional Information</h2>
