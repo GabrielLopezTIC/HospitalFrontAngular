@@ -15,8 +15,6 @@ import { EditarUsuarioComponent } from './usuario/editar-usuario/editar-usuario.
 import { ListaUsuarioComponent } from './usuario/lista-usuario/lista-usuario.component';
 import { NuevoUsuarioComponent } from './usuario/nuevo-usuario/nuevo-usuario.component';
 import { MenuPrincipalComponent } from './menu-principal/menu-principal.component';
-import { MenuAdmComponent } from './menu-adm/menu-adm.component';
-import { AdmComponent } from './adm/adm.component';
 import { MenuAdmUsersComponent } from './menu-adm-users/menu-adm-users.component';
 import { CuestionarioComponent } from './cuestionario/cuestionario.component';
 
@@ -47,7 +45,6 @@ import { EditarCuestionarioComponent } from './cuestionario/editar-cuestionario/
 import {MatTooltipModule} from '@angular/material/tooltip'; 
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { GraficaTabaquismoComponent } from './grafica-tabaquismo/grafica-tabaquismo.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { EstadisticasComponent } from './estadisticas/estadisticas.component';
 import {MatStepperModule} from '@angular/material/stepper'; 
@@ -72,8 +69,6 @@ PdfMakeWrapper.setFonts(pdfFonts);
     ListaUsuarioComponent,
     NuevoUsuarioComponent,
     MenuPrincipalComponent,
-    MenuAdmComponent,
-    AdmComponent,
     MenuAdmUsersComponent,
     CuestionarioComponent,
     ModalInfoTerapComponent,
@@ -84,7 +79,6 @@ PdfMakeWrapper.setFonts(pdfFonts);
     MenuAdmCuestionarioComponent,
     MenuAdmMedicamentoComponent,
     EditarCuestionarioComponent,
-    GraficaTabaquismoComponent,
     EstadisticasComponent,
     PadecimientoListaComponent,
     NuevoPadecimientoComponent,

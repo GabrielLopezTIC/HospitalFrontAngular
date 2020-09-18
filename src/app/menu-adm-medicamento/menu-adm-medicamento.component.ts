@@ -43,4 +43,8 @@ export class MenuAdmMedicamentoComponent implements OnInit {
     return this.tokenService.getUserName();
   }
 
+  roleType(){
+    return this.tokenService.getAuthorities()[0];
+  }
+
 }

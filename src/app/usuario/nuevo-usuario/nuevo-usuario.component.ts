@@ -4,6 +4,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NuevoUsuario } from 'src/app/models/nuevo-usuario';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-nuevo-usuario',
@@ -12,7 +13,11 @@ import { NuevoUsuario } from 'src/app/models/nuevo-usuario';
 })
 export class NuevoUsuarioComponent implements OnInit {
 
-  rolesList:string[]=["medico","farmaceutico","admin"];
+  rolesListAdmin:string[]=["medico","admin"];
+  rolesListMedico:string[]=["farmaceutico"];
+  rolesList:string[] = this.roleType()=="ROLE_ADMIN"? this.rolesListAdmin : this.rolesListMedico;
+
+
   nuevoUsuario: NuevoUsuario;
   nombre: string;
   nombreUsuario: string;
@@ -34,7 +39,8 @@ export class NuevoUsuarioComponent implements OnInit {
     private tokenService: TokenService,
     private usuarioService: UsuarioService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private language: AuthService
   ) { }
 
   ngOnInit() {
@@ -112,5 +118,9 @@ export class NuevoUsuarioComponent implements OnInit {
 
   roleType(){
     return this.tokenService.getAuthorities()[0];
+  }
+
+  public lang():string{
+    return this.language.lang();
   }
 }

@@ -45,22 +45,22 @@
                                             </mat-form-field>
                                         </div>
                                         <div class="form-group">
-                                            <a (click)="idioma('es')" id="es"><label *ngIf="lang() == 'es'">Español
-                                                |</label><label *ngIf="lang() == 'en'">Spanish |</label><label
-                                                *ngIf="lang() == 'br'">Espanhol |</label></a>
-                                        <a (click)="idioma('en')" id="en"><label *ngIf="lang() == 'es'">Inglés
-                                                |</label><label *ngIf="lang() == 'en'">English |</label><label
-                                                *ngIf="lang() == 'br'">Inglês |</label></a>
-                                        <a (click)="idioma('br')" id="br"><label *ngIf="lang() == 'es'">Portugues
-                                                |</label><label *ngIf="lang() == 'en'">Portuguese |</label><label
-                                                *ngIf="lang() == 'br'">Português |</label></a>
+                                            <a (click)="idioma('es')" id="es"><span *ngIf="lang() == 'es'">Español
+                                                |</span><span *ngIf="lang() == 'en'">Spanish |</span><span
+                                                *ngIf="lang() == 'br'">Espanhol |</span></a>
+                                        <a (click)="idioma('en')" id="en"><span *ngIf="lang() == 'es'">Inglés
+                                                |</span><span *ngIf="lang() == 'en'">English |</span><span
+                                                *ngIf="lang() == 'br'">Inglês |</span></a>
+                                        <a (click)="idioma('br')" id="br"><span *ngIf="lang() == 'es'">Portugues
+                                                |</span><span *ngIf="lang() == 'en'">Portuguese |</span><span
+                                                *ngIf="lang() == 'br'">Português |</span></a>
                                         </div>
                                         <div class="form-group">
                                             <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">
                                                 <i class="fas fa-sign-in-alt"></i>
-                                                <label *ngIf="lang() == 'es'">Iniciar Sesión</label>
-                                                <label *ngIf="lang() == 'br'">Iniciar sessão</label>
-                                                <label *ngIf="lang() == 'en'">Log in</label>                           
+                                                <span *ngIf="lang() == 'es'">Iniciar Sesión</span>
+                                                <span *ngIf="lang() == 'br'">Iniciar sessão</span>
+                                                <span *ngIf="lang() == 'en'">Log in</span>                           
                                                 </button>
                                         </div>
                                     </div>

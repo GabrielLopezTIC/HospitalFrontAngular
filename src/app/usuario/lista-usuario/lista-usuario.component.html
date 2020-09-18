@@ -4,27 +4,62 @@
     <div class="contenedor ml-3 mr-3">
       <div class="ml-2">
         <mat-form-field>
-          <input matInput type="text" placeholder="Nombre de usuario" [(ngModel)]="nombreUsuario">
+          <input matInput type="text"
+            [placeholder]="lang()=='br'? 'Nome do usuário' : lang()=='en'? 'Username' : 'Nombre de usuario'"
+            [(ngModel)]="nombreUsuario">
           <button mat-button *ngIf="nombreUsuario" matSuffix mat-icon-button aria-label="Clear"
             (click)="nombreUsuario=''">
             <mat-icon>x</mat-icon>
           </button>
         </mat-form-field>
-        <button class="btn btn-success ml-2" (click)="buscar()">Buscar</button>
+        <button class="btn btn-success ml-2" (click)="buscar()">
+          <span *ngIf="lang()=='es'">Buscar</span>
+          <span *ngIf="lang()=='en'">Search</span>
+          <span *ngIf="lang()=='br'">Buscar</span>
+        </button>
       </div>
       <div>
         <div class="table-container">
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Nombre</th>
-                <th scope="col">Nombre de usuario</th>
-                <th scope="col">Email</th>
-                <th scope="col">Rol</th>
-                <th scope="col">Sup</th>
-                <th scope="col">Sub</th>
-                <th scope="col" *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') ">Editar</th>
-                <th scope="col" *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') ">Borrar</th>
+                <th scope="col">
+                  <span *ngIf="lang()=='es'">Nombre</span>
+                  <span *ngIf="lang()=='en'">Name</span>
+                  <span *ngIf="lang()=='br'">Nome</span>
+
+                </th>
+                <th scope="col">
+                  <span *ngIf="lang()=='es'">Nombre de usuario</span>
+                  <span *ngIf="lang()=='en'">Username</span>
+                  <span *ngIf="lang()=='br'">Nome do usuário</span>
+
+                </th>
+                <th scope="col">
+                  Email
+                </th>
+                <th scope="col">
+                  <span *ngIf="lang()=='es'">Rol</span>
+                  <span *ngIf="lang()=='en'">Role</span>
+                  <span *ngIf="lang()=='br'">O cargo</span>
+
+                </th>
+                <th scope="col">
+                  Sup
+                </th>
+                <th scope="col">
+                  Sub
+                </th>
+                <th scope="col" *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') ">
+                  <span *ngIf="lang()=='es'">Editar</span>
+                  <span *ngIf="lang()=='en'">Edit</span>
+                  <span *ngIf="lang()=='br'">Editar</span>
+                </th>
+                <th scope="col" *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') ">
+                  <span *ngIf="lang()=='es'">Borrar</span>
+                  <span *ngIf="lang()=='en'">Delete</span>
+                  <span *ngIf="lang()=='br'">Excluir</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -42,10 +77,17 @@
                 <td>{{usuario.sub}}</td>
                 <td *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') "><button
                     class="btn btn-outline-info" routerLink="/editarUsuario/{{usuario.nombreUsuario}}"><i
-                      class="far fa-trash-alt"></i> Editar</button></td>
+                      class="far fa-trash-alt"></i>
+                    <span *ngIf="lang()=='es'">Editar</span>
+                    <span *ngIf="lang()=='en'">Edit</span>
+                    <span *ngIf="lang()=='br'">Editar</span>
+                  </button></td>
                 <td *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO')"><button
                     *ngIf="usuario.nombreUsuario != username()" class="btn btn-outline-danger"
-                    (click)="borrar(usuario.nombreUsuario)"><i class="far fa-trash-alt"></i> Eliminar</button></td>
+                    (click)="borrar(usuario.nombreUsuario)"><i class="far fa-trash-alt"></i>
+                    <span *ngIf="lang()=='es'">Borrar</span>
+                    <span *ngIf="lang()=='en'">Delete</span>
+                    <span *ngIf="lang()=='br'">Excluir</span></button></td>
               </tr>
             </tbody>
           </table>
@@ -54,7 +96,7 @@
       <div class="row">
         <div class="col-sm-8"></div>
         <div class="col-sm-4">
-          <label class="mr-1">Pag. </label>
+          <span class="mr-1">Pag. </span>
           <button *ngIf="paginas[0] > 9" (click)="retrocede()"> Back</button>
           <button *ngIf="totalPages >= paginas[0]" (click)="primeroButton()">{{paginas[0]}}</button>
           <button *ngIf="totalPages >= paginas[1]" (click)="segundoButton()">{{paginas[1]}}</button>

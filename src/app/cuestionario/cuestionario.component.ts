@@ -25,6 +25,11 @@ export class ToxicOpc {
   clave: string;
   valor: string;
 }
+
+export class GeneroOpc{
+  clave:string;
+  valor:string;
+}
 @Component({
   selector: 'app-cuestionario',
   templateUrl: './cuestionario.component.html',
@@ -34,13 +39,17 @@ export class ToxicOpc {
 export class CuestionarioComponent implements OnInit {
 
   isLogged = false;
-
   turno: string;
   ///////////////////////////////////////genero
-  generoEs = ['H', 'M'];
+ /* generoEs = ['H', 'M'];
   generoEn = ['M', 'F'];
   generoBr = ['H', 'M'];
-  genero: string[] = this.lang() === "es" ? this.generoEs : this.lang() === "en" ? this.generoEn : this.generoBr;
+  genero: string[] = this.lang() === "es" ? this.generoEs : this.lang() === "en" ? this.generoEn : this.generoBr;*/
+
+
+  hombre = this.lang()=='br'? 'H' : this.lang()=='en'? 'M' : 'H';
+  mujer = this.lang()=='br'? 'M' : this.lang()=='en'? 'F' : 'M';
+  genero: GeneroOpc[] = [{clave: 'H',valor: this.hombre },{clave : 'M', valor : this.mujer}]
   generoSel: string;
 
 
@@ -599,7 +608,7 @@ export class CuestionarioComponent implements OnInit {
     });
 
     bod.push([{ content: 'GENDER', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.genero, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
+    { content: data.genero=='M'? 'F' : 'M' , colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
     { content: 'SIZE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
     { content: 'TOXICOMANIES', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },

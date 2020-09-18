@@ -1,4 +1,40 @@
-<app-menuAdm></app-menuAdm>
+<app-menu-adm-cuestionario></app-menu-adm-cuestionario>
 <div class="grafica">
-    <app-grafica-tabaquismo  ></app-grafica-tabaquismo>
+    <div class="row">
+        <div class="col-sm-6">
+            <mat-form-field>
+                <mat-select matSelect [placeholder]="lang()=='br'? 'Intervalo de resumo': lang()=='en'? 'Summary range' : 'Rango Resumen'" [(ngModel)]="rangoSel" name="rangoSel"
+                    [value]="rangoSel" (selectionChange)="cargaGrafica()">
+                    <div>
+                        <mat-option *ngFor="let op of rangos" [value]="op.clave">
+                            {{op.valor}}
+                        </mat-option>
+                    </div>
+                </mat-select>
+                <button mat-button *ngIf="rangoSel" matSuffix mat-icon-button aria-label="Clear" (click)="rangoSel=''">
+                    <mat-icon>x</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div class="col-sm-6"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <mat-form-field>
+                <input matInput [(ngModel)]="inicioSemana" type="date" [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'" (change)="cargaGrafica()">
+            </mat-form-field>
+        </div>
+        <div class="col-sm-6"></div>
+    </div>
+    <div class="row">
+        <div class="col-sem-6">
+            <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
+            <div id="MediosdPPrincipal">
+                <highcharts-chart [Highcharts]="Highcharts" [options]="graficaPrueba"
+                    style="width: 100%; height: 400px; display: block;">
+                </highcharts-chart>
+            </div>
+        </div>
+        <div class="col-sm-6"></div>
+    </div>
 </div>

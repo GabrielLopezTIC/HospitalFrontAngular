@@ -44,5 +44,9 @@ export class MenuAdmUsersComponent implements OnInit {
   }
 
 
+  roleType(){
+    return this.tokenService.getAuthorities()[0];
+  }
+
 
 }

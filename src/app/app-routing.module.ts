@@ -6,7 +6,6 @@ import { ListaUsuarioComponent } from './usuario/lista-usuario/lista-usuario.com
 import { ListaCuestionarioComponent } from './cuestionario/lista-cuestionario/lista-cuestionario.component';
 import { EditarUsuarioComponent } from './usuario/editar-usuario/editar-usuario.component';
 import { NuevoUsuarioComponent } from './usuario/nuevo-usuario/nuevo-usuario.component';
-import { AdmComponent } from './adm/adm.component';
 import { CuestionarioComponent } from './cuestionario/cuestionario.component';
 import { EditarCuestionarioComponent } from './cuestionario/editar-cuestionario/editar-cuestionario.component';
 import { ListaMedicamentoComponent } from './medicamentos/lista-medicamento/lista-medicamento.component';
@@ -28,7 +27,6 @@ const routes: Routes = [
   { path: 'nuevoUsuario', component: NuevoUsuarioComponent, canActivate: [guard], data: { expectedRol: ['admin','medico'] } },
   { path: 'nuevoMedicamento', component: NuevoMedicamentoComponent, canActivate: [guard], data: { expectedRol: ['admin'] } },
   { path: 'nuevoPadecimiento', component: NuevoPadecimientoComponent, canActivate: [guard], data: { expectedRol: ['admin'] } },
-  { path: 'administracion', component: AdmComponent, canActivate: [guard], data: { expectedRol: ['admin', 'medico'] } },
   { path: 'cuestionario', component: CuestionarioComponent, canActivate: [guard], data: { expectedRol: ['admin', 'medico', 'farmaceutico'] } },
   { path: 'estadisticas', component: EstadisticasComponent, canActivate: [guard], data: { expectedRol: ['admin','medico'] } },
   { path: '**', redirectTo: '', pathMatch: 'full' }

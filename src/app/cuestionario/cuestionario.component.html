@@ -29,8 +29,8 @@
                                     [placeholder]="lang() == 'es'? 'Genero del paciente': lang() == 'en'? 'Gender of patient' : 'Gênero do paciente'"
                                     [(ngModel)]="generoSel" name="genero" [value]="generoSel">
                                     <div>
-                                        <mat-option *ngFor="let op of genero" [value]="op">
-                                            {{op}}
+                                        <mat-option *ngFor="let op of genero" [value]="op.clave">
+                                            {{op.valor}}
                                         </mat-option>
                                     </div>
                                 </mat-select>

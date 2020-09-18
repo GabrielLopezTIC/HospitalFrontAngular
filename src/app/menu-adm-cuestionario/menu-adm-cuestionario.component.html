@@ -1,20 +1,48 @@
 <nav class="navbar navbar-expand-lg nav-bar-custom mb-4">
-    <label class="nombreUsuario" *ngIf="isLogged">
+    <span class="nombreUsuario" *ngIf="isLogged">
         <img class="img-usr" src="assets/logo-usr.png" alt="">
             {{getUser() | uppercase}}
-        </label>
+        </span>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        aria-controls="navbarNav" aria-expanded="false" aria-span="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto" *ngIf="lang() === 'es' || lang() === 'en' || lang() === 'br'">
             <li class="nav-item">
-                <a class="nav-link" routerLink="/"><i class="fa fa-home" aria-hidden="true"></i>
+                <a class="nav-link" routerLink="/cuestionario"><i class="fa fa-home" aria-hidden="true"></i>
                     Inicio</a>
             </li>
-            <li class="nav-item" *ngIf="isLogged">
-                <a class="nav-link" routerLink="/administracion"><i class="fa fa-cog"></i> Admin</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    Admin
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/listaCuestionario">
+                        <span *ngIf="lang()=='es'">Cuestionarios</span>
+                        <span *ngIf="lang()=='en'">Questionnaires</span>
+                        <span *ngIf="lang()=='br'">Questionários</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/listaUsuario">
+                        <span *ngIf="lang()=='es'">Usuarios</span>
+                        <span *ngIf="lang()=='en'">Users</span>
+                        <span *ngIf="lang()=='br'">Comercial</span>
+                    </a>
+                    <a class="dropdown-item" href="/listaPadecimiento" *ngIf="roleType()=='ROLE_ADMIN'">
+                        <span *ngIf="lang()=='es'">Padecimientos</span>
+                        <span *ngIf="lang()=='en'">Ailments</span>
+                        <span *ngIf="lang()=='br'">
+                            Doenças</span>
+                        
+                    </a>
+                    <a class="dropdown-item" href="/listaMedicamento" *ngIf="roleType()=='ROLE_ADMIN'">
+                        <span *ngIf="lang()=='es'">Medicamentos</span>
+                        <span *ngIf="lang()=='en'">Medicament</span>
+                        <span *ngIf="lang()=='br'">Medicação</span>
+                    </a>
+                </div>
             </li>
             <li class="nav-item" *ngIf="isLogged">
                 <a class="nav-link" routerLink="/listaCuestionario"><i class="fa fa-users"></i> Lista de pacientes</a>

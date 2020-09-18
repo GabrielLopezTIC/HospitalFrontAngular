@@ -3,6 +3,7 @@ import { Usuario } from 'src/app/models/usuario';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ToastrService } from 'ngx-toastr';
 import { TokenService } from 'src/app/services/token.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-lista-usuario',
@@ -22,7 +23,8 @@ export class ListaUsuarioComponent implements OnInit {
   constructor(
     private usuarioService: UsuarioService,
     private toastr: ToastrService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private language: AuthService
   ) { }
 
   ngOnInit() {
@@ -86,6 +88,7 @@ export class ListaUsuarioComponent implements OnInit {
   }
 
   buscar(){
+    if(this.roleType()=='ROLE_ADMIN'){
     this.usuarioService.details(this.nombreUsuario).subscribe(
       data => {
         this.usuarios = [];
@@ -97,6 +100,19 @@ export class ListaUsuarioComponent implements OnInit {
         });
       }
     );
+    }else{
+      this.usuarioService.detailsByMedico(this.nombreUsuario).subscribe(
+        data => {
+          this.usuarios = [];
+          this.usuarios.push(data);
+        },
+        error => {
+          this.toastr.error("Usuario no encontrado", '', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
+        }
+      );
+    }
   }
 
 
@@ -132,6 +148,10 @@ export class ListaUsuarioComponent implements OnInit {
 
   username(){
     return this.tokenService.getUserName();
+  }
+
+  public lang():string{
+    return this.language.lang();
   }
 
 }

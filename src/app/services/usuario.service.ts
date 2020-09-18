@@ -63,12 +63,24 @@ export class UsuarioService {
     return this.httpClient.put<any>(this.usuariosURL+"update/"+username,usuario);
   }
 
+  public updateByMedico(username:String, usuario: NuevoUsuario): Observable<any> {
+    return this.httpClient.put<any>(this.usuariosURL+"updateByMedico/"+username,usuario);
+  }
+
   /**
    * Devuelve un usuario mediante su nombre de usuario
    * @param username 
    */
   public details(username:String): Observable<any> {
     return this.httpClient.get<any>(this.usuariosURL+"find/"+username);
+  }
+
+  /**
+   * Devuelve un usuario mediante su nombre de usuario
+   * @param username 
+   */
+  public detailsByMedico(username:String): Observable<any> {
+    return this.httpClient.get<any>(this.usuariosURL+"findBy/medico/"+username);
   }
 
 }

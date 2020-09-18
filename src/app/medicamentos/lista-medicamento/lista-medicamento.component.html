@@ -11,23 +11,51 @@
                         <mat-icon>x</mat-icon>
                     </button>
                 </mat-form-field>
-                <button class="btn btn-success ml-2" (click)="buscar()">Buscar</button>
+                <button class="btn btn-success ml-2" (click)="buscar()">
+                    <span *ngIf="lang()=='es'">Buscar</span>
+                    <span *ngIf="lang()=='en'">Search</span>
+                    <span *ngIf="lang()=='br'">Buscar</span>
+                </button>
             </div>
 
             <div class="table-container">
                 <table class="table">
                     <thead>
                         <tr class="color-theme-green">
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Legal Basis</th>
-                            <th scope="col">RMP Version</th>
-                            <th scope="col">MRP DCP</th>
-                            <th scope="col">Riesgos importantes</th>
-                            <th scope="col">Riesgos potenciales importantes</th>
-                            <th scope="col">Informacion faltante</th>
-                            <th scope="col" *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'">Detalles
+                            <th scope="col">
+                                <span *ngIf="lang()=='es'">Nombre</span>
+                                <span *ngIf="lang()=='en'">Name</span>
+                                <span *ngIf="lang()=='br'">Nome</span>
                             </th>
-                            <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
+                            <th scope="col">
+                                <span *ngIf="lang()=='es'">Base legal</span>
+                                <span *ngIf="lang()=='en'">Legal basis</span>
+                                <span *ngIf="lang()=='br'">Base legal</span>
+                            </th>
+                            <th scope="col">
+                                RMP Version
+                            </th>
+                            <th scope="col">MRP DCP</th>
+                            <th scope="col">
+                                <span *ngIf="lang()=='es'">Riesgos importantes</span>
+                                <span *ngIf="lang()=='en'">Important risk</span>
+                                <span *ngIf="lang()=='br'">Risco importantes</span>
+                            </th>
+                            <th scope="col">
+                                <span *ngIf="lang()=='es'">Riesgos potenciales importantes</span>
+                                <span *ngIf="lang()=='en'">Important potential risk</span>
+                                <span *ngIf="lang()=='br'">Risco potencial importante</span>
+                            </th>
+                            <th scope="col">
+                                <span *ngIf="lang()=='es'">Informacion faltante</span>
+                                <span *ngIf="lang()=='en'">Missing info</span>
+                                <span *ngIf="lang()=='br'">Informação faltando</span>
+                            </th>
+                            <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">
+                                <span *ngIf="lang()=='es'">Borrar</span>
+                                <span *ngIf="lang()=='en'">Delete</span>
+                                <span *ngIf="lang()=='br'">Excluir</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,11 +73,11 @@
                             <td>{{medicamento.importantRiskEs}}</td>
                             <td>{{medicamento.importantPotentialRiskEs}}</td>
                             <td>{{medicamento.missingInfoEs}}</td>
-                            <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button
-                                    class="btn btn-outline-info"><i class="far fa-trash-alt"></i> Detalles</button></td>
-                            <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
+                           <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
                                     (click)="borrar(medicamento.productName)"><i class="far fa-trash-alt"></i>
-                                    Eliminar</button>
+                                    <span *ngIf="lang()=='es'">Borrar</span>
+                  <span *ngIf="lang()=='en'">Delete</span>
+                  <span *ngIf="lang()=='br'">Excluir</span></button>
                             </td>
                         </tr>
                     </tbody>

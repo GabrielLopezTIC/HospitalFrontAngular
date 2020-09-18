@@ -3,6 +3,7 @@ import { Padecimiento } from 'src/app/models/padecimiento';
 import { ToastrService } from 'ngx-toastr';
 import { TokenService } from 'src/app/services/token.service';
 import { PadecimientoService } from 'src/app/services/padecimiento.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-padecimiento-lista',
@@ -19,7 +20,8 @@ export class PadecimientoListaComponent implements OnInit {
   constructor(
     private padecimientoService: PadecimientoService,
     private toastr: ToastrService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private language: AuthService
   ) { }
  
   ngOnInit() {
@@ -98,5 +100,10 @@ export class PadecimientoListaComponent implements OnInit {
   roleType(): string {
     return this.tokenService.getAuthorities()[0];
   }
+
+  public lang():string{
+    return this.language.lang();
+  }
+
 
 }

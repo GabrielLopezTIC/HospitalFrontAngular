@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Cuestionario } from '../models/cuestionario';
-import { Observable } from 'rxjs';
+import { DatosGraficaToxicomaniasDTO } from '../models/datos-grafica-toxicomanias-dto'
+import { from, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -39,8 +40,8 @@ export class CuestionarioService {
    * @param size 
    * @param orderBy 
    */
-  public findAllPaginationByMedico(nombre:string,page: number, size: number, orderBy: string): Observable<Cuestionario[]> {
-    return this.httpClient.get<Cuestionario[]>(this.cuestionarioURL + "findAll/user/"+nombre+"/page/" + page + "/size/" + size + "/orderCol/" + orderBy);
+  public findAllPaginationByMedico(nombre: string, page: number, size: number, orderBy: string): Observable<Cuestionario[]> {
+    return this.httpClient.get<Cuestionario[]>(this.cuestionarioURL + "findAll/user/" + nombre + "/page/" + page + "/size/" + size + "/orderCol/" + orderBy);
   }
 
 
@@ -84,4 +85,21 @@ export class CuestionarioService {
   public details(clave: String): Observable<any> {
     return this.httpClient.get<any>(this.cuestionarioURL + "findByClave/" + clave);
   }
+
+
+  public datosGraficaToxicomaniasAdmin(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
+    return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(this.cuestionarioURL + "findDataGraphWeek/admin/date/" + fecha + "/lang/" + lenguaje);
+  }
+
+  public datosGraficaToxicomaniasMedico(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
+    return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(this.cuestionarioURL + "findDataGraphWeek/medico/date/" + fecha + "/lang/" + lenguaje);
+  }
+
+  /**
+   * Graficas mensuiales toxicomanias
+   */
+  public datosGraficaToxicomaniasMensualesAdmin(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
+    return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(this.cuestionarioURL + "findDataGraphMounth/admin/date/" + fecha + "/lang/" + lenguaje);
+  }
+
 }

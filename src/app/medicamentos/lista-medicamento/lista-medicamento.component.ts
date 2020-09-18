@@ -21,6 +21,7 @@ export class ListaMedicamentoComponent implements OnInit {
     private tokenService:TokenService,
     private medicamentoService:MedicamentoService,
     private toastr: ToastrService,
+    private language: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -100,6 +101,9 @@ export class ListaMedicamentoComponent implements OnInit {
     return this.tokenService.getAuthorities()[0];
   }
 
+  public lang():string{
+    return this.language.lang();
+  }
 
 
 

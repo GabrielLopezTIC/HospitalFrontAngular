@@ -4,23 +4,39 @@
     <div class="contenedor ml-3 mr-3">
       <div class="ml-2">
         <mat-form-field>
-          <input matInput type="text" oninput="this.value = this.value.replace(/ /g, '')" placeholder="Catalog Key"
-            [(ngModel)]="catalogKey">
+          <input matInput type="text" oninput="this.value = this.value.replace(/ /g, '')"
+            [placeholder]="lang()=='br'? 'Chave de catálogo': lang()=='en'? 'Catalog yey' : 'Clave de catalogo'" [(ngModel)]="catalogKey">
           <button mat-button *ngIf="catalogKey" matSuffix mat-icon-button aria-label="Clear" (click)="catalogKey=''">
             <mat-icon>x</mat-icon>
           </button>
         </mat-form-field>
-        <button class="btn btn-success ml-2" (click)="buscar()">Buscar</button>
+        <button class="btn btn-success ml-2" (click)="buscar()">
+          <span *ngIf="lang()=='es'">Buscar</span>
+          <span *ngIf="lang()=='en'">Search</span>
+          <span *ngIf="lang()=='br'">Buscar</span>
+        </button>
       </div>
       <div>
         <div class="table-container">
           <table class="table">
             <thead>
               <tr class="color-theme-green">
-                <th scope="col">Catalog Key</th>
-                <th scope="col">Nombre</th>
+                <th scope="col">
+                  <span *ngIf="lang()=='es'">Clave de catálogo</span>
+                  <span *ngIf="lang()=='en'">Catalog key</span>
+                  <span *ngIf="lang()=='br'">Chave de catálogo</span>
+                </th>
+                <th scope="col">
+                  <span *ngIf="lang()=='es'">Nombre</span>
+                  <span *ngIf="lang()=='en'">Name</span>
+                  <span *ngIf="lang()=='br'">Nome</span>
+                </th>
                 <th scope="col">Cie 10</th>
-                <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">Borrar</th>
+                <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">
+                  <span *ngIf="lang()=='es'">Borrar</span>
+                  <span *ngIf="lang()=='en'">Delete</span>
+                  <span *ngIf="lang()=='br'">Excluir</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -34,7 +50,10 @@
                 <td>{{pade.nombreEs}}</td>
                 <td>{{pade.cie10Es}}</td>
                 <td *ngIf="roleType() == 'ROLE_ADMIN'"><button (click)="borrar(pade.catalogKey)"
-                    class="btn btn-outline-danger"><i class="far fa-trash-alt"></i> Eliminar</button></td>
+                    class="btn btn-outline-danger"><i class="far fa-trash-alt"></i><span
+                      *ngIf="lang()=='es'">Borrar</span>
+                    <span *ngIf="lang()=='en'">Delete</span>
+                    <span *ngIf="lang()=='br'">Excluir</span></button></td>
               </tr>
             </tbody>
           </table>
