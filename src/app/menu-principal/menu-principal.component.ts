@@ -10,11 +10,13 @@ import { Router } from '@angular/router';
 })
 export class MenuPrincipalComponent implements OnInit {
 
+  tipoUsuario: string = this.roleType() == 'ROLE_MEDICO' ? "assets/logo-med.png" : this.roleType() == 'ROLE_ADMIN' ? "assets/logo-adm.png" :
+    "assets/logo-farm.png";
   isLogged = false;
 
   constructor(private tokenService: TokenService,
-  private language: AuthService,
-  private router:Router
+    private language: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -30,16 +32,16 @@ export class MenuPrincipalComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
-  public lang():string{
+  public lang(): string {
     return this.language.lang();
   }
 
 
-  roleType():string{
+  roleType(): string {
     return this.tokenService.getAuthorities()[0];
   }
 
-  getUser():string{
+  getUser(): string {
     return this.tokenService.getUserName();
   }
 

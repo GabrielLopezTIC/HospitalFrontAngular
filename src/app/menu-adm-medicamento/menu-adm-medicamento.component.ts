@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 })
 export class MenuAdmMedicamentoComponent implements OnInit {
 
+  tipoUsuario: string = this.roleType() == 'ROLE_MEDICO' ? "assets/logo-med.png" : this.roleType() == 'ROLE_ADMIN' ? "assets/logo-adm.png" :
+    "assets/logo-farm.png";
   isLogged = false;
   nombreUsuario = '';
 

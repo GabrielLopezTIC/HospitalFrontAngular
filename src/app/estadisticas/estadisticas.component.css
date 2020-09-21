@@ -2,3 +2,12 @@
     width: 500px;
     height: 300px;
 }
+
+.iniFiltro{
+    width: 100%;
+  }
+
+  .filterInput{
+    width: 80%;
+  }
+

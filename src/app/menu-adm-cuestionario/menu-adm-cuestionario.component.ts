@@ -9,7 +9,8 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./menu-adm-cuestionario.component.css']
 })
 export class MenuAdmCuestionarioComponent implements OnInit {
-
+  tipoUsuario: string = this.roleType() == 'ROLE_MEDICO' ? "assets/logo-med.png" : this.roleType() == 'ROLE_ADMIN' ? "assets/logo-adm.png" :
+  "assets/logo-farm.png";
   isLogged = false;
   nombreUsuario = '';
 
