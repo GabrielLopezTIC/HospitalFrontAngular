@@ -84,6 +84,7 @@ PdfMakeWrapper.setFonts(pdfFonts);
     NuevoPadecimientoComponent,
     MenuPadecimientoComponent,
     NuevoPadecimientoComponent
+    
   ],
   imports: [
     BrowserModule,

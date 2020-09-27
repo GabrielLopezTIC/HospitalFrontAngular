@@ -41,7 +41,7 @@ export class CuestionarioComponent implements OnInit {
   isLogged = false;
   turno: string;
   ///////////////////////////////////////genero
- /* generoEs = ['H', 'M'];
+ /* generoEs = ['H', 'M'];          
   generoEn = ['M', 'F'];
   generoBr = ['H', 'M'];
   genero: string[] = this.lang() === "es" ? this.generoEs : this.lang() === "en" ? this.generoEn : this.generoBr;*/

@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { map, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { DatosGraficaPadecimientoDto } from '../models/datos-grafica-padecimiento-dto';
 
 
 @Component({
@@ -55,7 +56,7 @@ export class EstadisticasComponent implements OnInit {
 
 
   datosGraficaToxicomanias: DatosGraficaToxicomaniasDTO[];
-
+  datosGraficaPadecimientos: DatosGraficaPadecimientoDto;
 
 
 
@@ -72,8 +73,7 @@ export class EstadisticasComponent implements OnInit {
 
   ngOnInit() {
     this.cargaGrafica();
-    this.creaGraficaPastel();
-    this.creaGraficaCombinada();
+    this.cargarGraficaPade();
     this.cargarPadecimientos("A");
   }
 
@@ -186,139 +186,109 @@ export class EstadisticasComponent implements OnInit {
       }
     }
 
-   
+
   }
 
-
-  creaGraficaPastel() {
-
-    this.series = [{
-      name: 'Brands',
-      colorByPoint: true,
-      data: [{
-        name: 'OTRAS',
-        y: 61.41,
-        sliced: true,
-        selected: true
-      }, {
-        name: 'ACTINOMICOSIS',
-        y: 11.84
-      }, {
-        name: 'BOLUTISMO',
-        y: 10.85
-      }, {
-        name: 'RETRASO MENTAL PROFUNDO',
-        y: 4.67
-      }, {
-        name: 'TULAREMIA',
-        y: 4.18
-      }, {
-        name: 'TUBERCULOSIS DEL OIDO',
-        y: 1.64
-      }, {
-        name: 'TETANOS OBSTETRICO',
-        y: 1.6
-      }, {
-        name: 'HEPATITIS AGUDA TIPO B',
-        y: 1.2
-      }, {
-        name: 'HEPATITIS CRONICA',
-        y: 2.61
-      }]
-    }]
-
-
-    this.graficaPastel =  {
-      title: {
-        text: 'Resumen semanal padecimientos'
-      },
-      chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
-      },
-      tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-      },
-      accessibility: {
-        point: {
-          valueSuffix: '%'
+  seriesPade: any[];
+  creaGraficaPade( datos:DatosGraficaPadecimientoDto) {
+    console.log(datos.total)
+    /*let datos = {
+      datos: [
+        {
+          fecha: "2020-09-21",
+          hombres: 3,
+          mujeres: 2
+        },
+        {
+          fecha: "2020-09-22",
+          hombres: 2,
+          mujeres: 3
+        },
+        {
+          fecha: "2020-09-23",
+          hombres: 1,
+          mujeres: 5
+        },
+        {
+          fecha: "2020-09-24",
+          hombres: 3,
+          mujeres: 7
+        },
+        {
+          fecha: "2020-09-25",
+          hombres: 4,
+          mujeres: 6
+        },
+        {
+          fecha: "2020-09-26",
+          hombres: 6,
+          mujeres: 3
+        },
+        {
+          fecha: "2020-09-27",
+          hombres: 7,
+          mujeres: 1
         }
-      },
-      plotOptions: {
-        pie: {
-          allowPointSelect: true,
-          cursor: 'pointer',
-          dataLabels: {
-            enabled: true,
-            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-          }
-        }
-      },
-      series: this.series
-    };
+      ],
 
-    
-  }
+      total: [26, 27]
 
+    }*/
 
-creaGraficaCombinada(){
-  this.graficaCombinada = {
-    title: {
-        text: "Resumen semanal padecimiento "+this.selPade
-    },
-    xAxis: {
-      title: {
-        text: "Fecha"
-      },
-        categories: ['2020-09-21', '2020-09-21', '2020-09-21', '2020-09-21', '2020-09-21','2020-09-21','2020-09-21']
-    },
-    yAxis:{
-      title: {
-        text: "Pacientes"
-      }
-    },
-    series: [{
-        type: 'column',
-        name: 'Hombres',
-        color: 'red',
-        data: [3, 2, 1, 3, 4]
+    this.seriesPade = [{
+      type: 'column',
+      name: 'Hombres',
+      color: 'red',
+      data: [datos.datos[0].hombres,datos.datos[1].hombres,datos.datos[2].hombres,
+      datos.datos[3].hombres,datos.datos[4].hombres,datos.datos[5].hombres,datos.datos[6].hombres]
     }, {
-        type: 'column',
+      type: 'column',
+      name: 'Mujeres',
+      color: 'blue',
+      data: [datos.datos[0].mujeres,datos.datos[1].mujeres,datos.datos[2].mujeres,
+      datos.datos[3].mujeres,datos.datos[4].mujeres,datos.datos[5].mujeres,datos.datos[6].mujeres]
+    }, {
+      type: 'pie',
+      name: 'Pacientes totales',
+      data: [{
+        name: 'Hombres',
+        y: datos.total[0],
+        color: 'red'//Highcharts.getOptions().colors[0] 
+      }, {
         name: 'Mujeres',
-        color: 'blue',
-        data: [2, 3, 5, 7, 6]
-    }/*,  {
-        type: 'spline',
-        name: 'Average',
-        data: [3, 2.67, 3, 6.33, 3.33],
-        marker: {
-            lineWidth: 2,
-            lineColor: Highcharts.getOptions().colors[3],
-            fillColor: 'white'
+        y: datos.total[1],
+        color: 'blue'//Highcharts.getOptions().colors[2] 
+      }],
+      center:datos.total,
+      size: [100,80],
+      showInLegend: false,
+      dataLabels: {
+        enabled: false
+      }
+    }];
+
+
+    /////////////////////////////////////////////////////////////////////
+
+    this.graficaCombinada = {
+      title: {
+        text: "Resumen semanal padecimiento " + this.selPade
+      },
+      xAxis: {
+        title: {
+          text: "Fecha"
+        },
+        categories: [datos.datos[0].fecha,datos.datos[1].fecha,datos.datos[2].fecha,
+        datos.datos[3].fecha,datos.datos[4].fecha,datos.datos[5].fecha,datos.datos[6].fecha]
+      },
+      yAxis: {
+        title: {
+          text: "Pacientes"
         }
-    }*/, {
-        type: 'pie',
-        name: 'Pacientes totales',
-        data: [{
-            name: 'Hombres',
-            y: 13,
-            color: 'red'//Highcharts.getOptions().colors[0] 
-        }, {
-            name: 'Mujeres',
-            y: 19,
-            color: 'blue'//Highcharts.getOptions().colors[2] 
-        }],
-        center: [100, 80],
-        size: 100,
-        showInLegend: false,
-        dataLabels: {
-            enabled: false
-        }
-    }]
-};
-}
+      },
+      series: this.seriesPade
+    };
+  }
 
 
 
@@ -327,8 +297,55 @@ creaGraficaCombinada(){
 
 
 
-cargarGraficaPade():void{
+  cargarGraficaPade(): void {
+    if (this.rangoPadeSel == "S") {
+      if (this.roleType() == "ROLE_ADMIN") {
+        this.cuestService.datosGraficaPadecimientosSemanalesAdmin(this.inicioSemanaPade,this.selPade).subscribe(
+          data => {
+            console.log(data);
+            this.datosGraficaPadecimientos = data;
+            this.creaGraficaPade(this.datosGraficaPadecimientos);
+          },
+          error => {
+            console.log("error");
+          }
+        );
+      }
+      if (this.roleType() == "ROLE_MEDICO") {
+        this.cuestService.datosGraficaPadecimientosSemanalesMedico(this.inicioSemanaPade,this.selPade).subscribe(
+          data => {
+           console.log(data);
+          },
+          error => {
+            console.log("error");
+          }
+        );
+      }
+    }
+    if (this.rangoPadeSel == "M") {
+      if (this.roleType() == "ROLE_ADMIN") {
+        this.cuestService.datosGraficaPadecimientosMensualesAdmin(this.inicioSemanaPade, this.selPade).subscribe(
+          data => {
+            console.log(data);
+          },
+          error => {
+            console.log("error");
+          }
+        );
+      }
+      if (this.roleType() == "ROLE_MEDICO") {
+        this.cuestService.datosGraficaPadecimientosMensualesMedico(this.inicioSemanaPade, this.selPade).subscribe(
+          data => {
+           console.log(data);
+          },
+          error => {
+            console.log("error");
+          }
+        );
+    }
 
+
+  }
 }
 
 
@@ -341,7 +358,6 @@ cargarGraficaPade():void{
 
   cargaGrafica(): void {
 
-    console.log(this.inicioSemana);
     this.cargando = true;
 
     if (this.rangoSel == "S") {
@@ -383,12 +399,25 @@ cargarGraficaPade():void{
           }
         );
       }
+      if (this.roleType() == "ROLE_MEDICO") {
+        console.log("medico")
+        this.cuestService.datosGraficaToxicomaniasMensualesMedico(this.inicioSemana, this.lang()).subscribe(
+          data => {
+            console.log(data);
+            this.datosGraficaToxicomanias = data;
+            this.grafica(this.datosGraficaToxicomanias);
+            this.cargando = false;
+          },
+          error => {
+            console.log("error");
+          }
+        );
     }
 
   }
 
 
-
+  }
 
 
 
@@ -405,14 +434,14 @@ cargarGraficaPade():void{
     return this.optionsPade.filter(option => option.includes(value));
   }
   cargarPadecimientos(letra: string) {
-    this.lang() === "es"? this.myControlPade.setValue("Buscando...") : this.lang() === "en"?  this.myControlPade.setValue("Searching...") : this.myControlPade.setValue("Procurando...");
+    this.lang() === "es" ? this.myControlPade.setValue("Buscando...") : this.lang() === "en" ? this.myControlPade.setValue("Searching...") : this.myControlPade.setValue("Procurando...");
 
     this.myControlPade.disable();
     this.optionsPade = [];
     this.padecimientoService.findAllIniciaCon(letra, this.lang()).subscribe(
       data => {
         data.forEach(padecimiento => {
-          this.lang() == "es"? this.optionsPade.push(padecimiento.nombreEs) : this.lang() == "en"? this.optionsPade.push(padecimiento.nombreEn) : this.optionsPade.push(padecimiento.nombreBr);
+          this.lang() == "es" ? this.optionsPade.push(padecimiento.nombreEs) : this.lang() == "en" ? this.optionsPade.push(padecimiento.nombreEn) : this.optionsPade.push(padecimiento.nombreBr);
 
         });
         this.filteredOptionsPade = this.myControlPade.valueChanges.pipe(
