@@ -19,6 +19,9 @@ th {
 .contenedor{
   background-color: white;
   border-radius: 5px;
+  -webkit-box-shadow: 7px 7px 27px 2px rgba(0,0,0,0.5);
+  -moz-box-shadow: 7px 7px 27px 2px rgba(0,0,0,0.5);
+  box-shadow: 7px 7px 27px 2px rgba(0,0,0,0.5);
 }
 
 
@@ -27,4 +30,14 @@ th {
   height: 300px;
   overflow: auto;
   margin: 0 auto;
+}
+
+.wrapper {
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  
+}
+.inner {
+  padding: 12px;
 }

@@ -22,6 +22,19 @@ import { DatosGraficaPadecimientoDto } from '../models/datos-grafica-padecimient
 
 export class EstadisticasComponent implements OnInit {
 
+  /////////////////////////////////activa / desactiva linea de carga graficas
+  cargando: boolean = false;
+  cargandoPade: boolean = false;
+
+  //////////////////////////////////labels emanal y mensual
+  semanal = this.lang() == 'br' ? 'SEMANAL' : this.lang() == 'en' ? 'WEEKLY' : 'SEMANAL';
+  mensual = this.lang() == 'br' ? 'POR MÊS' : this.lang() == 'en' ? 'MONTHLY' : 'MENSUAL';
+
+  ////////////////////////////////////////Toxicomanias
+  rangos: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }];
+  rangoSel: string = "S";
+  inicioSemana: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
+
   ///////////////////////////////////Padecimientos
   iniPade: string;
   myControlPade = new FormControl();
@@ -30,20 +43,6 @@ export class EstadisticasComponent implements OnInit {
   selPade: string; // variable que guarda el padecimiento elegido
   padecimientosList = []; //lista que guarda los padecimientos elegidos momentaneamente
   inicialesPade: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-
-
-
-
-
-  cargando: boolean = true;
-
-  semanal = this.lang() == 'br' ? 'SEMANAL' : this.lang() == 'en' ? 'WEEKLY' : 'SEMANAL';
-  mensual = this.lang() == 'br' ? 'POR MÊS' : this.lang() == 'en' ? 'MONTHLY' : 'MENSUAL';
-
-  rangos: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }];
-  rangoSel: string = "S";
-  series: any;
-  inicioSemana: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
   rangosPade: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }];
   rangoPadeSel: string = "S";
@@ -59,9 +58,6 @@ export class EstadisticasComponent implements OnInit {
   datosGraficaPadecimientos: DatosGraficaPadecimientoDto;
 
 
-
-
-
   constructor(protected userService: UsuarioService,
     protected cuestService: CuestionarioService,
     protected authService: AuthService,
@@ -72,16 +68,165 @@ export class EstadisticasComponent implements OnInit {
 
 
   ngOnInit() {
-    this.cargaGrafica();
-    this.cargarGraficaPade();
+    this.cargaGraficaToxic();
+    //this.cargarGraficaPade();
     this.cargarPadecimientos("A");
   }
 
 
 
-  public grafica(listaDatos: DatosGraficaToxicomaniasDTO[]): void {
 
-    this.series = [{
+  seriesPade: any[] = [];
+  creaGraficaPade(datos: DatosGraficaPadecimientoDto): void {
+
+    let datosHombre = [];
+    let datosMujer = [];
+    let categorias = [];
+
+    if (this.rangoPadeSel == "S") { // grafica semanal
+      // labels de las fechas
+      categorias = [datos.datos[0].fecha, datos.datos[1].fecha, datos.datos[2].fecha,
+      datos.datos[3].fecha, datos.datos[4].fecha, datos.datos[5].fecha, datos.datos[6].fecha];
+      // datos de hombres
+      datosHombre = [datos.datos[0].hombres, datos.datos[1].hombres, datos.datos[2].hombres,
+      datos.datos[3].hombres, datos.datos[4].hombres, datos.datos[5].hombres, datos.datos[6].hombres];
+      //datos de mujeres
+      datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
+      datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
+    } else { // grafica mensual
+      //label de fechas;
+      categorias = [datos.datos[0].fecha, datos.datos[1].fecha, datos.datos[2].fecha,
+      datos.datos[3].fecha];
+      //datos de hombres
+      datosHombre = [datos.datos[0].hombres, datos.datos[1].hombres, datos.datos[2].hombres,
+      datos.datos[3].hombres];
+      //datos mujeres
+      datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
+      datos.datos[3].mujeres];
+    }
+
+
+    let hombres = this.lang()=='en'? "Mens": this.lang()=='br'? "Masculino" : "Hombres";
+    let mujeres =   this.lang()=='en'? "Women": this.lang()=='br'? "Mulheres" : "Mujeres";
+    let total = this.lang()=='en'? "Total patients": this.lang()=='br'? "Pacientes totais" : "Pacientes totales";
+
+    this.seriesPade = [{
+      type: 'column',
+      name: hombres,
+      color: 'red',
+      data: datosHombre
+    }, {
+      type: 'column',
+      name: mujeres,
+      color: 'blue',
+      data: datosMujer
+    }, {
+      type: 'pie',
+      name: total,
+      data: [{
+        name: hombres,
+        y: datos.total[0],
+        color: 'red'//Highcharts.getOptions().colors[0] 
+      }, {
+        name: mujeres,
+        y: datos.total[1],
+        color: 'blue'//Highcharts.getOptions().colors[2] 
+      }],
+      center: datos.total,
+      size: [100, 80],
+      showInLegend: false,
+      dataLabels: {
+        enabled: false
+      }
+    }]
+
+    let title = this.lang()=='en'? "Weekly disease summary ": this.lang()=='br'? "Resumo semanal da doença " : "Resumen semanal padecimiento ";
+    let fecha = this.lang()=='en'? "Date": this.lang()=='br'? "Data" : "Fecha";
+    let pacientes = this.lang()=='en'? "Patients": this.lang()=='br'? "Pacientes" : "Pacientes";
+    
+
+    this.graficaCombinada = {
+      title: {
+        text: title + this.selPade
+      },
+      xAxis: {
+        title: {
+          text: fecha
+        },
+        categories: categorias
+      },
+      yAxis: {
+        title: {
+          text: pacientes
+        }
+      },
+      series: this.seriesPade
+    };
+  }
+
+
+
+  cargarGraficaPade(): void {
+    this.cargandoPade = true; // activa la animacion de carga
+    if (this.rangoPadeSel == "S") { // grafica semanañl
+      if (this.roleType() == "ROLE_ADMIN") {
+        this.cuestService.datosGraficaPadecimientosSemanalesAdmin(this.inicioSemanaPade, this.selPade).subscribe(
+          data => {
+            this.creaGraficaPade(data);
+            this.cargandoPade = false; // desactiva la animacion de carga
+          },
+          error => {
+            this.cargandoPade = false;
+          }
+        );
+      }
+      if (this.roleType() == "ROLE_MEDICO") {
+        this.cuestService.datosGraficaPadecimientosSemanalesMedico(this.inicioSemanaPade, this.selPade).subscribe(
+          data => {
+            this.creaGraficaPade(data);
+            console.log(data);
+            this.cargandoPade = false;
+          },
+          error => {
+            this.cargandoPade = false;
+          }
+        );
+      }
+    }
+    if (this.rangoPadeSel == "M") { // mensual
+      if (this.roleType() == "ROLE_ADMIN") {
+        this.cuestService.datosGraficaPadecimientosMensualesAdmin(this.inicioSemanaPade, this.selPade).subscribe(
+          data => {
+            console.log("admin mensual")
+            this.creaGraficaPade(data);
+            console.log(data);
+            this.cargandoPade = false;
+          },
+          error => {
+            this.cargandoPade = false;
+          }
+        );
+      }
+      if (this.roleType() == "ROLE_MEDICO") {
+        this.cuestService.datosGraficaPadecimientosMensualesMedico(this.inicioSemanaPade, this.selPade).subscribe(
+          data => {
+            console.log("medico mensual")
+            this.creaGraficaPade(data);
+            this.cargandoPade = false;
+          },
+          error => {
+            this.cargandoPade = false;
+          }
+        );
+      }
+    }
+  }
+
+
+  seriesToxic: any[] = [];
+  graficaToxic(listaDatos: DatosGraficaToxicomaniasDTO[]): void {
+
+    this.seriesToxic = [{
       name: listaDatos[0].toxicomanias[0].nombre,
       data: [],
       type: 'column'
@@ -140,7 +285,7 @@ export class EstadisticasComponent implements OnInit {
           stacking: 'percent'
         }
       },
-      series: this.series,
+      series: this.seriesToxic,
       lang: {
         noData: 'https://www.highcharts.com/samples/graphics/sun.png'
       },
@@ -188,245 +333,58 @@ export class EstadisticasComponent implements OnInit {
 
 
   }
-
-  seriesPade: any[];
-  creaGraficaPade( datos:DatosGraficaPadecimientoDto) {
-    console.log(datos.total)
-    /*let datos = {
-      datos: [
-        {
-          fecha: "2020-09-21",
-          hombres: 3,
-          mujeres: 2
-        },
-        {
-          fecha: "2020-09-22",
-          hombres: 2,
-          mujeres: 3
-        },
-        {
-          fecha: "2020-09-23",
-          hombres: 1,
-          mujeres: 5
-        },
-        {
-          fecha: "2020-09-24",
-          hombres: 3,
-          mujeres: 7
-        },
-        {
-          fecha: "2020-09-25",
-          hombres: 4,
-          mujeres: 6
-        },
-        {
-          fecha: "2020-09-26",
-          hombres: 6,
-          mujeres: 3
-        },
-        {
-          fecha: "2020-09-27",
-          hombres: 7,
-          mujeres: 1
-        }
-      ],
-
-      total: [26, 27]
-
-    }*/
-
-    this.seriesPade = [{
-      type: 'column',
-      name: 'Hombres',
-      color: 'red',
-      data: [datos.datos[0].hombres,datos.datos[1].hombres,datos.datos[2].hombres,
-      datos.datos[3].hombres,datos.datos[4].hombres,datos.datos[5].hombres,datos.datos[6].hombres]
-    }, {
-      type: 'column',
-      name: 'Mujeres',
-      color: 'blue',
-      data: [datos.datos[0].mujeres,datos.datos[1].mujeres,datos.datos[2].mujeres,
-      datos.datos[3].mujeres,datos.datos[4].mujeres,datos.datos[5].mujeres,datos.datos[6].mujeres]
-    }, {
-      type: 'pie',
-      name: 'Pacientes totales',
-      data: [{
-        name: 'Hombres',
-        y: datos.total[0],
-        color: 'red'//Highcharts.getOptions().colors[0] 
-      }, {
-        name: 'Mujeres',
-        y: datos.total[1],
-        color: 'blue'//Highcharts.getOptions().colors[2] 
-      }],
-      center:datos.total,
-      size: [100,80],
-      showInLegend: false,
-      dataLabels: {
-        enabled: false
-      }
-    }];
-
-
-    /////////////////////////////////////////////////////////////////////
-
-    this.graficaCombinada = {
-      title: {
-        text: "Resumen semanal padecimiento " + this.selPade
-      },
-      xAxis: {
-        title: {
-          text: "Fecha"
-        },
-        categories: [datos.datos[0].fecha,datos.datos[1].fecha,datos.datos[2].fecha,
-        datos.datos[3].fecha,datos.datos[4].fecha,datos.datos[5].fecha,datos.datos[6].fecha]
-      },
-      yAxis: {
-        title: {
-          text: "Pacientes"
-        }
-      },
-      series: this.seriesPade
-    };
-  }
-
-
-
-
-
-
-
-
-  cargarGraficaPade(): void {
-    if (this.rangoPadeSel == "S") {
-      if (this.roleType() == "ROLE_ADMIN") {
-        this.cuestService.datosGraficaPadecimientosSemanalesAdmin(this.inicioSemanaPade,this.selPade).subscribe(
-          data => {
-            console.log(data);
-            this.datosGraficaPadecimientos = data;
-            this.creaGraficaPade(this.datosGraficaPadecimientos);
-          },
-          error => {
-            console.log("error");
-          }
-        );
-      }
-      if (this.roleType() == "ROLE_MEDICO") {
-        this.cuestService.datosGraficaPadecimientosSemanalesMedico(this.inicioSemanaPade,this.selPade).subscribe(
-          data => {
-           console.log(data);
-          },
-          error => {
-            console.log("error");
-          }
-        );
-      }
-    }
-    if (this.rangoPadeSel == "M") {
-      if (this.roleType() == "ROLE_ADMIN") {
-        this.cuestService.datosGraficaPadecimientosMensualesAdmin(this.inicioSemanaPade, this.selPade).subscribe(
-          data => {
-            console.log(data);
-          },
-          error => {
-            console.log("error");
-          }
-        );
-      }
-      if (this.roleType() == "ROLE_MEDICO") {
-        this.cuestService.datosGraficaPadecimientosMensualesMedico(this.inicioSemanaPade, this.selPade).subscribe(
-          data => {
-           console.log(data);
-          },
-          error => {
-            console.log("error");
-          }
-        );
-    }
-
-
-  }
-}
-
-
-
-
-
-
-
-
-
-  cargaGrafica(): void {
-
-    this.cargando = true;
-
-    if (this.rangoSel == "S") {
+  cargaGraficaToxic(): void {
+    this.cargando = true; // inicia animacion de cargando
+    if (this.rangoSel == "S") { // si la grafica sera semanal
       if (this.roleType() == "ROLE_ADMIN") {
         this.cuestService.datosGraficaToxicomaniasAdmin(this.inicioSemana, this.lang()).subscribe(
           data => {
-            this.datosGraficaToxicomanias = data;
-            this.grafica(this.datosGraficaToxicomanias);
-            this.cargando = false;
+            this.graficaToxic(data); // genera la grafica
+            this.cargando = false; // desactiva la animacion de carga
           },
           error => {
-            console.log("error");
+            this.cargando = false; // desactiva la animacion de carga
           }
         );
       }
       if (this.roleType() == "ROLE_MEDICO") {
         this.cuestService.datosGraficaToxicomaniasMedico(this.inicioSemana, this.lang()).subscribe(
           data => {
-            this.datosGraficaToxicomanias = data;
-            this.grafica(this.datosGraficaToxicomanias);
+            this.graficaToxic(data);
             this.cargando = false;
           },
           error => {
-            console.log("error");
+            this.cargando = false;
           }
         );
       }
     }
-    if (this.rangoSel == "M") {
+    if (this.rangoSel == "M") { // si la grafica sera mensual
       if (this.roleType() == "ROLE_ADMIN") {
         this.cuestService.datosGraficaToxicomaniasMensualesAdmin(this.inicioSemana, this.lang()).subscribe(
           data => {
-            this.datosGraficaToxicomanias = data;
-            this.grafica(this.datosGraficaToxicomanias);
+            this.graficaToxic(data);
             this.cargando = false;
           },
           error => {
-            console.log("error");
+            this.cargando = false;
           }
         );
       }
       if (this.roleType() == "ROLE_MEDICO") {
-        console.log("medico")
         this.cuestService.datosGraficaToxicomaniasMensualesMedico(this.inicioSemana, this.lang()).subscribe(
           data => {
-            console.log(data);
-            this.datosGraficaToxicomanias = data;
-            this.grafica(this.datosGraficaToxicomanias);
+            this.graficaToxic(data);
             this.cargando = false;
           },
           error => {
-            console.log("error");
+            this.cargando = false;
           }
         );
+      }
+
     }
-
   }
-
-
-  }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -435,14 +393,12 @@ export class EstadisticasComponent implements OnInit {
   }
   cargarPadecimientos(letra: string) {
     this.lang() === "es" ? this.myControlPade.setValue("Buscando...") : this.lang() === "en" ? this.myControlPade.setValue("Searching...") : this.myControlPade.setValue("Procurando...");
-
     this.myControlPade.disable();
     this.optionsPade = [];
     this.padecimientoService.findAllIniciaCon(letra, this.lang()).subscribe(
       data => {
         data.forEach(padecimiento => {
           this.lang() == "es" ? this.optionsPade.push(padecimiento.nombreEs) : this.lang() == "en" ? this.optionsPade.push(padecimiento.nombreEn) : this.optionsPade.push(padecimiento.nombreBr);
-
         });
         this.filteredOptionsPade = this.myControlPade.valueChanges.pipe(
           startWith(''),

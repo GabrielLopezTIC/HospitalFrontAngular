@@ -118,20 +118,20 @@ export class CuestionarioService {
     return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(this.cuestionarioURL + "findDataGraphMounth/medico/date/" + fecha + "/lang/" + lenguaje);
   }
 
-
+////////////////////////////////////////////////////////////////////PAdecimientoa
   
   /**
    * Graficas mensuiales padecimientos para admin
    */
   public datosGraficaPadecimientosMensualesAdmin(fecha: string, pade: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphWeek/admin/date/"+fecha+"/pade/"+pade);
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphMounth/admin/date/"+fecha+"/pade/"+pade);
   }
 
   /**
    * Graficas mensuiales padecimientos para medicos
    */
   public datosGraficaPadecimientosMensualesMedico(fecha: string, pade: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphWeek/admin/date/"+fecha+"/pade/"+pade);
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphMounth/admin/date/"+fecha+"/pade/"+pade);
   }
 
    /**
@@ -145,7 +145,7 @@ export class CuestionarioService {
    * Graficas semanaes padecimientos para medicos
    */
   public datosGraficaPadecimientosSemanalesMedico(fecha: string, pade: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphWeek/admin/date/"+fecha+"/pade/"+pade);
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphWeek/medico/date/"+fecha+"/pade/"+pade);
   }
 
 }

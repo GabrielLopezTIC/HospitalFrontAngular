@@ -1,40 +1,40 @@
 <app-menu-adm-cuestionario></app-menu-adm-cuestionario>
-
-
-
 <div class="row">
     <div class="col-sm-6">
-        <div class="row">
-            <div class="col-sm-6">
-                <mat-form-field>
-                    <mat-select matSelect
-                        [placeholder]="lang()=='br'? 'Intervalo de resumo': lang()=='en'? 'Summary range' : 'Rango Resumen'"
-                        [(ngModel)]="rangoSel" name="rangoSel" [value]="rangoSel" (selectionChange)="cargaGrafica()">
-                        <div>
-                            <mat-option *ngFor="let op of rangos" [value]="op.clave">
-                                {{op.valor}}
-                            </mat-option>
-                        </div>
-                    </mat-select>
-                    <button mat-button *ngIf="rangoSel" matSuffix mat-icon-button aria-label="Clear"
-                        (click)="rangoSel=''">
-                        <mat-icon>x</mat-icon>
-                    </button>
-                </mat-form-field>
+        <div class="panelGraficaToxic">
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field>
+                        <mat-select matSelect
+                            [placeholder]="lang()=='br'? 'Intervalo de resumo': lang()=='en'? 'Summary range' : 'Rango Resumen'"
+                            [(ngModel)]="rangoSel" name="rangoSel" [value]="rangoSel"
+                            (selectionChange)="cargaGraficaToxic()">
+                            <div>
+                                <mat-option *ngFor="let op of rangos" [value]="op.clave">
+                                    {{op.valor}}
+                                </mat-option>
+                            </div>
+                        </mat-select>
+                        <button mat-button *ngIf="rangoSel" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="rangoSel=''">
+                            <mat-icon>x</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                    <mat-form-field>
+                        <input matInput [(ngModel)]="inicioSemana" type="date"
+                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'"
+                            (change)="cargaGraficaToxic()">
+                    </mat-form-field>
+                </div>
             </div>
-            <div class="col-sm-6">
-                <mat-form-field>
-                    <input matInput [(ngModel)]="inicioSemana" type="date"
-                        [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'"
-                        (change)="cargaGrafica()">
-                </mat-form-field>
+            <div>
+                <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
+                <highcharts-chart [Highcharts]="Highcharts" [options]="graficaPrueba"
+                    style="width: 100%; height: 400px; display: block;">
+                </highcharts-chart>
             </div>
-        </div>
-        <div>
-            <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
-            <highcharts-chart [Highcharts]="Highcharts" [options]="graficaPrueba"
-                style="width: 100%; height: 400px; display: block;">
-            </highcharts-chart>
         </div>
     </div>
     <div class="col-sm-6">
@@ -61,8 +61,7 @@
                 <div class="col-sm-4">
                     <mat-form-field>
                         <input matInput [(ngModel)]="inicioSemanaPade" type="date"
-                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'"
-                            (change)="cargarGraficaPade()">
+                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'">
                     </mat-form-field>
                 </div>
                 <div class="col-sm-4">
@@ -106,96 +105,12 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="row">
                 <div>
+                    <mat-progress-bar *ngIf="cargandoPade" mode="indeterminate"></mat-progress-bar>
                     <highcharts-chart [Highcharts]="Highcharts" [options]="graficaCombinada"
                         style="width: 100%; height: 400px; display: block;">
                     </highcharts-chart>
-                </div>
             </div>
         </div>
     </div>
-</div> 
-<!--<div class="row">
-    <div class="col-sm-6">
-        <div class="panelGraficaPade">
-            <div class="row">
-                <div class="col-sm-4">
-                    <mat-form-field>
-                        <mat-select matSelect
-                            [placeholder]="lang()=='br'? 'Intervalo de resumo': lang()=='en'? 'Summary range' : 'Rango Resumen'"
-                            [(ngModel)]="rangoPadeSel" name="rangoPadeSel" [value]="rangoPadeSel"
-                            (selectionChange)="cargarGraficaPade()">
-                            <div>
-                                <mat-option *ngFor="let op of rangosPade" [value]="op.clave">
-                                    {{op.valor}}
-                                </mat-option>
-                            </div>
-                        </mat-select>
-                        <button mat-button *ngIf="rangoPadeSel" matSuffix mat-icon-button aria-label="Clear"
-                            (click)="rangoPadeSel=''">
-                            <mat-icon>x</mat-icon>
-                        </button>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-4">
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="inicioSemanaPade" type="date"
-                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'"
-                            (change)="cargarGraficaPade()">
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-4">
-                    <button class="btn btn-outline-success" (click)="creaGraficaCombinada()">
-                        <label *ngIf="lang() === 'es'">Mostrar</label>
-                        <label *ngIf="lang() === 'en'">Show</label>
-                        <label *ngIf="lang() === 'br'">Mostrar</label>
-                    </button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <mat-form-field class="iniFiltro">
-                        <mat-select matSelect [placeholder]="lang() == 'es'? 'Letra' : 
-                        lang() == 'en'? 'Letter' : 'Carta' " [(ngModel)]="iniPade" name="iniPade" [value]="iniPade"
-                            (selectionChange)="cargarPadecimientos(iniPade)">
-                            <mat-option *ngFor="let op of inicialesPade" [value]="op">
-                                {{op}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-10">
-                    <mat-form-field class="example-full-width filterInput">
-                        <input type="text" [placeholder]="lang() == 'es'? 'Diagnostico' : 
-                        lang() == 'en'? 'Diagnostic' : 'Diagnóstico' " aria-label="Number" matInput
-                            [formControl]="myControlPade" [matAutocomplete]="autoPade" [(ngModel)]="selPade"
-                            oninput="this.value = this.value.toUpperCase()">
-                        <mat-spinner *ngIf="optionsPade.length === 0" matSuffix [diameter]="18"
-                            style="float: right; margin-left: 8px"></mat-spinner>
-                        <button mat-button *ngIf="selPade" matSuffix mat-icon-button aria-label="Clear"
-                            (click)="selPade=''">
-                            <mat-icon>x</mat-icon>
-                        </button>
-                        <mat-autocomplete #autoPade="matAutocomplete">
-                            <mat-option *ngFor="let option of filteredOptionsPade | async" [value]="option"
-                                [matTooltip]="option">
-                                {{option}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="row">
-                <div>
-                    <highcharts-chart [Highcharts]="Highcharts" [options]="graficaCombinada"
-                        style="width: 100%; height: 400px; display: block;">
-                    </highcharts-chart>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6">
-
-    </div>
-</div>-->
+</div>

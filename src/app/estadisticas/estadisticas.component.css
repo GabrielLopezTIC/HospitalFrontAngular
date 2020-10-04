@@ -11,3 +11,7 @@
     width: 80%;
   }
 
+.panelGraficaPade, .panelGraficaToxic{
+  background-color: rgb(134, 115, 115);
+  padding: 10px;
+}

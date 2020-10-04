@@ -45,13 +45,26 @@
                 </div>
             </li>
             <li class="nav-item" *ngIf="isLogged">
-                <a class="nav-link" routerLink="/listaCuestionario"><i class="fa fa-users"></i> Lista de pacientes</a>
+                <a class="nav-link" routerLink="/listaCuestionario"><i class="fa fa-users"></i> 
+                    <span *ngIf="lang()=='es'">Lista de pacientes</span>
+                    <span *ngIf="lang()=='en'">
+                        Patient list</span>
+                    <span *ngIf="lang()=='br'">Lista de pacientes</span>
+                </a>
             </li>
             <li class="nav-item" *ngIf="isLogged">
-                <a class="nav-link" routerLink="/estadisticas"><i class="fa fa-pie-chart"></i> Estadisticas</a>
+                <a class="nav-link" routerLink="/estadisticas"><i class="fa fa-pie-chart"></i>
+                    <span *ngIf="lang()=='es'">Estadisticas</span>
+                    <span *ngIf="lang()=='en'">
+                        Statistics</span>
+                    <span *ngIf="lang()=='br'">Estatisticas</span>
+                </a>
             </li>
             <li class="nav-item" *ngIf="isLogged" (click)="onLogOut()">
-                <a class="nav-link" style="cursor: pointer;"><i class="fa fa-sign-out"></i> Cerrar Sesión</a>
+                <a class="nav-link" style="cursor: pointer;"><i class="fa fa-sign-out"></i>
+                    <span *ngIf="lang()=='es'">Cerrar sesión</span>
+                <span *ngIf="lang()=='en'">Sign out</span>
+                <span *ngIf="lang()=='br'">Fechar sessão</span></a>
             </li>
         </ul>
     </div>

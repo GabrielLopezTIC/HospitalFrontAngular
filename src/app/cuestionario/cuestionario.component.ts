@@ -164,6 +164,7 @@ export class CuestionarioComponent implements OnInit {
     this.lang() === "es"? this.myControlPade.setValue("Buscando...") : this.lang() === "en"?  this.myControlPade.setValue("Searching...") : this.myControlPade.setValue("Procurando...");
 
     this.myControlPade.disable();
+    
     this.optionsPade = [];
     this.padecimientoService.findAllIniciaCon(letra, this.lang()).subscribe(
       data => {
@@ -192,6 +193,7 @@ export class CuestionarioComponent implements OnInit {
     this.lang() === "es"? this.myControl.setValue("Buscando...") : this.lang() === "en"? this.myControl.setValue("Searching...") :  this.myControl.setValue("Procurando...");
 
     this.myControl.disable();
+    
     this.medicamentoService.findAllIniciaCon(letra, this.lang()).subscribe(
       data => {
         this.optionsMedic = data;
@@ -328,10 +330,13 @@ export class CuestionarioComponent implements OnInit {
   }
 
 
+  registrando: boolean = false;
   public registrar(): void {
     let texto = this.lang() === "es" ? "Desea confirmar el registro" : this.lang() === "en" ? "Do you want to confirm the registration?" : "Quer confirmar o registro?";
 
     if (confirm(texto) === true) {
+      this.registrando = true; // habilita la animacion al registrar un cuestionario
+
       this.nuevoRegistro = new Cuestionario(
         this.lang(),
         moment().format("YYYY-MM-DD"), // fecha ingreso
@@ -367,6 +372,8 @@ export class CuestionarioComponent implements OnInit {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
 
+          this.registrando = false;
+
           let texto = this.lang() === "es" ? "¿Desea imprimir formato?" : this.lang() === "en" ? "Do you want to print format?" : "Você quer imprimir o formato?";
 
           if (confirm(texto)) {
@@ -379,6 +386,7 @@ export class CuestionarioComponent implements OnInit {
           this.toastr.error("Error al registrar el paciente", 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
+          this.registrando = false;
         }
       );
     }

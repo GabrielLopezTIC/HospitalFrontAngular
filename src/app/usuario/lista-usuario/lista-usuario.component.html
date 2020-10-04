@@ -1,7 +1,7 @@
 <app-menuAdmUsers></app-menuAdmUsers>
 <div class="row">
   <div class="col-sm-12 ">
-    <div class="contenedor ml-3 mr-3">
+    <div class="contenedor ml-3 mr-3 pl-2 pr-2 pt-2 pb-2">
       <div class="ml-2">
         <mat-form-field>
           <input matInput type="text"
@@ -65,7 +65,21 @@
             <tbody>
               <tr *ngIf="usuarios.length == 0">
                 <td colspan="11">
-                  <mat-spinner matSuffix [diameter]="20" style="float: center; margin-left: 8px"></mat-spinner>
+                  <div class="row wrapper">
+                    <div class="inner">
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <mat-spinner style="margin:0 auto;" matSuffix [diameter]="80"
+                                    style="float: right; margin-left: 8px"></mat-spinner>
+                            </div>
+                            <div class="col-sm-4"></div>
+                        </div>
+                        <div class="row">
+                            <h3>Cargando usuarios...</h3>
+                        </div>
+                    </div>
+                    </div>
                 </td>
               </tr>
               <tr *ngFor="let usuario of usuarios" class="color-theme-dark-ligth">

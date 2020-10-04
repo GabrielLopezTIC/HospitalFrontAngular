@@ -1,7 +1,7 @@
 <app-menu-adm-cuestionario></app-menu-adm-cuestionario>
 <div class="row">
   <div class="col-sm-12">
-    <div class="contenedor mr-3 ml-3">
+    <div class="contenedor mr-3 ml-3 pl-2 pr-2 pt-2 pb-2">
       <div class="mr-2">
         <mat-form-field>
           <input matInput type="text"
@@ -81,7 +81,21 @@
             <tbody>
               <tr *ngIf="cuestionarios.length == 0">
                 <td colspan="11">
-                  <mat-spinner matSuffix [diameter]="20" style="float: center; margin-left: 8px"></mat-spinner>
+                  <div class="row wrapper">
+                    <div class="inner">
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <mat-spinner style="margin:0 auto;" matSuffix [diameter]="80"
+                                    style="float: right; margin-left: 8px"></mat-spinner>
+                            </div>
+                            <div class="col-sm-4"></div>
+                        </div>
+                        <div class="row">
+                            <h3>Cargando cuestionarios...</h3>
+                        </div>
+                    </div>
+                    </div>
                 </td>
               </tr>
               <tr *ngFor="let paciente of cuestionarios" class="color-theme-dark-ligth">

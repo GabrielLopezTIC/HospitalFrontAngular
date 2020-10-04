@@ -1,7 +1,7 @@
 <app-menu-adm-medicamento></app-menu-adm-medicamento>
 <div class="row">
     <div class="col-sm-12">
-        <div class="contenedor mr-3 ml-3">
+        <div class="contenedor mr-3 ml-3 pl-2 pr-2 pt-2 pb-2">
             <div class="ml-2">
                 <mat-form-field>
                     <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
@@ -61,8 +61,21 @@
                     <tbody>
                         <tr *ngIf="medicamentos.length == 0">
                             <td colspan="11">
-                                <mat-spinner matSuffix [diameter]="20" style="float: center; margin-left: 8px">
-                                </mat-spinner>
+                                <div class="row wrapper">
+                                    <div class="inner">
+                                        <div class="row">
+                                            <div class="col-sm-4"></div>
+                                            <div class="col-sm-4">
+                                                <mat-spinner style="margin:0 auto;" matSuffix [diameter]="80"
+                                                    style="float: right; margin-left: 8px"></mat-spinner>
+                                            </div>
+                                            <div class="col-sm-4"></div>
+                                        </div>
+                                        <div class="row">
+                                            <h3>Cargando medicamentos...</h3>
+                                        </div>
+                                    </div>
+                                    </div>
                             </td>
                         </tr>
                         <tr *ngFor="let medicamento of medicamentos" class="color-theme-dark-ligth">
@@ -70,9 +83,21 @@
                             <td>{{medicamento.legalBasis}}</td>
                             <td>{{medicamento.rmpVersion}}</td>
                             <td>{{medicamento.mrpDcp}}</td>
-                            <td>{{medicamento.importantRiskEs}}</td>
-                            <td>{{medicamento.importantPotentialRiskEs}}</td>
-                            <td>{{medicamento.missingInfoEs}}</td>
+                            <td>
+                                <span *ngIf="lang()=='es'">{{medicamento.importantRiskEs}}</span>
+                                <span *ngIf="lang()=='en'">{{medicamento.importantRiskEn}}</span>
+                                <span *ngIf="lang()=='br'">{{medicamento.importantRiskBr}}</span> 
+                            </td>
+                            <td>
+                                <span *ngIf="lang()=='es'">{{medicamento.importantPotentialRiskEs}}</span>
+                                <span *ngIf="lang()=='en'">{{medicamento.importantPotentialRiskEn}}</span>
+                                <span *ngIf="lang()=='br'">{{medicamento.importantPotentialRiskBr}}</span>
+                            </td>
+                            <td>
+                                <span *ngIf="lang()=='es'">{{medicamento.missingInfoEs}}</span>
+                                <span *ngIf="lang()=='en'">{{medicamento.missingInfoEn}}</span>
+                                <span *ngIf="lang()=='br'">{{medicamento.missingInfoBr}}</span>
+                            </td>
                            <td *ngIf="roleType() == 'ROLE_ADMIN'"><button class="btn btn-outline-danger"
                                     (click)="borrar(medicamento.productName)"><i class="far fa-trash-alt"></i>
                                     <span *ngIf="lang()=='es'">Borrar</span>
