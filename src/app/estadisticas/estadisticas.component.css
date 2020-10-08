@@ -12,6 +12,5 @@
   }
 
 .panelGraficaPade, .panelGraficaToxic{
-  background-color: rgb(134, 115, 115);
-  padding: 10px;
+  background-color: white;/* rgb(134, 115, 115);*/
 }

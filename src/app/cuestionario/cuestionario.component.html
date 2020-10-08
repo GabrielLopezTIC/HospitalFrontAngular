@@ -1,620 +1,643 @@
 <app-menuPrincipal *ngIf="registrando == false"></app-menuPrincipal>
-<div class="text-center" *ngIf="!isLogged; else loggedOut">
-    <h2>No has iniciado sesión</h2>
-</div>
-
-<ng-template #loggedOut>
-    <diV class="principal">
-        <div class="card">
-            <div class="card-body">
-                <div *ngIf="registrando == true" class="row wrapper">
-                    <div class="inner">
-                        <div class="row">
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <mat-spinner style="margin:0 auto;" matSuffix [diameter]="80"
-                                    style="float: right; margin-left: 8px"></mat-spinner>
-                            </div>
-                            <div class="col-sm-4"></div>
+<diV class="principal">
+    <div class="card">
+        <div class="card-body">
+            <div *ngIf="registrando == true" class="row wrapper">
+                <div class="inner">
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <mat-spinner style="margin:0 auto;" matSuffix [diameter]="80"
+                                style="float: right; margin-left: 8px"></mat-spinner>
                         </div>
-                        <div class="row">
-                            <h3>Registrando paciente...</h3>
-                        </div>
-                    </div>
-                </div>
-                <div *ngIf="registrando == false" class="contenedor">
-                    <div class="row border border-top-0 border-success mt-1">
-                        <div class="col-sm-12">
-                            <h2 *ngIf="lang()=='es'">Información Del Paciente</h2>
-                            <h2 *ngIf="lang()=='en'">Patient Information</h2>
-                            <h2 *ngIf="lang()=='br'">Informação do paciente</h2>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-sm-12 col-md-3">
-                            <mat-form-field>
-                                <input matInput type="text"
-                                    [placeholder]="lang() == 'es'? 'Turno': lang() == 'en'? 'Turn' : 'Virar'"
-                                    oninput="this.value = this.value.toUpperCase()" [(ngModel)]="turno">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-3">
-                            <mat-form-field>
-                                <mat-select matSelect
-                                    [placeholder]="lang() == 'es'? 'Genero del paciente': lang() == 'en'? 'Gender of patient' : 'Gênero do paciente'"
-                                    [(ngModel)]="generoSel" name="genero" [value]="generoSel">
-                                    <div>
-                                        <mat-option *ngFor="let op of genero" [value]="op.clave">
-                                            {{op.valor}}
-                                        </mat-option>
-                                    </div>
-                                </mat-select>
-                                <button mat-button *ngIf="generoSel" matSuffix mat-icon-button aria-label="Clear"
-                                    (click)="generoSel=''">
-                                    <mat-icon>x</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-3"></div>
+                        <div class="col-sm-4"></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-3">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="nombre" type="text" [placeholder]="lang() == 'es'? 'Ingrese nombre del paciente' : 
-                                    lang() == 'en'? 'Enter patient name' : 'Digite o nome do paciente' "
-                                    oninput="this.value = this.value.toUpperCase()">
-                                <button mat-button *ngIf="nombre" matSuffix mat-icon-button aria-label="Clear"
-                                    (click)="nombre=''">
-                                    <mat-icon>x</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-3">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="apellido" type="text" [placeholder]="lang() == 'es'? 'Ingrese apellido del paciente' : 
-                                    lang() == 'en'? 'Enter patient lastname' : 'Digite o sobrenome do paciente' "
-                                    oninput="this.value = this.value.toUpperCase()">
-                                <button mat-button *ngIf="apellido" matSuffix mat-icon-button aria-label="Clear"
-                                    (click)="apellido=''">
-                                    <mat-icon>x</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-3">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="peso" type="number" [placeholder]="lang() == 'es'? 'Ingrese peso (Kg)' : 
-                                lang() == 'en'? 'Enter weight (Kg)' : 'Digite o peso (Kg)' "
-                                    (keypress)="onlyDecimalNumberKey($event)">
-                                <button mat-button *ngIf="peso" matSuffix mat-icon-button aria-label="Clear"
-                                    (click)="peso=''">
-                                    <mat-icon>x</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-3">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="talla" type="number" [placeholder]="lang() == 'es'? 'Ingrese talla (cm)' : 
-                                lang() == 'en'? 'Enter size (cm)' : 'Digite o tamanho (cm)' "
-                                    (keypress)="onlyDecimalNumberKey($event)">
-                                <button mat-button *ngIf="talla" matSuffix mat-icon-button aria-label="Clear"
-                                    (click)="talla=''">
-                                    <mat-icon>x</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
+                        <h3>Registrando paciente...</h3>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="imc" type="number" [placeholder]="lang() == 'es'? 'Ingrese IMC del paciente' : 
-                                lang() == 'en'? 'Enter patient BMI' : 'Digite o IMC do paciente' "
-                                    (keypress)="onlyDecimalNumberKey($event)">
-                                <button mat-button *ngIf="imc" matSuffix mat-icon-button aria-label="Clear"
-                                    (click)="imc=''">
-                                    <mat-icon>x</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-3">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="f_nac" type="date" [placeholder]="lang() == 'es'? 'Ingrese fecha de nacimiento' : 
-                                lang() == 'en'? 'Enter date of birth' : 'Digite a data de nascimento' ">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-3">
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="l_nac" type="text" [placeholder]="lang() == 'es'? 'Ingrese ciudad de nacimiento' : 
-                                lang() == 'en'? 'Enter city of birth' : 'Digite a ciudade de nascimento' "
-                                    oninput="this.value = this.value.toUpperCase()">
-                                <button mat-button *ngIf="l_nac" matSuffix mat-icon-button aria-label="Clear"
-                                    (click)="l_nac=''">
-                                    <mat-icon>x</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-3">
-                            <mat-form-field>
-                                <mat-select matSelect [placeholder]="lang() == 'es'? 'Tipo de sangre' : 
-                                lang() == 'en'? 'Blood type' : 'Tipo sanguineo' " [(ngModel)]="opSangSel"
-                                    name="tsangre" [value]="opSangSel">
-                                    <mat-option *ngFor="let op of opcSangre" [value]="op">
-                                        {{op}}
-                                    </mat-option>
-                                </mat-select>
-                                <button mat-button *ngIf="opSangSel" matSuffix mat-icon-button aria-label="Clear"
-                                    (click)="opSangSel=''">
-                                    <mat-icon>x</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="row border border-top-0 border-success mt-2">
-                        <div class="col-sm-12">
-                            <h2 *ngIf="lang()=='es'">Toxicomanias</h2>
-                            <h2 *ngIf="lang()=='en'">Drug addiction</h2>
-                            <h2 *ngIf="lang()=='br'">Dependência de drogas</h2>
-                        </div>
-
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-sm-4">
-                            <label *ngIf="lang() === 'es'">Alcoholismo:</label>
-                            <label *ngIf="lang() === 'en'">Alcoholism:</label>
-                            <label *ngIf="lang() === 'br'">Alcoolismo:</label>
-                            <mat-radio-group name="opAlc" [(ngModel)]="opAlcoholSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opAlc" [value]="op.clave"
-                                    style="margin: 10px">
-                                    {{op.valor}}
-                                </mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-                        <div class="col-sm-4">
-                            <label *ngIf="lang() === 'es'">Tabaquismo:</label>
-                            <label *ngIf="lang() === 'en'">Smoking:</label>
-                            <label *ngIf="lang() === 'br'">Fumar:</label>
-                            <mat-radio-group name="opcionesTab" [(ngModel)]="opTabSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opcionesTab" [value]="op.clave"
-                                    style="margin: 10px">
-                                    {{op.valor}}
-                                </mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-                        <div class="col-sm-4">
-                            <label *ngIf="lang() === 'es'">Drogas:</label>
-                            <label *ngIf="lang() === 'en'">Drugs:</label>
-                            <label *ngIf="lang() === 'br'">Drogas:</label>
-                            <mat-radio-group name="opcionesDrog" [(ngModel)]="opDrogSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opcionesDrog" [value]="op.clave"
-                                    style="margin: 10px">
-                                    {{op.valor}}
-                                </mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label *ngIf="lang() === 'es'">Suplementos:</label>
-                            <label *ngIf="lang() === 'en'">Supplements:</label>
-                            <label *ngIf="lang() === 'br'">Suplementos:</label>
-                            <mat-radio-group name="opcionesSupl" [(ngModel)]="opSuplSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opcionesSupl" [value]="op.clave"
-                                    style="margin: 10px">
-                                    {{op.valor}}
-                                </mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-                        <div class="col-sm-4">
-                            <label *ngIf="lang() === 'es'">Herbolaria:</label>
-                            <label *ngIf="lang() === 'en'">Herbalist:</label>
-                            <label *ngIf="lang() === 'br'">Herbalist:</label>
-                            <mat-radio-group name="opcionesHerb" [(ngModel)]="opHerbSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opcionesHerb" [value]="op.clave"
-                                    style="margin: 10px">
-                                    {{op.valor}}
-                                </mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-                        <div class="col-sm-4">
-                            <label *ngIf="lang() === 'es'">Med. tradicion.:</label>
-                            <label *ngIf="lang() === 'en'">Trad. medicine:</label>
-                            <label *ngIf="lang() === 'br'">Med. tradicion.:</label>
-                            <mat-radio-group name="opcionesMedTrad" [(ngModel)]="opMedTradSel">
-                                <mat-radio-button *ngFor="let op of opciones" name="opcionesMedTrad" [value]="op.clave"
-                                    style="margin: 10px">
-                                    {{op.valor}}
-                                </mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-                    </div>
-                    <div class="row border border-top-0 border-success mt-3">
-                        <div class="col-sm-12">
-                            <h2 *ngIf="lang()=='es'">Padecimientos</h2>
-                            <h2 *ngIf="lang()=='en'">Ailments</h2>
-                            <h2 *ngIf="lang()=='br'">Doenças</h2>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-sm-12">
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <mat-form-field class="iniFiltro">
-                                        <mat-select matSelect [placeholder]="lang() == 'es'? 'Letra' : 
-                                        lang() == 'en'? 'Letter' : 'Carta' " [(ngModel)]="iniPade" name="iniPade"
-                                            [value]="iniPade" (selectionChange)="cargarPadecimientos(iniPade)">
-                                            <mat-option *ngFor="let op of inicialesPade" [value]="op">
-                                                {{op}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm-9">
-                                    <mat-form-field class="example-full-width filterInput">
-                                        <input type="text" [placeholder]="lang() == 'es'? 'Diagnostico' : 
-                                        lang() == 'en'? 'Diagnostic' : 'Diagnóstico' " aria-label="Number" matInput
-                                            [formControl]="myControlPade" [matAutocomplete]="autoPade"
-                                            [ngStyle]="{'background-color':optionsPade.length === 0?'#DBDAC1':''}"
-                                            [(ngModel)]="selPade" oninput="this.value = this.value.toUpperCase()">
-                                        <mat-spinner *ngIf="optionsPade.length === 0" matSuffix [diameter]="18"
-                                            style="float: right; margin-left: 8px"></mat-spinner>
-                                        <button mat-button *ngIf="selPade" matSuffix mat-icon-button aria-label="Clear"
-                                            (click)="selPade=''">
-                                            <mat-icon>x</mat-icon>
-                                        </button>
-                                        <mat-autocomplete #autoPade="matAutocomplete">
-                                            <mat-option *ngFor="let option of filteredOptionsPade | async"
-                                                [value]="option" [matTooltip]="option">
-                                                {{option}}
-                                            </mat-option>
-                                        </mat-autocomplete>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button class="btn btn-outline-success" (click)="agregarPade(selPade)">
-                                        <label *ngIf="lang() === 'es'">Añadir</label>
-                                        <label *ngIf="lang() === 'en'">Add</label>
-                                        <label *ngIf="lang() === 'br'">Adicionar</label>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="pade-container-list  mt-2">
-                                        <div *ngFor="let pad of padecimientosList" class="itemsPade mb-1">
-                                            <div class="row pt-1 pb-1 pr-1 pl-1">
-                                                <div class="col-sm-10">
-                                                    {{pad}}
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <button class="btn btn-outline-danger" (click)="borrarPade(pad)">
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row border border-top-0 border-success mt-3">
-                        <div class="col-sm-12">
-                            <h2 *ngIf="lang()=='es'">Reacciones Medicas Adversas</h2>
-                            <h2 *ngIf="lang()=='en'">Adverse Medical Reactions</h2>
-                            <h2 *ngIf="lang()=='br'">Reações Médicas Adversas</h2>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-sm-12">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <mat-form-field class="iniFiltro">
-                                        <mat-select matSelect [placeholder]="lang() == 'es'? 'SOC' : 
-                                                lang() == 'en'? 'SOC' : 'SOC' " [(ngModel)]="socMedraSel"
-                                            name="socMedraSel" [value]="socMedraSel"
-                                            (selectionChange)="cargarMedra(socMedraSel)">
-                                            <mat-option *ngFor="let op of socMedra" [value]="op" [matTooltip]="op">
-                                                {{op}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm-7">
-                                    <mat-form-field class="example-full-width filterInput">
-                                        <input type="text" [placeholder]="lang() == 'es'? 'MedDRA' : 
-                                                lang() == 'en'? 'MedDRA' : 'MedDRA' " aria-label="Number" matInput
-                                            [formControl]="myControlMedra" [matAutocomplete]="autoMedra"
-                                            [ngStyle]="{'background-color':optionsMedra.length === 0?'#DBDAC1':''}"
-                                            [(ngModel)]="selMedra" oninput="this.value = this.value.toUpperCase()">
-                                        <mat-spinner *ngIf="optionsMedra.length === 0" matSuffix [diameter]="18"
-                                            style="float: right; margin-left: 8px"></mat-spinner>
-                                        <button mat-button *ngIf="selMedra" matSuffix mat-icon-button aria-label="Clear"
-                                            (click)="selMedra=''">
-                                            <mat-icon>x</mat-icon>
-                                        </button>
-                                        <mat-autocomplete #autoMedra="matAutocomplete">
-                                            <mat-option *ngFor="let option of filteredOptionsMedra | async"
-                                                [value]="option" [matTooltip]="option">
-                                                {{option}}
-                                            </mat-option>
-                                        </mat-autocomplete>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button class="btn btn-outline-success" (click)="agregarMedra(selMedra)">
-                                        <label *ngIf="lang() === 'es'">Añadir</label>
-                                        <label *ngIf="lang() === 'en'">Add</label>
-                                        <label *ngIf="lang() === 'br'">Adicionar</label>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="pade-container-list  mt-2">
-                                        <div *ngFor="let med of medraList" class="itemsPade mb-1">
-                                            <div class="row pt-1 pb-1 pr-1 pl-1">
-                                                <div class="col-sm-10">
-                                                    {{med}}
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <button class="btn btn-outline-danger" (click)="borrarMedra(med)">
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row border border-top-0 border-success mt-3">
-                        <div class="col-sm-12">
-                            <h2 *ngIf="lang()=='es'">Terapéutica Indicada</h2>
-                            <h2 *ngIf="lang()=='en'">Therapeutics Indicated</h2>
-                            <h2 *ngIf="lang()=='br'">Terapêutica Indicada</h2>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-sm-12">
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <mat-form-field class="iniFiltro">
-                                        <mat-select matSelect [placeholder]="lang() == 'es'? 'Letra' : 
-                                        lang() == 'en'? 'Letter' : 'Carta' " [(ngModel)]="iniTerap" name="iniTerap"
-                                            [value]="iniTerap" (selectionChange)="cargarMedicamentos(iniTerap)">
-                                            <mat-option *ngFor="let op of inicialesPade" [value]="op">
-                                                {{op}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm-9">
-                                    <mat-form-field class="example-full-width filterInput">
-                                        <input type="text" [placeholder]="lang() == 'es'? 'Terapeutica' : 
-                                        lang() == 'en'? 'Therapy' : 'Terapia' " aria-label="Number" matInput
-                                            [ngStyle]="{'background-color':options.length === 0?'#DBDAC1':''}"
-                                            [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="selTerap"
-                                            oninput="this.value = this.value.toUpperCase()">
-                                        <mat-spinner *ngIf="options.length === 0" matSuffix [diameter]="18"
-                                            style="float: right; margin-left: 8px"></mat-spinner>
-                                        <button mat-button *ngIf="selTerap" matSuffix mat-icon-button aria-label="Clear"
-                                            (click)="selTerap=''">
-                                            <mat-icon>x</mat-icon>
-                                        </button>
-                                        <mat-autocomplete #auto="matAutocomplete">
-                                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
-                                                [matTooltip]="option">
-                                                {{option}}
-                                            </mat-option>
-                                        </mat-autocomplete>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button class="btn btn-outline-success" (click)="agregarTerap(selTerap)">
-                                        <label *ngIf="lang() === 'es'">Añadir</label>
-                                        <label *ngIf="lang() === 'en'">Add</label>
-                                        <label *ngIf="lang() === 'br'">Adicionar</label>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="terap-container-list mt-2">
-                                        <div *ngFor="let terap of terapeuticasList" class="itemsPade mb-1">
-                                            <div class="row pt-1 pb-1 pr-1 pl-1">
-                                                <div class="col-sm-2">
-                                                    {{terap.medicamento}}
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <div class="row">
-                                                        <div class="col-sm-4">
-                                                            <mat-form-field>
-                                                                <input matInput type="text"
-                                                                    [(ngModel)]="terap.distintivo" [placeholder]="lang() == 'es'? 'Distintivo' : 
-                                                                    lang() == 'en'? 'Disctintive' : 'Distintivo' "
-                                                                    oninput="this.value = this.value.toUpperCase()">
-                                                                <button mat-button *ngIf="terap.distintivo" matSuffix
-                                                                    mat-icon-button aria-label="Clear"
-                                                                    (click)="terap.distintivo=''">
-                                                                    <mat-icon>x</mat-icon>
-                                                                </button>
-                                                            </mat-form-field>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <mat-form-field>
-                                                                <input matInput type="text"
-                                                                    [(ngModel)]="terap.presentacion" [placeholder]="lang() == 'es'? 'Presentación' : 
-                                lang() == 'en'? 'Presentation' : 'Apresentação' "
-                                                                    oninput="this.value = this.value.toUpperCase()">
-                                                                <button mat-button *ngIf="terap.presentacion" matSuffix
-                                                                    mat-icon-button aria-label="Clear"
-                                                                    (click)="terap.presentacion=''">
-                                                                    <mat-icon>x</mat-icon>
-                                                                </button>
-                                                            </mat-form-field>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <mat-form-field>
-                                                                <input matInput type="text" [(ngModel)]="terap.dosis"
-                                                                    [placeholder]="lang() == 'es'? 'Dosis' : 
-                                                                    lang() == 'en'? 'Dose' : 'Dose' "
-                                                                    oninput="this.value = this.value.toUpperCase()">
-                                                                <button mat-button *ngIf="terap.dosis" matSuffix
-                                                                    mat-icon-button aria-label="Clear"
-                                                                    (click)="terap.dosis=''">
-                                                                    <mat-icon>x</mat-icon>
-                                                                </button>
-                                                            </mat-form-field>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-4">
-                                                            <mat-form-field>
-                                                                <input matInput type="text" [(ngModel)]="terap.via"
-                                                                    [placeholder]="lang() == 'es'? 'Vía' : 
-                                                                    lang() == 'en'? 'Throug' : 'Através da' "
-                                                                    oninput="this.value = this.value.toUpperCase()">
-                                                                <button mat-button *ngIf="terap.via" matSuffix
-                                                                    mat-icon-button aria-label="Clear"
-                                                                    (click)="terap.via=''">
-                                                                    <mat-icon>x</mat-icon>
-                                                                </button>
-                                                            </mat-form-field>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <mat-form-field>
-                                                                <input matInput type="text"
-                                                                    [(ngModel)]="terap.intervalo" [placeholder]="lang() == 'es'? 'Intervalo' : 
-                                                                    lang() == 'en'? 'Interval' : 'Intervalo' "
-                                                                    oninput="this.value = this.value.toUpperCase()">
-                                                                <button mat-button *ngIf="terap.intervalo" matSuffix
-                                                                    mat-icon-button aria-label="Clear"
-                                                                    (click)="terap.intervalo=''">
-                                                                    <mat-icon>x</mat-icon>
-                                                                </button>
-                                                            </mat-form-field>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <mat-form-field>
-                                                                <input matInput type="date" [(ngModel)]="terap.fInicio"
-                                                                    [placeholder]="lang() == 'es'? 'Fecha de inicio' : 
-                                                                    lang() == 'en'? 'Initial date' : 'Data inicial' ">
-                                                            </mat-form-field>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-4">
-                                                            <mat-form-field>
-                                                                <input matInput type="date" [(ngModel)]="terap.fTermino"
-                                                                    [placeholder]="lang() == 'es'? 'Fecha termino' : 
-                                                                    lang() == 'en'? 'End date' : 'Date final' ">
-                                                            </mat-form-field>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <mat-form-field>
-                                                                <input matInput type="date"
-                                                                    [(ngModel)]="terap.caducidad" [placeholder]="lang() == 'es'? 'Caducidad' : 
-                                                                    lang() == 'en'? 'Expiration' : 'Expiração' ">
-                                                            </mat-form-field>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <mat-form-field>
-                                                                <input matInput type="text" [(ngModel)]="terap.nLote"
-                                                                    [placeholder]="lang() == 'es'? 'N° Lote' : 
-                                                                    lang() == 'en'? 'Lot N°' : 'N° do lote' ">
-                                                                <button mat-button *ngIf="terap.nLote" matSuffix
-                                                                    mat-icon-button aria-label="Clear"
-                                                                    (click)="terap.nLote=''">
-                                                                    <mat-icon>x</mat-icon>
-                                                                </button>
-                                                            </mat-form-field>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <div class="row">
-                                                        <div class="col-sm-12">
-                                                            <button class="btn btn-outline-info"
-                                                                (click)="info(terap.medicamento)"><i
-                                                                    class="fa fa-info-circle" aria-hidden="true"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mt-2">
-                                                        <div class="col-sm-12">
-                                                            <button class="btn btn-outline-danger"
-                                                                (click)="borrarTerap(terap)">
-                                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row border border-top-0 border-success mt3">
-                        <div class="col-sm-12">
-                            <h2 *ngIf="lang()=='es'">Información Adicional</h2>
-                            <h2 *ngIf="lang()=='en'">Additional Information</h2>
-                            <h2 *ngIf="lang()=='br'">Informação Adicional</h2>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-sm-4">
-                            <mat-form-field>
-                                <mat-label *ngIf="lang() === 'es'">Observaciones clinicas</mat-label>
-                                <mat-label *ngIf="lang() === 'en'">Clinical observations</mat-label>
-                                <mat-label *ngIf="lang() === 'br'">Observações clínicas</mat-label>
-                                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-                                    cdkAutosizeMinRows="1" cdkAutosizeMaxRows="100" [(ngModel)]="obsClin"
-                                    oninput="this.value = this.value.toUpperCase()"></textarea>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-4">
-                            <mat-form-field>
-                                <mat-label *ngIf="lang() === 'es'">Datos de laboratorio relevantes</mat-label>
-                                <mat-label *ngIf="lang() === 'en'">Relevant laboratory data</mat-label>
-                                <mat-label *ngIf="lang() === 'br'">Dados laboratoriais relevantes</mat-label>
-                                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-                                    cdkAutosizeMinRows="1" cdkAutosizeMaxRows="100" [(ngModel)]="datosLabo"
-                                    oninput="this.value = this.value.toUpperCase()"></textarea>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-4">
-                            <mat-form-field>
-                                <mat-select matSelect
-                                    [placeholder]="lang() === 'es'? 'Grado de informacion': lang() === 'en'? 'Degree of information' : 'Grau de informação'  "
-                                    [(ngModel)]="gradoInfo" name="gInfo" [value]="gradoInfo">
-                                    <mat-option *ngFor="let op of opcGradoInfo" [value]="op">
-                                        {{op}}
-                                    </mat-option>
-                                </mat-select>
-                                <button mat-button *ngIf="gradoInf" matSuffix mat-icon-button aria-label="Clear"
-                                    (click)="gradoInf=''">
-                                    <mat-icon>x</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                    </div>
-
-                    <!--- <button class="btn btn-success" [disabled]="!validAll()" (click)="registrar()">
-                        <label *ngIf="lang() === 'es'">Registrar</label>
-                        <label *ngIf="lang() === 'en'">To register</label>
-                        <label *ngIf="lang() === 'br'">Registrar</label>
-                    </button>
-                -->
-                    <button class="btn btn-success" (click)="registrar()">
-                        <label *ngIf="lang() === 'es'">Registrar</label>
-                        <label *ngIf="lang() === 'en'">To register</label>
-                        <label *ngIf="lang() === 'br'">Registrar</label>
-                    </button>
                 </div>
             </div>
+            <div *ngIf="registrando == false" class="contenedor">
+                <div class="row border border-top-0 border-success mt-1">
+                    <div class="col-sm-12">
+                        <h2 *ngIf="lang()=='es'">Información Del Paciente</h2>
+                        <h2 *ngIf="lang()=='en'">Patient Information</h2>
+                        <h2 *ngIf="lang()=='br'">Informação do paciente</h2>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-12 col-md-3">
+                        <mat-form-field>
+                            <input matInput type="text"
+                                [placeholder]="lang() == 'es'? 'Turno': lang() == 'en'? 'Turn' : 'Virar'"
+                                oninput="this.value = this.value.toUpperCase()" [(ngModel)]="turno">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-select matSelect
+                                [placeholder]="lang() == 'es'? 'Genero del paciente': lang() == 'en'? 'Gender of patient' : 'Gênero do paciente'"
+                                [(ngModel)]="generoSel" name="genero" [value]="generoSel">
+                                <div>
+                                    <mat-option *ngFor="let op of genero" [value]="op.clave">
+                                        {{op.valor}}
+                                    </mat-option>
+                                </div>
+                            </mat-select>
+                            <button mat-button *ngIf="generoSel" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="generoSel=''">
+                                <mat-icon>x</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="nombre" type="text" [placeholder]="lang() == 'es'? 'Ingrese nombre del paciente' : 
+                                    lang() == 'en'? 'Enter patient name' : 'Digite o nome do paciente' "
+                                oninput="this.value = this.value.toUpperCase()">
+                            <button mat-button *ngIf="nombre" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="nombre=''">
+                                <mat-icon>x</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="apellido" type="text" [placeholder]="lang() == 'es'? 'Ingrese apellido del paciente' : 
+                                    lang() == 'en'? 'Enter patient lastname' : 'Digite o sobrenome do paciente' "
+                                oninput="this.value = this.value.toUpperCase()">
+                            <button mat-button *ngIf="apellido" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="apellido=''">
+                                <mat-icon>x</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="peso" type="number" [placeholder]="lang() == 'es'? 'Ingrese peso (Kg)' : 
+                                lang() == 'en'? 'Enter weight (Kg)' : 'Digite o peso (Kg)' "
+                                (keypress)="onlyDecimalNumberKey($event)">
+                            <button mat-button *ngIf="peso" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="peso=''">
+                                <mat-icon>x</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="talla" type="number" [placeholder]="lang() == 'es'? 'Ingrese talla (cm)' : 
+                                lang() == 'en'? 'Enter size (cm)' : 'Digite o tamanho (cm)' "
+                                (keypress)="onlyDecimalNumberKey($event)">
+                            <button mat-button *ngIf="talla" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="talla=''">
+                                <mat-icon>x</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="imc" type="number" [placeholder]="lang() == 'es'? 'Ingrese IMC del paciente' : 
+                                lang() == 'en'? 'Enter patient BMI' : 'Digite o IMC do paciente' "
+                                (keypress)="onlyDecimalNumberKey($event)">
+                            <button mat-button *ngIf="imc" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="imc=''">
+                                <mat-icon>x</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="f_nac" type="date" [placeholder]="lang() == 'es'? 'Ingrese fecha de nacimiento' : 
+                                lang() == 'en'? 'Enter date of birth' : 'Digite a data de nascimento' ">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="l_nac" type="text" [placeholder]="lang() == 'es'? 'Ingrese ciudad de nacimiento' : 
+                                lang() == 'en'? 'Enter city of birth' : 'Digite a ciudade de nascimento' "
+                                oninput="this.value = this.value.toUpperCase()">
+                            <button mat-button *ngIf="l_nac" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="l_nac=''">
+                                <mat-icon>x</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-select matSelect [placeholder]="lang() == 'es'? 'Tipo de sangre' : 
+                                lang() == 'en'? 'Blood type' : 'Tipo sanguineo' " [(ngModel)]="opSangSel"
+                                name="tsangre" [value]="opSangSel">
+                                <mat-option *ngFor="let op of opcSangre" [value]="op">
+                                    {{op}}
+                                </mat-option>
+                            </mat-select>
+                            <button mat-button *ngIf="opSangSel" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="opSangSel=''">
+                                <mat-icon>x</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row border border-top-0 border-success mt-2">
+                    <div class="col-sm-12">
+                        <h2 *ngIf="lang()=='es'">Toxicomanias</h2>
+                        <h2 *ngIf="lang()=='en'">Drug addiction</h2>
+                        <h2 *ngIf="lang()=='br'">Dependência de drogas</h2>
+                    </div>
+
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label *ngIf="lang() === 'es'">Alcoholismo:</label>
+                                <label *ngIf="lang() === 'en'">Alcoholism:</label>
+                                <label *ngIf="lang() === 'br'">Alcoolismo:</label>
+                            </div>
+                            <div class="col-sm-12">
+                                <mat-radio-group name="opAlc" [(ngModel)]="opAlcoholSel">
+                                    <mat-radio-button *ngFor="let op of opciones" name="opAlc" [value]="op.clave"
+                                        style="margin: 10px">
+                                        {{op.valor}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label *ngIf="lang() === 'es'">Tabaquismo:</label>
+                                <label *ngIf="lang() === 'en'">Smoking:</label>
+                                <label *ngIf="lang() === 'br'">Fumar:</label>
+                            </div>
+                            <div class="col-sm-12">
+                                <mat-radio-group name="opcionesTab" [(ngModel)]="opTabSel">
+                                    <mat-radio-button *ngFor="let op of opciones" name="opcionesTab" [value]="op.clave"
+                                        style="margin: 10px">
+                                        {{op.valor}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label *ngIf="lang() === 'es'">Drogas:</label>
+                                <label *ngIf="lang() === 'en'">Drugs:</label>
+                                <label *ngIf="lang() === 'br'">Drogas:</label>
+                            </div>
+                            <div class="col-sm-12">
+                                <mat-radio-group name="opcionesDrog" [(ngModel)]="opDrogSel">
+                                    <mat-radio-button *ngFor="let op of opciones" name="opcionesDrog" [value]="op.clave"
+                                        style="margin: 10px">
+                                        {{op.valor}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label *ngIf="lang() === 'es'">Suplementos:</label>
+                                <label *ngIf="lang() === 'en'">Supplements:</label>
+                                <label *ngIf="lang() === 'br'">Suplementos:</label>
+                            </div>
+                            <div class="col-sm-12">
+                                <mat-radio-group name="opcionesSupl" [(ngModel)]="opSuplSel">
+                                    <mat-radio-button *ngFor="let op of opciones" name="opcionesSupl" [value]="op.clave"
+                                        style="margin: 10px">
+                                        {{op.valor}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label *ngIf="lang() === 'es'">Herbolaria:</label>
+                                <label *ngIf="lang() === 'en'">Herbalist:</label>
+                                <label *ngIf="lang() === 'br'">Herbalist:</label>
+                            </div>
+                            <div class="col-sm-12">
+                                <mat-radio-group name="opcionesHerb" [(ngModel)]="opHerbSel">
+                                    <mat-radio-button *ngFor="let op of opciones" name="opcionesHerb" [value]="op.clave"
+                                        style="margin: 10px">
+                                        {{op.valor}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label *ngIf="lang() === 'es'">Med. tradicion.:</label>
+                                <label *ngIf="lang() === 'en'">Trad. medicine:</label>
+                                <label *ngIf="lang() === 'br'">Med. tradicion.:</label>
+                            </div>
+                            <div class="col-sm-12">
+                                <mat-radio-group name="opcionesMedTrad" [(ngModel)]="opMedTradSel">
+                                    <mat-radio-button *ngFor="let op of opciones" name="opcionesMedTrad"
+                                        [value]="op.clave" style="margin: 10px">
+                                        {{op.valor}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row border border-top-0 border-success mt-3">
+                    <div class="col-sm-12">
+                        <h2 *ngIf="lang()=='es'">Padecimientos</h2>
+                        <h2 *ngIf="lang()=='en'">Ailments</h2>
+                        <h2 *ngIf="lang()=='br'">Doenças</h2>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <mat-form-field class="iniFiltro">
+                                    <mat-select matSelect [placeholder]="lang() == 'es'? 'Letra' : 
+                                        lang() == 'en'? 'Letter' : 'Carta' " [(ngModel)]="iniPade" name="iniPade"
+                                        [value]="iniPade" (selectionChange)="cargarPadecimientos(iniPade)">
+                                        <mat-option *ngFor="let op of inicialesPade" [value]="op">
+                                            {{op}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-9">
+                                <mat-form-field class="example-full-width filterInput">
+                                    <input type="text" [placeholder]="lang() == 'es'? 'Diagnostico' : 
+                                        lang() == 'en'? 'Diagnostic' : 'Diagnóstico' " aria-label="Number" matInput
+                                        [formControl]="myControlPade" [matAutocomplete]="autoPade"
+                                        [ngStyle]="{'background-color':optionsPade.length === 0?'#DBDAC1':''}"
+                                        [(ngModel)]="selPade" oninput="this.value = this.value.toUpperCase()">
+                                    <mat-spinner *ngIf="optionsPade.length === 0" matSuffix [diameter]="18"
+                                        style="float: right; margin-left: 8px"></mat-spinner>
+                                    <button mat-button *ngIf="selPade" matSuffix mat-icon-button aria-label="Clear"
+                                        (click)="selPade=''">
+                                        <mat-icon>x</mat-icon>
+                                    </button>
+                                    <mat-autocomplete #autoPade="matAutocomplete">
+                                        <mat-option *ngFor="let option of filteredOptionsPade | async" [value]="option"
+                                            [matTooltip]="option">
+                                            {{option}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-1">
+                                <button class="btn btn-outline-success" (click)="agregarPade(selPade)">
+                                    <label *ngIf="lang() === 'es'">Añadir</label>
+                                    <label *ngIf="lang() === 'en'">Add</label>
+                                    <label *ngIf="lang() === 'br'">Adicionar</label>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="pade-container-list  mt-2">
+                                    <div *ngFor="let pad of padecimientosList" class="itemsPade mb-1">
+                                        <div class="row pt-1 pb-1 pr-1 pl-1">
+                                            <div class="col-sm-10">
+                                                {{pad}}
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button class="btn btn-outline-danger" (click)="borrarPade(pad)">
+                                                    <i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row border border-top-0 border-success mt-3">
+                    <div class="col-sm-12">
+                        <h2 *ngIf="lang()=='es'">Reacciones Medicas Adversas</h2>
+                        <h2 *ngIf="lang()=='en'">Adverse Medical Reactions</h2>
+                        <h2 *ngIf="lang()=='br'">Reações Médicas Adversas</h2>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <mat-form-field class="iniFiltro">
+                                    <mat-select matSelect [placeholder]="lang() == 'es'? 'SOC' : 
+                                                lang() == 'en'? 'SOC' : 'SOC' " [(ngModel)]="socMedraSel"
+                                        name="socMedraSel" [value]="socMedraSel"
+                                        (selectionChange)="cargarMedra(socMedraSel)">
+                                        <mat-option *ngFor="let op of socMedra" [value]="op" [matTooltip]="op">
+                                            {{op}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-7">
+                                <mat-form-field class="example-full-width filterInput">
+                                    <input type="text" [placeholder]="lang() == 'es'? 'MedDRA' : 
+                                                lang() == 'en'? 'MedDRA' : 'MedDRA' " aria-label="Number" matInput
+                                        [formControl]="myControlMedra" [matAutocomplete]="autoMedra"
+                                        [ngStyle]="{'background-color':optionsMedra.length === 0?'#DBDAC1':''}"
+                                        [(ngModel)]="selMedra" oninput="this.value = this.value.toUpperCase()">
+                                    <mat-spinner *ngIf="optionsMedra.length === 0" matSuffix [diameter]="18"
+                                        style="float: right; margin-left: 8px"></mat-spinner>
+                                    <button mat-button *ngIf="selMedra" matSuffix mat-icon-button aria-label="Clear"
+                                        (click)="selMedra=''">
+                                        <mat-icon>x</mat-icon>
+                                    </button>
+                                    <mat-autocomplete #autoMedra="matAutocomplete">
+                                        <mat-option *ngFor="let option of filteredOptionsMedra | async" [value]="option"
+                                            [matTooltip]="option">
+                                            {{option}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-1">
+                                <button class="btn btn-outline-success" (click)="agregarMedra(selMedra)">
+                                    <label *ngIf="lang() === 'es'">Añadir</label>
+                                    <label *ngIf="lang() === 'en'">Add</label>
+                                    <label *ngIf="lang() === 'br'">Adicionar</label>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="pade-container-list  mt-2">
+                                    <div *ngFor="let med of medraList" class="itemsPade mb-1">
+                                        <div class="row pt-1 pb-1 pr-1 pl-1">
+                                            <div class="col-sm-10">
+                                                {{med}}
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button class="btn btn-outline-danger" (click)="borrarMedra(med)">
+                                                    <i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row border border-top-0 border-success mt-3">
+                    <div class="col-sm-12">
+                        <h2 *ngIf="lang()=='es'">Terapéutica Indicada</h2>
+                        <h2 *ngIf="lang()=='en'">Therapeutics Indicated</h2>
+                        <h2 *ngIf="lang()=='br'">Terapêutica Indicada</h2>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <mat-form-field class="iniFiltro">
+                                    <mat-select matSelect [placeholder]="lang() == 'es'? 'Letra' : 
+                                        lang() == 'en'? 'Letter' : 'Carta' " [(ngModel)]="iniTerap" name="iniTerap"
+                                        [value]="iniTerap" (selectionChange)="cargarMedicamentos(iniTerap)">
+                                        <mat-option *ngFor="let op of inicialesPade" [value]="op">
+                                            {{op}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-9">
+                                <mat-form-field class="example-full-width filterInput">
+                                    <input type="text" [placeholder]="lang() == 'es'? 'Terapeutica' : 
+                                        lang() == 'en'? 'Therapy' : 'Terapia' " aria-label="Number" matInput
+                                        [ngStyle]="{'background-color':options.length === 0?'#DBDAC1':''}"
+                                        [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="selTerap"
+                                        oninput="this.value = this.value.toUpperCase()">
+                                    <mat-spinner *ngIf="options.length === 0" matSuffix [diameter]="18"
+                                        style="float: right; margin-left: 8px"></mat-spinner>
+                                    <button mat-button *ngIf="selTerap" matSuffix mat-icon-button aria-label="Clear"
+                                        (click)="selTerap=''">
+                                        <mat-icon>x</mat-icon>
+                                    </button>
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+                                            [matTooltip]="option">
+                                            {{option}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-1">
+                                <button class="btn btn-outline-success" (click)="agregarTerap(selTerap)">
+                                    <label *ngIf="lang() === 'es'">Añadir</label>
+                                    <label *ngIf="lang() === 'en'">Add</label>
+                                    <label *ngIf="lang() === 'br'">Adicionar</label>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="terap-container-list mt-2">
+                                    <div *ngFor="let terap of terapeuticasList" class="itemsPade mb-1">
+                                        <div class="row pt-1 pb-1 pr-1 pl-1">
+                                            <div class="col-sm-2">
+                                                {{terap.medicamento}}
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <mat-form-field>
+                                                            <input matInput type="text" [(ngModel)]="terap.distintivo"
+                                                                [placeholder]="lang() == 'es'? 'Distintivo' : 
+                                                                    lang() == 'en'? 'Disctintive' : 'Distintivo' "
+                                                                oninput="this.value = this.value.toUpperCase()">
+                                                            <button mat-button *ngIf="terap.distintivo" matSuffix
+                                                                mat-icon-button aria-label="Clear"
+                                                                (click)="terap.distintivo=''">
+                                                                <mat-icon>x</mat-icon>
+                                                            </button>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <mat-form-field>
+                                                            <input matInput type="text" [(ngModel)]="terap.presentacion"
+                                                                [placeholder]="lang() == 'es'? 'Presentación' : 
+                                lang() == 'en'? 'Presentation' : 'Apresentação' "
+                                                                oninput="this.value = this.value.toUpperCase()">
+                                                            <button mat-button *ngIf="terap.presentacion" matSuffix
+                                                                mat-icon-button aria-label="Clear"
+                                                                (click)="terap.presentacion=''">
+                                                                <mat-icon>x</mat-icon>
+                                                            </button>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <mat-form-field>
+                                                            <input matInput type="text" [(ngModel)]="terap.dosis"
+                                                                [placeholder]="lang() == 'es'? 'Dosis' : 
+                                                                    lang() == 'en'? 'Dose' : 'Dose' "
+                                                                oninput="this.value = this.value.toUpperCase()">
+                                                            <button mat-button *ngIf="terap.dosis" matSuffix
+                                                                mat-icon-button aria-label="Clear"
+                                                                (click)="terap.dosis=''">
+                                                                <mat-icon>x</mat-icon>
+                                                            </button>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <mat-form-field>
+                                                            <input matInput type="text" [(ngModel)]="terap.via"
+                                                                [placeholder]="lang() == 'es'? 'Vía' : 
+                                                                    lang() == 'en'? 'Throug' : 'Através da' "
+                                                                oninput="this.value = this.value.toUpperCase()">
+                                                            <button mat-button *ngIf="terap.via" matSuffix
+                                                                mat-icon-button aria-label="Clear"
+                                                                (click)="terap.via=''">
+                                                                <mat-icon>x</mat-icon>
+                                                            </button>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <mat-form-field>
+                                                            <input matInput type="text" [(ngModel)]="terap.intervalo"
+                                                                [placeholder]="lang() == 'es'? 'Intervalo' : 
+                                                                    lang() == 'en'? 'Interval' : 'Intervalo' "
+                                                                oninput="this.value = this.value.toUpperCase()">
+                                                            <button mat-button *ngIf="terap.intervalo" matSuffix
+                                                                mat-icon-button aria-label="Clear"
+                                                                (click)="terap.intervalo=''">
+                                                                <mat-icon>x</mat-icon>
+                                                            </button>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <mat-form-field>
+                                                            <input matInput type="date" [(ngModel)]="terap.fInicio"
+                                                                [placeholder]="lang() == 'es'? 'Fecha de inicio' : 
+                                                                    lang() == 'en'? 'Initial date' : 'Data inicial' ">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <mat-form-field>
+                                                            <input matInput type="date" [(ngModel)]="terap.fTermino"
+                                                                [placeholder]="lang() == 'es'? 'Fecha termino' : 
+                                                                    lang() == 'en'? 'End date' : 'Date final' ">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <mat-form-field>
+                                                            <input matInput type="date" [(ngModel)]="terap.caducidad"
+                                                                [placeholder]="lang() == 'es'? 'Caducidad' : 
+                                                                    lang() == 'en'? 'Expiration' : 'Expiração' ">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <mat-form-field>
+                                                            <input matInput type="text" [(ngModel)]="terap.nLote"
+                                                                [placeholder]="lang() == 'es'? 'N° Lote' : 
+                                                                    lang() == 'en'? 'Lot N°' : 'N° do lote' ">
+                                                            <button mat-button *ngIf="terap.nLote" matSuffix
+                                                                mat-icon-button aria-label="Clear"
+                                                                (click)="terap.nLote=''">
+                                                                <mat-icon>x</mat-icon>
+                                                            </button>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <button class="btn btn-outline-info"
+                                                            (click)="info(terap.medicamento)"><i
+                                                                class="fa fa-info-circle" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-sm-12">
+                                                        <button class="btn btn-outline-danger"
+                                                            (click)="borrarTerap(terap)">
+                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row border border-top-0 border-success mt3">
+                    <div class="col-sm-12">
+                        <h2 *ngIf="lang()=='es'">Información Adicional</h2>
+                        <h2 *ngIf="lang()=='en'">Additional Information</h2>
+                        <h2 *ngIf="lang()=='br'">Informação Adicional</h2>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-4">
+                        <mat-form-field>
+                            <mat-label *ngIf="lang() === 'es'">Observaciones clinicas</mat-label>
+                            <mat-label *ngIf="lang() === 'en'">Clinical observations</mat-label>
+                            <mat-label *ngIf="lang() === 'br'">Observações clínicas</mat-label>
+                            <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="100" [(ngModel)]="obsClin"
+                                oninput="this.value = this.value.toUpperCase()"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-form-field>
+                            <mat-label *ngIf="lang() === 'es'">Datos de laboratorio relevantes</mat-label>
+                            <mat-label *ngIf="lang() === 'en'">Relevant laboratory data</mat-label>
+                            <mat-label *ngIf="lang() === 'br'">Dados laboratoriais relevantes</mat-label>
+                            <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="100" [(ngModel)]="datosLabo"
+                                oninput="this.value = this.value.toUpperCase()"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-form-field>
+                            <mat-select matSelect
+                                [placeholder]="lang() === 'es'? 'Grado de informacion': lang() === 'en'? 'Degree of information' : 'Grau de informação'  "
+                                [(ngModel)]="gradoInfo" name="gInfo" [value]="gradoInfo">
+                                <mat-option *ngFor="let op of opcGradoInfo" [value]="op">
+                                    {{op}}
+                                </mat-option>
+                            </mat-select>
+                            <button mat-button *ngIf="gradoInf" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="gradoInf=''">
+                                <mat-icon>x</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <button class="btn btn-success" (click)="registrar()">
+                    <label *ngIf="lang() === 'es'">Registrar</label>
+                    <label *ngIf="lang() === 'en'">To register</label>
+                    <label *ngIf="lang() === 'br'">Registrar</label>
+                </button>
+            </div>
         </div>
-    </diV>
-</ng-template>
+    </div>
+</diV>

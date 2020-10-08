@@ -1,7 +1,7 @@
 <app-menu-adm-cuestionario></app-menu-adm-cuestionario>
 <div class="row">
-    <div class="col-sm-6">
-        <div class="panelGraficaToxic">
+    <div class="col-sm-6 pl-2">
+        <div class="panelGraficaToxic p-3 m-3">
             <div class="row">
                 <div class="col-sm-6">
                     <mat-form-field>
@@ -38,7 +38,89 @@
         </div>
     </div>
     <div class="col-sm-6">
-        <div class="panelGraficaPade">
+       
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panelGraficaPade p-3 m-3">
+            <div class="row">
+                <div class="col-sm-4">
+                    <mat-form-field>
+                        <mat-select matSelect
+                            [placeholder]="lang()=='br'? 'Intervalo de resumo': lang()=='en'? 'Summary range' : 'Rango Resumen'"
+                            [(ngModel)]="rangoMedraSel" name="rangoMedraSel" [value]="rangoMedraSel"
+                            (selectionChange)="cargarGraficaMedra()">
+                            <div>
+                                <mat-option *ngFor="let op of rangosMedra" [value]="op.clave">
+                                    {{op.valor}}
+                                </mat-option>
+                            </div>
+                        </mat-select>
+                        <button mat-button *ngIf="rangoMedraSel" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="rangoMedraSel=''">
+                            <mat-icon>x</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                    <mat-form-field>
+                        <input matInput [(ngModel)]="inicioSemanaMedra" type="date"
+                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'">
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-outline-success" (click)="cargarGraficaMedra()">
+                        <label *ngIf="lang() === 'es'">Mostrar</label>
+                        <label *ngIf="lang() === 'en'">Show</label>
+                        <label *ngIf="lang() === 'br'">Mostrar</label>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <mat-form-field class="iniFiltro">
+                        <mat-select matSelect [placeholder]="lang() == 'es'? 'SOC' : 
+                                    lang() == 'en'? 'SOC' : 'SOC' " [(ngModel)]="socMedraSel" name="socMedraSel"
+                            [value]="socMedraSel" (selectionChange)="cargarMedra(socMedraSel)">
+                            <mat-option *ngFor="let op of socMedra" [value]="op" [matTooltip]="op">
+                                {{op}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-7">
+                    <mat-form-field class="example-full-width filterInput">
+                        <input type="text" [placeholder]="lang() == 'es'? 'MedDRA' : 
+                                    lang() == 'en'? 'MedDRA' : 'MedDRA' " aria-label="Number" matInput
+                            [formControl]="myControlMedra" [matAutocomplete]="autoMedra"
+                            [ngStyle]="{'background-color':optionsMedra.length === 0?'#DBDAC1':''}"
+                            [(ngModel)]="selMedra" oninput="this.value = this.value.toUpperCase()">
+                        <mat-spinner *ngIf="optionsMedra.length === 0" matSuffix [diameter]="18"
+                            style="float: right; margin-left: 8px"></mat-spinner>
+                        <button mat-button *ngIf="selMedra" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="selMedra=''">
+                            <mat-icon>x</mat-icon>
+                        </button>
+                        <mat-autocomplete #autoMedra="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOptionsMedra | async" [value]="option"
+                                [matTooltip]="option">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div>
+                <mat-progress-bar *ngIf="cargandoMedra" mode="indeterminate"></mat-progress-bar>
+                <highcharts-chart [Highcharts]="Highcharts" [options]="graficaCombinadaMedra"
+                    style="width: 100%; height: 400px; display: block;">
+                </highcharts-chart>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="panelGraficaPade p-3 m-3">
             <div class="row">
                 <div class="col-sm-4">
                     <mat-form-field>
@@ -88,6 +170,7 @@
                     <mat-form-field class="example-full-width filterInput">
                         <input type="text" [placeholder]="lang() == 'es'? 'Diagnostico' : 
                         lang() == 'en'? 'Diagnostic' : 'Diagnóstico' " aria-label="Number" matInput
+                        [ngStyle]="{'background-color':optionsPade.length === 0?'#DBDAC1':''}"
                             [formControl]="myControlPade" [matAutocomplete]="autoPade" [(ngModel)]="selPade"
                             oninput="this.value = this.value.toUpperCase()">
                         <mat-spinner *ngIf="optionsPade.length === 0" matSuffix [diameter]="18"
@@ -105,11 +188,11 @@
                     </mat-form-field>
                 </div>
             </div>
-                <div>
-                    <mat-progress-bar *ngIf="cargandoPade" mode="indeterminate"></mat-progress-bar>
-                    <highcharts-chart [Highcharts]="Highcharts" [options]="graficaCombinada"
-                        style="width: 100%; height: 400px; display: block;">
-                    </highcharts-chart>
+            <div>
+                <mat-progress-bar *ngIf="cargandoPade" mode="indeterminate"></mat-progress-bar>
+                <highcharts-chart [Highcharts]="Highcharts" [options]="graficaCombinada"
+                    style="width: 100%; height: 400px; display: block;">
+                </highcharts-chart>
             </div>
         </div>
     </div>

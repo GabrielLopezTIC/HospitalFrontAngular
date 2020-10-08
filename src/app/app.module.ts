@@ -83,7 +83,8 @@ PdfMakeWrapper.setFonts(pdfFonts);
     PadecimientoListaComponent,
     NuevoPadecimientoComponent,
     MenuPadecimientoComponent,
-    NuevoPadecimientoComponent
+    NuevoPadecimientoComponent,
+    
     
   ],
   imports: [
@@ -110,7 +111,7 @@ PdfMakeWrapper.setFonts(pdfFonts);
     HighchartsChartModule,
     MatStepperModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
   ],
   providers: [
     interceptorProvider

@@ -1,14 +1,8 @@
-/*.color-theme-green{
-    background-color:#BFDB6A !important;
-}*/
-
-
 .pade-container-list {
     width: 95%;
     height: 200px;
     overflow: auto;
   }
-
 
   .terap-container-list {
     width: 95%;
@@ -24,16 +18,9 @@
     width: 100%;
   }
 
- 
-
-  /*.container{
-    width: 100% !important;
-  }*/
-
   .border-top-0{
     border-width:3px !important;
   }
-
 
   .principal {
     display: flex;
@@ -47,6 +34,7 @@
 -moz-box-shadow: 7px 7px 27px 2px rgba(0,0,0,0.5);
 box-shadow: 7px 7px 27px 2px rgba(0,0,0,0.5);
 }
+
 mat-form-field {
   width: 90%;
 }

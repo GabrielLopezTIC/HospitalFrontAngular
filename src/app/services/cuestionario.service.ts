@@ -75,8 +75,8 @@ export class CuestionarioService {
    * @param nombre Actualiza el registro de un cuestionario
    * @param cuestionario 
    */
-  public update(nombre: String, cuestionario: Cuestionario): Observable<any> {
-    return this.httpClient.put<any>(this.cuestionarioURL + "update/" + nombre, cuestionario);
+  public update(clave: String, cuestionario: Cuestionario): Observable<any> {
+    return this.httpClient.put<any>(this.cuestionarioURL + "update/" + clave, cuestionario);
   }
 
   /**
@@ -146,6 +146,37 @@ export class CuestionarioService {
    */
   public datosGraficaPadecimientosSemanalesMedico(fecha: string, pade: string): Observable<DatosGraficaPadecimientoDto> {
     return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphWeek/medico/date/"+fecha+"/pade/"+pade);
+  }
+
+
+  ////////////////////////////////////////////////////////////////////MedDRA
+  
+  /**
+   * Graficas mensuiales padecimientos para admin
+   */
+  public datosGraficaMedraMensualesAdmin(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphMounth/admin/date/"+fecha+"/medra/"+medra);
+  }
+
+  /**
+   * Graficas mensuiales padecimientos para medicos
+   */
+  public datosGraficaMedraMensualesMedico(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphMounth/admin/date/"+fecha+"/medra/"+medra);
+  }
+
+   /**
+   * Graficas semanales padecimientos para admin
+   */
+  public datosGraficaMedraSemanalesAdmin(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphWeek/admin/date/"+fecha+"/medra/"+medra);
+  }
+
+  /**
+   * Graficas semanaes padecimientos para medicos
+   */
+  public datosGraficaMedraSemanalesMedico(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphWeek/medico/date/"+fecha+"/medra/"+medra);
   }
 
 }
