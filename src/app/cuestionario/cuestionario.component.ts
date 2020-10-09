@@ -35,6 +35,9 @@ export class GeneroOpc {
 })
 
 export class CuestionarioComponent implements OnInit {
+
+  
+
   public registrando: boolean = false; // indica si se esta llevando a cabo el proceso de registro , se utiliza para animaciones
   public turno: string; // turno
   ///////////////////////////////////////genero
@@ -509,9 +512,13 @@ export class CuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let risk = "";
     data.terapeuticas.forEach(terap => {
-      risk = risk + "RIESGOS IMPORTANTES: ( " + terap.medicamento.importantRiskEs + " ) \n" +
-        "RIESGOS POTENCIALES: ( " + terap.medicamento.importantPotentialRiskEs + " ) \n";
+      risk = risk + 
+      "MEDICAMENTO: [ "+terap.medicamento.productName+" ] \n\n"+
+      "RIESGOS IMPORTANTES: ( " + terap.medicamento.importantRiskEs + " ) \n\n" +
+      "RIESGOS POTENCIALES: ( " + terap.medicamento.importantPotentialRiskEs + " ) \n\n"+
+      "INFORMACION FALTANTE: ( "+ terap.medicamento.missingInfoEs+ " ) \n\n\n\n"; 
     });
+    
 
     bod.push([{ content: 'CONCORDANCIA CON RIESGOS IDENTIFICADOS', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: risk, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }]);
@@ -521,7 +528,7 @@ export class CuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const doc = new jsPDF()
     autoTable(doc,
-      {
+      { 
         didDrawCell: (data) => {
           if (data.column.index === 0 && data.row.index === 1) {
             doc.addImage(this.getLogo(), 'PNG', data.cell.x + 5, data.cell.y + 5, 50, 20);
@@ -665,8 +672,11 @@ export class CuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let risk = "";
     data.terapeuticas.forEach(terap => {
-      risk = risk + "IMPORTANT RISK: ( " + terap.medicamento.importantRiskEn + " ) \n" +
-        "POTENTIAL RISK: ( " + terap.medicamento.importantPotentialRiskEn + " ) \n";
+      risk = risk + 
+      "DRUG: [ "+terap.medicamento.productName+" ] \n\n"+
+      "IMPORTANT RISK: ( " + terap.medicamento.importantRiskEn + " ) \n\n" +
+      "POTENTIAL RISK: ( " + terap.medicamento.importantPotentialRiskEn + " ) \n\n"+
+      "MISSING INFO: ( "+ terap.medicamento.missingInfoEn+ " ) \n\n\n\n"; 
     });
 
     bod.push([{ content: 'CONCORDANCE WITH IDENTIFIED RISKS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
@@ -783,7 +793,7 @@ export class CuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'DROGAS UTILIZADAS', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    bod.push([{ content: 'DROGAS PRESCRITAS', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'GENÉRICO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: 'DISTINTIVO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
@@ -821,9 +831,13 @@ export class CuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let risk = "";
     data.terapeuticas.forEach(terap => {
-      risk = risk + "RIESGOS IMPORTANTES: ( " + terap.medicamento.importantRiskBr + " ) \n" +
-        "RIESGOS POTENCIALES: ( " + terap.medicamento.importantPotentialRiskBr + " ) \n";
+      risk = risk + 
+      "MEDICAMENTO: [ "+terap.medicamento.productName+" ] \n\n"+
+      "RISCOS IMPORTANTES: ( " + terap.medicamento.importantRiskBr + " ) \n\n" +
+      "RISCOS POTENCIAIS: ( " + terap.medicamento.importantPotentialRiskBr + " ) \n\n"+
+      "FALTA DE INFORMAÇÃO: ( "+ terap.medicamento.missingInfoBr+ " ) \n\n\n\n"; 
     });
+    
 
     bod.push([{ content: 'CONCORDÂNCIA COM RISCOS IDENTIFICADOS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: risk, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
@@ -882,10 +896,38 @@ export class CuestionarioComponent implements OnInit {
     this.medraList = []; //lista que guarda los padecimientos elegidos momentaneamente
   }
 
+
+
+
+
+
+
  // regresa el lenguaje en el que se esta trabajando
   public lang(): string {
     return this.language.lang();
   }
+
+  public comparaFechaNacimiento(fecha:string): boolean{
+    let fechaHoy =  moment().format("YYYY-MM-DD")
+    return moment(fecha).isAfter(fechaHoy);
+  }
+
+  public comparaFechaInicioMed(fecha:string): boolean{
+    let fechaAyer =  moment().subtract(1, "days").format("YYYY-MM-DD")
+    return !moment(fecha).isAfter(fechaAyer);
+  }
+
+  public comparaFechaTerminoMed(fechaIni:string,fechaTerm:string):boolean{
+    return !moment(fechaTerm).isAfter(moment(fechaIni).subtract(1, "days").format("YYYY-MM-DD"));
+  }
+  public comparaFechaCaducidadMed(fechaBase:string):boolean{
+    let fechaHoy =  moment().subtract(1, "days").format("YYYY-MM-DD")
+    return !moment(fechaBase).isAfter(fechaHoy);
+  }
+
+
+
+
 
   //solo permite decimales en un campo de texto
   public onlyDecimalNumberKey(event): boolean {

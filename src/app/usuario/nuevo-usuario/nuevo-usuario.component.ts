@@ -13,27 +13,19 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class NuevoUsuarioComponent implements OnInit {
 
-  rolesListAdmin:string[]=["medico","admin"];
-  rolesListMedico:string[]=["farmaceutico"];
-  rolesList:string[] = this.roleType()=="ROLE_ADMIN"? this.rolesListAdmin : this.rolesListMedico;
+  public rolesList:string[] = this.roleType()=="ROLE_ADMIN"? ["medico","admin"] : ["farmaceutico"];
 
-
-  nuevoUsuario: NuevoUsuario;
-  nombre: string;
-  nombreUsuario: string;
-  email: string;
-  password: string;
-  passwordConf:string;
-  rolSelec: String;
+  public nuevoUsuario: NuevoUsuario;
+  public nombre: string;
+  public nombreUsuario: string;
+  public email: string;
+  public password: string;
+  public passwordConf:string;
+  public rolSelec: String;
   sub:string[] = [];
   sup:string[] = [];
 
-
-
-
-  errMsj: string;
-  isLogged = false;
-  passConfirm='#f00';
+  public passConfirm='#f00';
 
   constructor(
     private tokenService: TokenService,
@@ -44,20 +36,16 @@ export class NuevoUsuarioComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.tokenService.getToken()) {
-      this.isLogged = true;
-    }
-
     if(this.roleType() == "ROLE_MEDICO"){
       this.rolSelec = "farmaceutico";
-    }
-
-    if(this.roleType() == "ROLE_MEDICO"){
       this.sup.push(this.tokenService.getUserName());
     }
   }
 
-  verifPass(){
+  /**
+   * Verifica que las contraseñas introduccidas sean iguales y su no marca de rojo el campo
+   */
+  public verifPass(): void{
     if(this.password != '' && (this.password == this.passConfirm)){
       this.passConfirm = 'white';
     }else{
@@ -65,9 +53,10 @@ export class NuevoUsuarioComponent implements OnInit {
     }
   }
 
-  onRegister(): void {
+  public onRegister(): void {
     if(confirm("Desea registrar al usuario") === true ){
-      this.nuevoUsuario = new NuevoUsuario(this.nombre,
+      this.nuevoUsuario = new NuevoUsuario(
+        this.nombre,
         this.nombreUsuario,
         this.email,
         this.password,
@@ -77,15 +66,15 @@ export class NuevoUsuarioComponent implements OnInit {
         );
       this.usuarioService.nuevo(this.nuevoUsuario).subscribe(
         data => {
-          this.updateSubs(this.tokenService.getUserName());
+          //this.updateSubs(this.tokenService.getUserName());
+
           this.toastr.success('Cuenta Creada', 'OK', {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
           this.router.navigate(['/listaUsuario']);
         },
         err => {
-          this.errMsj = err.error.mensaje;
-          this.toastr.error(this.errMsj, 'Fail', {
+          this.toastr.error("Error al registrar el usuario", 'Fail', {
             timeOut: 3000,  positionClass: 'toast-top-center',
           });
         }
@@ -93,6 +82,7 @@ export class NuevoUsuarioComponent implements OnInit {
     }
   }
 
+  /*
   updateSubsUser:NuevoUsuario;
   updateSubs(username:string){
     this.usuarioService.details(username).subscribe(
@@ -113,10 +103,9 @@ export class NuevoUsuarioComponent implements OnInit {
         console.log("Error al actualizar subs");
       }
     );
-  }
+  }*/
 
-
-  roleType(){
+  public roleType(): string{
     return this.tokenService.getAuthorities()[0];
   }
 

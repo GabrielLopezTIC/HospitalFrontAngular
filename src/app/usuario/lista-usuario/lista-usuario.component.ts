@@ -60,7 +60,6 @@ export class ListaUsuarioComponent implements OnInit {
 
 
   cargarRegistros(page: number, size: number, orderBy: string): void {
-    if(this.roleType() == "ROLE_ADMIN"){
       this.usuarioService.findAllPagination(page, size, orderBy).subscribe(
         data => {
           this.usuarios = data['content'];
@@ -72,23 +71,9 @@ export class ListaUsuarioComponent implements OnInit {
           });
         }
       );
-    }else if(this.roleType() == "ROLE_MEDICO"){
-      this.usuarioService.findAllPaginationByUserAnSub(this.tokenService.getUserName(),page, size, orderBy).subscribe(
-        data => {
-          this.usuarios = data['content'];
-          this.totalPages = data['totalPages'];
-        },
-        error =>{
-          this.toastr.error("Tu sesión expiró o no tienes los permisos para ver esto", 'Fail', {
-            timeOut: 3000, positionClass: 'toast-top-center',
-          });
-        }
-      );
-    }
   }
 
   buscar(){
-    if(this.roleType()=='ROLE_ADMIN'){
     this.usuarioService.details(this.nombreUsuario).subscribe(
       data => {
         this.usuarios = [];
@@ -100,19 +85,6 @@ export class ListaUsuarioComponent implements OnInit {
         });
       }
     );
-    }else{
-      this.usuarioService.detailsByMedico(this.nombreUsuario).subscribe(
-        data => {
-          this.usuarios = [];
-          this.usuarios.push(data);
-        },
-        error => {
-          this.toastr.error("Usuario no encontrado", '', {
-            timeOut: 3000, positionClass: 'toast-top-center',
-          });
-        }
-      );
-    }
   }
 
 

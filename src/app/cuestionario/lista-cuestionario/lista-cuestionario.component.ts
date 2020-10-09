@@ -69,7 +69,6 @@ export class ListaCuestionarioComponent implements OnInit {
 
 
   cargarRegistros(page: number, size: number, orderBy: string): void {
-    if (this.tokenService.getAuthorities()[0] == 'ROLE_ADMIN') {
       this.cuestionarioService.findAllPagination(page, size, orderBy).subscribe(
         data => {
           this.cuestionarios = data['content'];
@@ -83,24 +82,7 @@ export class ListaCuestionarioComponent implements OnInit {
           });
         }
       );
-    } else {
-      this.cuestionarioService.findAllPaginationByMedico(this.tokenService.getUserName(),page,size,orderBy).subscribe(
-        data => {
-          console.log(data);
-          this.cuestionarios = data['content'];
-          this.totalPages = data['totalPages'];
-        },
-        error => {
-          console.log(error);
-          this.toastr.error(error.error.mensaje, 'Tu sesion expiró o no tienes los permisos para ver esto', {
-            timeOut: 3000, positionClass: 'toast-top-center',
-          });
-        }
-      );
     }
-
-
-  }
 
   buscar(){
     this.cuestionarioService.details(this.clavePaciente).subscribe(

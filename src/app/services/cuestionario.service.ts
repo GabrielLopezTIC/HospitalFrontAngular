@@ -35,24 +35,7 @@ export class CuestionarioService {
     return this.httpClient.get<Cuestionario[]>(this.cuestionarioURL + "findAll/page/" + page + "/size/" + size + "/orderCol/" + orderBy);
   }
 
-  /**
-   * Retorna una lista paginada de los cuestionarios registrados
-   * @param page 
-   * @param size 
-   * @param orderBy 
-   */
-  public findAllPaginationByMedico(nombre: string, page: number, size: number, orderBy: string): Observable<Cuestionario[]> {
-    return this.httpClient.get<Cuestionario[]>(this.cuestionarioURL + "findAll/user/" + nombre + "/page/" + page + "/size/" + size + "/orderCol/" + orderBy);
-  }
 
-
-  /**
-   * Regresa una lista  de los cuestionarios que fuerin registrados por nombre o sus subencargados
-   * @param nombre 
-   */
-  public findAllByName(nombre: string): Observable<Cuestionario[]> {
-    return this.httpClient.get<Cuestionario[]>(this.cuestionarioURL + "findAll/" + nombre);
-  }
 
   /**
    * Guarda un nuevo cuestionario
@@ -89,94 +72,50 @@ export class CuestionarioService {
 
 
   /**
-   * graficas semanales para admibistradores
+   * graficas semanales para 
    */
-  public datosGraficaToxicomaniasAdmin(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
-    return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(this.cuestionarioURL + "findDataGraphWeek/admin/date/" + fecha + "/lang/" + lenguaje);
+  public datosGraficaToxicomaniasSemanales(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
+    return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(this.cuestionarioURL + "findDataGraphWeek/date/" + fecha + "/lang/" + lenguaje);
   }
 
   /**
-   * grafica semanales para medicos
-   * @param fecha
-   * @param lenguaje 
+   * Graficas mensuiales toxicomanias
    */
-  public datosGraficaToxicomaniasMedico(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
-    return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(this.cuestionarioURL + "findDataGraphWeek/medico/date/" + fecha + "/lang/" + lenguaje);
-  }
-
-  /**
-   * Graficas mensuiales toxicomanias para admin
-   */
-  public datosGraficaToxicomaniasMensualesAdmin(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
-    return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(this.cuestionarioURL + "findDataGraphMounth/admin/date/" + fecha + "/lang/" + lenguaje);
-  }
-
-  /**
-   * Graficas mensuiales toxicomanias para medicos
-   */
-  public datosGraficaToxicomaniasMensualesMedico(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
-    return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(this.cuestionarioURL + "findDataGraphMounth/medico/date/" + fecha + "/lang/" + lenguaje);
+  public datosGraficaToxicomaniasMensuales(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
+    return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(this.cuestionarioURL + "findDataGraphMounth/date/" + fecha + "/lang/" + lenguaje);
   }
 
 ////////////////////////////////////////////////////////////////////PAdecimientoa
   
   /**
-   * Graficas mensuiales padecimientos para admin
+   * Graficas mensuiales padecimientos
    */
-  public datosGraficaPadecimientosMensualesAdmin(fecha: string, pade: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphMounth/admin/date/"+fecha+"/pade/"+pade);
-  }
-
-  /**
-   * Graficas mensuiales padecimientos para medicos
-   */
-  public datosGraficaPadecimientosMensualesMedico(fecha: string, pade: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphMounth/admin/date/"+fecha+"/pade/"+pade);
+  public datosGraficaPadecimientosMensuales(fecha: string, pade: string): Observable<DatosGraficaPadecimientoDto> {
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphMounth/date/"+fecha+"/pade/"+pade);
   }
 
    /**
-   * Graficas semanales padecimientos para admin
+   * Graficas semanales padecimientos
    */
-  public datosGraficaPadecimientosSemanalesAdmin(fecha: string, pade: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphWeek/admin/date/"+fecha+"/pade/"+pade);
+  public datosGraficaPadecimientosSemanales(fecha: string, pade: string): Observable<DatosGraficaPadecimientoDto> {
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphWeek/date/"+fecha+"/pade/"+pade);
   }
-
-  /**
-   * Graficas semanaes padecimientos para medicos
-   */
-  public datosGraficaPadecimientosSemanalesMedico(fecha: string, pade: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataPadeGraphWeek/medico/date/"+fecha+"/pade/"+pade);
-  }
-
 
   ////////////////////////////////////////////////////////////////////MedDRA
   
   /**
-   * Graficas mensuiales padecimientos para admin
+   * Graficas mensuiales padecimientos
    */
-  public datosGraficaMedraMensualesAdmin(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphMounth/admin/date/"+fecha+"/medra/"+medra);
-  }
-
-  /**
-   * Graficas mensuiales padecimientos para medicos
-   */
-  public datosGraficaMedraMensualesMedico(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphMounth/admin/date/"+fecha+"/medra/"+medra);
+  public datosGraficaMedraMensuales(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphMounth/date/"+fecha+"/medra/"+medra);
   }
 
    /**
-   * Graficas semanales padecimientos para admin
+   * Graficas semanales padecimientos
    */
-  public datosGraficaMedraSemanalesAdmin(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphWeek/admin/date/"+fecha+"/medra/"+medra);
+  public datosGraficaMedraSemanales(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
+    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphWeek/date/"+fecha+"/medra/"+medra);
   }
 
-  /**
-   * Graficas semanaes padecimientos para medicos
-   */
-  public datosGraficaMedraSemanalesMedico(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
-    return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphWeek/medico/date/"+fecha+"/medra/"+medra);
-  }
 
 }

@@ -198,7 +198,7 @@ export class EstadisticasComponent implements OnInit {
       }
     }]
 
-    
+
 
 
     this.graficaCombinada = {
@@ -222,58 +222,30 @@ export class EstadisticasComponent implements OnInit {
   cargarGraficaPade(): void {
     this.cargandoPade = true; // activa la animacion de carga
     if (this.rangoPadeSel == "S") { // grafica semanañl
-      if (this.roleType() == "ROLE_ADMIN") {
-        this.cuestService.datosGraficaPadecimientosSemanalesAdmin(this.inicioSemanaPade, this.selPade).subscribe(
-          data => {
-            console.log("admin semanal")
-            this.creaGraficaPade(data);
-            console.log(data);
-            this.cargandoPade = false; // desactiva la animacion de carga
-          },
-          error => {
-            this.cargandoPade = false;
-          }
-        );
-      }
-      if (this.roleType() == "ROLE_MEDICO") {
-        this.cuestService.datosGraficaPadecimientosSemanalesMedico(this.inicioSemanaPade, this.selPade).subscribe(
-          data => {
-            this.creaGraficaPade(data);
-            console.log(data);
-            this.cargandoPade = false;
-          },
-          error => {
-            this.cargandoPade = false;
-          }
-        );
-      }
+      this.cuestService.datosGraficaPadecimientosSemanales(this.inicioSemanaPade, this.selPade).subscribe(
+        data => {
+          console.log("admin semanal")
+          this.creaGraficaPade(data);
+          console.log(data);
+          this.cargandoPade = false; // desactiva la animacion de carga
+        },
+        error => {
+          this.cargandoPade = false;
+        }
+      );
     }
     if (this.rangoPadeSel == "M") { // mensual
-      if (this.roleType() == "ROLE_ADMIN") {
-        this.cuestService.datosGraficaPadecimientosMensualesAdmin(this.inicioSemanaPade, this.selPade).subscribe(
-          data => {
-            console.log("admin mensual")
-            this.creaGraficaPade(data);
-            console.log(data);
-            this.cargandoPade = false;
-          },
-          error => {
-            this.cargandoPade = false;
-          }
-        );
-      }
-      if (this.roleType() == "ROLE_MEDICO") {
-        this.cuestService.datosGraficaPadecimientosMensualesMedico(this.inicioSemanaPade, this.selPade).subscribe(
-          data => {
-            console.log("medico mensual")
-            this.creaGraficaPade(data);
-            this.cargandoPade = false;
-          },
-          error => {
-            this.cargandoPade = false;
-          }
-        );
-      }
+      this.cuestService.datosGraficaPadecimientosMensuales(this.inicioSemanaPade, this.selPade).subscribe(
+        data => {
+          console.log("admin mensual")
+          this.creaGraficaPade(data);
+          console.log(data);
+          this.cargandoPade = false;
+        },
+        error => {
+          this.cargandoPade = false;
+        }
+      );
     }
   }
 
@@ -319,7 +291,7 @@ export class EstadisticasComponent implements OnInit {
 
     if (this.rangoMedraSel == "S") { // grafica semanal
       title = this.lang() == 'en' ? "Weekly MedDRA summary " : this.lang() == 'br' ? "Resumo semanal da MedDRA " : "Resumen semanal MedDRA ";
-     
+
       // labels de las fechas
       categorias = [datos.datos[0].fecha, datos.datos[1].fecha, datos.datos[2].fecha,
       datos.datos[3].fecha, datos.datos[4].fecha, datos.datos[5].fecha, datos.datos[6].fecha];
@@ -377,7 +349,7 @@ export class EstadisticasComponent implements OnInit {
       }
     }]
 
-    
+
 
 
     this.graficaCombinadaMedra = {
@@ -402,56 +374,30 @@ export class EstadisticasComponent implements OnInit {
   cargarGraficaMedra(): void {
     this.cargandoMedra = true; // activa la animacion de carga
     if (this.rangoMedraSel == "S") { // grafica semanañl
-      if (this.roleType() == "ROLE_ADMIN") {
-        this.cuestService.datosGraficaMedraSemanalesAdmin(this.inicioSemanaMedra, this.selMedra).subscribe(
-          data => {
-            this.creaGraficaMedra(data);
-            this.cargandoMedra = false; // desactiva la animacion de carga
-          },
-          error => {
-            this.cargandoMedra = false;
-          }
-        );
-      }
-      if (this.roleType() == "ROLE_MEDICO") {
-        this.cuestService.datosGraficaMedraSemanalesMedico(this.inicioSemanaMedra, this.selMedra).subscribe(
-          data => {
-            this.creaGraficaMedra(data);
-            console.log(data);
-            this.cargandoMedra = false;
-          },
-          error => {
-            this.cargandoMedra = false;
-          }
-        );
-      }
+      this.cuestService.datosGraficaMedraSemanales(this.inicioSemanaMedra, this.selMedra).subscribe(
+        data => {
+          console.log("semanal");
+          console.log(data);
+          this.creaGraficaMedra(data);
+          this.cargandoMedra = false; // desactiva la animacion de carga
+        },
+        error => {
+          this.cargandoMedra = false;
+        }
+      );
     }
     if (this.rangoMedraSel == "M") { // mensual
-      if (this.roleType() == "ROLE_ADMIN") {
-        this.cuestService.datosGraficaMedraMensualesAdmin(this.inicioSemanaMedra, this.selMedra).subscribe(
-          data => {
-            console.log("admin mensual")
-            this.creaGraficaMedra(data);
-            console.log(data);
-            this.cargandoMedra = false;
-          },
-          error => {
-            this.cargandoMedra = false;
-          }
-        );
-      }
-      if (this.roleType() == "ROLE_MEDICO") {
-        this.cuestService.datosGraficaMedraMensualesMedico(this.inicioSemanaMedra, this.selMedra).subscribe(
-          data => {
-            console.log("medico mensual")
-            this.creaGraficaMedra(data);
-            this.cargandoMedra = false;
-          },
-          error => {
-            this.cargandoMedra = false;
-          }
-        );
-      }
+      this.cuestService.datosGraficaMedraMensuales(this.inicioSemanaMedra, this.selMedra).subscribe(
+        data => {
+          console.log("mensual");
+          this.creaGraficaMedra(data);
+          console.log(data);
+          this.cargandoMedra = false;
+        },
+        error => {
+          this.cargandoMedra = false;
+        }
+      );
     }
   }
 
@@ -569,56 +515,28 @@ export class EstadisticasComponent implements OnInit {
   cargaGraficaToxic(): void {
     this.cargando = true; // inicia animacion de cargando
     if (this.rangoSel == "S") { // si la grafica sera semanal
-      if (this.roleType() == "ROLE_ADMIN") {
-        this.cuestService.datosGraficaToxicomaniasAdmin(this.inicioSemana, this.lang()).subscribe(
-          data => {
-            this.graficaToxic(data); // genera la grafica
-            this.cargando = false; // desactiva la animacion de carga
-          },
-          error => {
-            this.cargando = false; // desactiva la animacion de carga
-          }
-        );
-      }
-      if (this.roleType() == "ROLE_MEDICO") {
-        this.cuestService.datosGraficaToxicomaniasMedico(this.inicioSemana, this.lang()).subscribe(
-          data => {
-            this.graficaToxic(data);
-            this.cargando = false;
-          },
-          error => {
-            this.cargando = false;
-          }
-        );
-      }
+      this.cuestService.datosGraficaToxicomaniasSemanales(this.inicioSemana, this.lang()).subscribe(
+        data => {
+          this.graficaToxic(data); // genera la grafica
+          this.cargando = false; // desactiva la animacion de carga
+        },
+        error => {
+          this.cargando = false; // desactiva la animacion de carga
+        }
+      );
     }
     if (this.rangoSel == "M") { // si la grafica sera mensual
-      if (this.roleType() == "ROLE_ADMIN") {
-        this.cuestService.datosGraficaToxicomaniasMensualesAdmin(this.inicioSemana, this.lang()).subscribe(
-          data => {
-            this.graficaToxic(data);
-            this.cargando = false;
-          },
-          error => {
-            this.cargando = false;
-          }
-        );
-      }
-      if (this.roleType() == "ROLE_MEDICO") {
-        this.cuestService.datosGraficaToxicomaniasMensualesMedico(this.inicioSemana, this.lang()).subscribe(
-          data => {
-            this.graficaToxic(data);
-            this.cargando = false;
-          },
-          error => {
-            this.cargando = false;
-          }
-        );
-      }
-
+      this.cuestService.datosGraficaToxicomaniasMensuales(this.inicioSemana, this.lang()).subscribe(
+        data => {
+          this.graficaToxic(data);
+          this.cargando = false;
+        },
+        error => {
+          this.cargando = false;
+        }
+      );
     }
   }
-
 
   lang(): string {
     return this.authService.lang();

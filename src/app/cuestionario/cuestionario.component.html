@@ -114,7 +114,7 @@
                     <div class="col-sm-3">
                         <mat-form-field>
                             <input matInput [(ngModel)]="f_nac" type="date" [placeholder]="lang() == 'es'? 'Ingrese fecha de nacimiento' : 
-                                lang() == 'en'? 'Enter date of birth' : 'Digite a data de nascimento' ">
+                                lang() == 'en'? 'Enter date of birth' : 'Digite a data de nascimento' " [ngStyle]="{'background-color':comparaFechaNacimiento(f_nac)?'#f57f7f':''}">
                         </mat-form-field>
                     </div>
                     <div class="col-sm-3">
@@ -529,7 +529,8 @@
                                                         <mat-form-field>
                                                             <input matInput type="date" [(ngModel)]="terap.fInicio"
                                                                 [placeholder]="lang() == 'es'? 'Fecha de inicio' : 
-                                                                    lang() == 'en'? 'Initial date' : 'Data inicial' ">
+                                                                    lang() == 'en'? 'Initial date' : 'Data inicial' "
+                                                                    [ngStyle]="{'background-color':comparaFechaInicioMed(terap.fInicio)?'#f57f7f':''}" >
                                                         </mat-form-field>
                                                     </div>
                                                 </div>
@@ -538,14 +539,17 @@
                                                         <mat-form-field>
                                                             <input matInput type="date" [(ngModel)]="terap.fTermino"
                                                                 [placeholder]="lang() == 'es'? 'Fecha termino' : 
-                                                                    lang() == 'en'? 'End date' : 'Date final' ">
+                                                                    lang() == 'en'? 'End date' : 'Date final' "
+                                                                    [ngStyle]="{'background-color':comparaFechaTerminoMed(terap.fInicio,terap.fTermino)?'#f57f7f':''}"
+                                                                    >
                                                         </mat-form-field>
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <mat-form-field>
                                                             <input matInput type="date" [(ngModel)]="terap.caducidad"
                                                                 [placeholder]="lang() == 'es'? 'Caducidad' : 
-                                                                    lang() == 'en'? 'Expiration' : 'Expiração' ">
+                                                                    lang() == 'en'? 'Expiration' : 'Expiração' "
+                                                                    [ngStyle]="{'background-color':comparaFechaCaducidadMed(terap.caducidad)?'#f57f7f':''}">
                                                         </mat-form-field>
                                                     </div>
                                                     <div class="col-sm-4">

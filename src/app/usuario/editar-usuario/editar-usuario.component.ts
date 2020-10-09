@@ -13,14 +13,14 @@ import { TokenService } from 'src/app/services/token.service';
 })
 export class EditarUsuarioComponent implements OnInit {
 
-  usuario: Usuario;
-  rolesList: string[] = ["medico", "practicante", "admin"];
-  usuarioAct: NuevoUsuario;
-  password: string = "";
-  passwordConf: string = "";
-  rolSelec: string;
-  sub: string[];
-  sup: string[];
+  public usuario: Usuario;
+  public rolesList: string[] = ["medico", "practicante", "admin"];
+  public usuarioAct: NuevoUsuario;
+  public password: string = "";
+  public passwordConf: string = "";
+  public rolSelec: string;
+  public sub: string[];
+  public sup: string[];
 
   constructor(
     private usuarioService: UsuarioService,
@@ -32,8 +32,6 @@ export class EditarUsuarioComponent implements OnInit {
 
   ngOnInit() {
     const nombreUsuario = this.activatedRoute.snapshot.params.nombreUsuario;
-
-    if(this.roleType()=='ROLE_ADMIN'){
     this.usuarioService.details(nombreUsuario).subscribe(
       data => {
         this.usuario = data;
@@ -51,39 +49,15 @@ export class EditarUsuarioComponent implements OnInit {
         });
         this.router.navigate(['/listaUsuario']);
       }
-    );}
-    else{
-      this.usuarioService.detailsByMedico(nombreUsuario).subscribe(
-        data => {
-          this.usuario = data;
-          if (this.usuario.roles[0]['rolNombre'] === 'ROLE_ADMIN') {
-            this.rolSelec = 'admin';
-          } else if (this.usuario.roles[0]['rolNombre'] === 'ROLE_MEDICO') {
-            this.rolSelec = 'medico';
-          } else if (this.usuario.roles[0]['rolNombre'] === 'ROLE_FARMACEUTICO') {
-            this.rolSelec = 'farmaceutico';
-          }
-        },
-        err => {
-          this.toastr.error(err.error.mensaje, 'Fail', {
-            timeOut: 3000, positionClass: 'toast-top-center',
-          });
-          this.router.navigate(['/listaUsuario']);
-        }
-      );
-    }
+    );
   }
 
-  onUpdate(): void {
-
+  public onUpdate(): void {
     if (confirm("Desea editar el usuario")) {
       const nombreUsuario = this.activatedRoute.snapshot.params.nombreUsuario;
-
       this.usuarioAct = new NuevoUsuario(this.usuario.nombre,
         this.usuario.nombreUsuario, this.usuario.email, this.password, [this.rolSelec], this.usuario.sub, this.usuario.sup);
 
-
-        if(this.roleType()=='ROLE_ADMIN'){
       this.usuarioService.update(nombreUsuario, this.usuarioAct).subscribe(
         data => {
           this.toastr.success('Usuario Actualizado', 'OK', {
@@ -97,26 +71,10 @@ export class EditarUsuarioComponent implements OnInit {
           });
         }
       );
-        }
-        else{
-          this.usuarioService.updateByMedico(nombreUsuario, this.usuarioAct).subscribe(
-            data => {
-              this.toastr.success('Usuario Actualizado', 'OK', {
-                timeOut: 3000, positionClass: 'toast-top-center'
-              });
-              this.router.navigate(['/listaUsuario']);
-            },
-            err => {
-              this.toastr.error(err.error.mensaje, 'Fail', {
-                timeOut: 3000, positionClass: 'toast-top-center',
-              });
-            }
-          );
-        }
     }
   }
 
-  roleType() {
+  public roleType(): string {
     return this.tokenService.getAuthorities()[0];
   }
 
