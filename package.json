@@ -27,6 +27,7 @@
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.5.9",
     "moment": "^2.27.0",
+    "ng-block-ui": "^3.0.2",
     "ngx-toastr": "^13.0.0",
     "pdfmake": "^0.1.60",
     "pdfmake-wrapper": "^2.0.0",

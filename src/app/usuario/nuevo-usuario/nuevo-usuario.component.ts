@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NuevoUsuario } from 'src/app/models/nuevo-usuario';
 import { AuthService } from 'src/app/services/auth.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-nuevo-usuario',
@@ -13,7 +14,11 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class NuevoUsuarioComponent implements OnInit {
 
+
   public rolesList:string[] = this.roleType()=="ROLE_ADMIN"? ["medico","admin"] : ["farmaceutico"];
+  public rolSelec: string;
+  public statusList = [{ clave: true, valor: 'Enable' }, { clave: false, valor: "Disable" }];
+  public statusSelect: boolean;
 
   public nuevoUsuario: NuevoUsuario;
   public nombre: string;
@@ -21,11 +26,13 @@ export class NuevoUsuarioComponent implements OnInit {
   public email: string;
   public password: string;
   public passwordConf:string;
-  public rolSelec: String;
+  
   sub:string[] = [];
   sup:string[] = [];
 
-  public passConfirm='#f00';
+  public passConfirm:string='#f00';
+  public creandoUsuario:boolean = false;
+  @BlockUI() blockUI: NgBlockUI;
 
   constructor(
     private tokenService: TokenService,
@@ -46,7 +53,7 @@ export class NuevoUsuarioComponent implements OnInit {
    * Verifica que las contraseñas introduccidas sean iguales y su no marca de rojo el campo
    */
   public verifPass(): void{
-    if(this.password != '' && (this.password == this.passConfirm)){
+    if(this.password != '' && (this.password == this.passwordConf)){
       this.passConfirm = 'white';
     }else{
       this.passConfirm='#f00';
@@ -54,56 +61,42 @@ export class NuevoUsuarioComponent implements OnInit {
   }
 
   public onRegister(): void {
+    
     if(confirm("Desea registrar al usuario") === true ){
       this.nuevoUsuario = new NuevoUsuario(
-        this.nombre,
-        this.nombreUsuario,
-        this.email,
-        this.password,
-        [this.rolSelec],
-        this.sub,
-        this.sup
+        this.nombre, // nombre
+        this.nombreUsuario, //nombre usuario
+        this.email, // email
+        this.password, //password
+        this.statusSelect, // enabled
+        [this.rolSelec], //roles
+        this.sub, // sub
+        this.sup // sup
         );
+        console.log(this.nuevoUsuario);
+        this.creandoUsuario = true;
+        let textoCargando = this.lang()=="en"? "Registering user..." : this.lang()=="br"? "Registrando usuário..." : "Registrando usuario..." ;
+        this.blockUI.start(textoCargando);
       this.usuarioService.nuevo(this.nuevoUsuario).subscribe(
         data => {
-          //this.updateSubs(this.tokenService.getUserName());
-
+        
           this.toastr.success('Cuenta Creada', 'OK', {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
+          this.creandoUsuario = false;
+          this.blockUI.stop();
           this.router.navigate(['/listaUsuario']);
         },
         err => {
           this.toastr.error("Error al registrar el usuario", 'Fail', {
             timeOut: 3000,  positionClass: 'toast-top-center',
           });
+          this.creandoUsuario = false;
+          this.blockUI.stop();
         }
       );
     }
   }
-
-  /*
-  updateSubsUser:NuevoUsuario;
-  updateSubs(username:string){
-    this.usuarioService.details(username).subscribe(
-      data =>{
-        this.updateSubsUser = data;
-        this.updateSubsUser.sub.push(this.nombreUsuario);
-        console.log("Subs locales actalizados");
-      },
-      err =>{
-        console.log("Error al buscar el medico")
-      }
-    );
-    this.usuarioService.update(username,this.updateSubsUser).subscribe(
-      data =>{
-        console.log("Subs server Actualizados")
-      },
-      err =>{
-        console.log("Error al actualizar subs");
-      }
-    );
-  }*/
 
   public roleType(): string{
     return this.tokenService.getAuthorities()[0];

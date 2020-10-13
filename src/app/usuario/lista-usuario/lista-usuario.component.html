@@ -42,13 +42,12 @@
                   <span *ngIf="lang()=='es'">Rol</span>
                   <span *ngIf="lang()=='en'">Role</span>
                   <span *ngIf="lang()=='br'">O cargo</span>
-
                 </th>
                 <th scope="col">
                   Sup
                 </th>
                 <th scope="col">
-                  Sub
+                  Status
                 </th>
                 <th scope="col" *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') ">
                   <span *ngIf="lang()=='es'">Editar</span>
@@ -63,23 +62,23 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngIf="usuarios.length == 0">
-                <td colspan="11">
+              <tr *ngIf="actualizandoLista">
+                <td colspan="11" *ngIf="usuarios.length == 0">
                   <div class="row wrapper">
-                    <div class="inner">
-                        <div class="row">
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <mat-spinner style="margin:0 auto;" matSuffix [diameter]="80"
-                                    style="float: right; margin-left: 8px"></mat-spinner>
-                            </div>
-                            <div class="col-sm-4"></div>
+                    <div class="inner" *ngIf="usuarios.length == 0">
+                      <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                          <mat-spinner style="margin:0 auto;" matSuffix [diameter]="80"
+                            style="float: right; margin-left: 8px"></mat-spinner>
                         </div>
-                        <div class="row">
-                            <h3>Cargando usuarios...</h3>
-                        </div>
+                        <div class="col-sm-4"></div>
+                      </div>
+                      <div class="row">
+                        <h3>Cargando usuarios...</h3>
+                      </div>
                     </div>
-                    </div>
+                  </div>
                 </td>
               </tr>
               <tr *ngFor="let usuario of usuarios" class="color-theme-dark-ligth">
@@ -88,7 +87,10 @@
                 <td>{{usuario.email}}</td>
                 <td>{{usuario.roles[0].rolNombre}}</td>
                 <td>{{usuario.sup}}</td>
-                <td>{{usuario.sub}}</td>
+                <td>
+                  <span *ngIf="usuario.enabled">Activada</span>
+                  <span *ngIf="!usuario.enabled">Desactivada</span>
+                </td>
                 <td *ngIf="(roleType() == 'ROLE_ADMIN') || (roleType() == 'ROLE_MEDICO') "><button
                     class="btn btn-outline-info" routerLink="/editarUsuario/{{usuario.nombreUsuario}}"><i
                       class="far fa-trash-alt"></i>

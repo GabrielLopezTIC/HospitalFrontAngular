@@ -57,7 +57,8 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 import { PadecimientoListaComponent } from './padecimientos/padecimiento-lista/padecimiento-lista.component';
 import { NuevoPadecimientoComponent } from './padecimientos/nuevo-padecimiento/nuevo-padecimiento.component';
 import { MenuPadecimientoComponent } from './menu-padecimiento/menu-padecimiento.component'; // fonts provided for pdfmake
- 
+import { BlockUIModule } from 'ng-block-ui';
+
 // Set the fonts to use
 PdfMakeWrapper.setFonts(pdfFonts);
 
@@ -89,6 +90,9 @@ PdfMakeWrapper.setFonts(pdfFonts);
   ],
   imports: [
     BrowserModule,
+    BlockUIModule.forRoot({
+      message: 'Default Message...'
+    }),
     AppRoutingModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),

@@ -19,6 +19,7 @@ import { TerapItem } from 'src/app/models/terap-item';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import { GeneroOpc, ToxicOpc } from '../cuestionario.component';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-editar-cuestionario',
@@ -26,6 +27,9 @@ import { GeneroOpc, ToxicOpc } from '../cuestionario.component';
   styleUrls: ['./editar-cuestionario.component.css']
 })
 export class EditarCuestionarioComponent implements OnInit {
+
+  @BlockUI() blockUI: NgBlockUI;
+
   public registrando: boolean = false;
   public turno: string; ///turno
   ///////////////////////////////////////genero opciones
@@ -69,6 +73,7 @@ export class EditarCuestionarioComponent implements OnInit {
   public padecimientosList = []; //lista que guarda los padecimientos elegidos momentaneamente
   public inicialesPade: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
   ///////////////////////////////////Terapeutica indicada
+  public iniTerap:string;
   public myControl = new FormControl();
   public optionsMedic: Medicamento[] = [];
   public options: string[] = [];
@@ -404,6 +409,8 @@ export class EditarCuestionarioComponent implements OnInit {
         this.gradoInfo,//gradoinfo
       );
 
+      let textoCargando = this.lang()=="en"? "Updating patient..." : this.lang()=="br"? "Atualizando paciente..." : "Actualizando paciente..." ;
+      this.blockUI.start(textoCargando);
       this.cuestionarioService.update(this.claveCuestionario, this.nuevoRegistro).subscribe( // registro de cuestionario
         data => {
           console.log(data);
@@ -412,18 +419,21 @@ export class EditarCuestionarioComponent implements OnInit {
           });
 
           this.registrando = false;
-
+          
           let texto = this.lang() === "es" ? "¿Desea imprimir formato?" : this.lang() === "en" ? "Do you want to print format?" : "Você quer imprimir o formato?";
 
           if (confirm(texto)) {
             this.lang() === "es" ? this.imprimePDFEs(data) : this.lang() === "en" ? this.imprimePDFEn(data) : this.imprimePDFBr(data);
+            
           }
+          this.blockUI.stop();
         },
         err => {
           this.toastr.error("Error al actualizar el paciente", 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
           this.registrando = false;
+          this.blockUI.stop();
         }
       );
     }
@@ -563,8 +573,11 @@ export class EditarCuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let risk = "";
     data.terapeuticas.forEach(terap => {
-      risk = risk + "RIESGOS IMPORTANTES: ( " + terap.medicamento.importantRiskEs + " ) \n" +
-        "RIESGOS POTENCIALES: ( " + terap.medicamento.importantPotentialRiskEs + " ) \n";
+      risk = risk + 
+      "MEDICAMENTO: [ "+terap.medicamento.productName+" ] \n\n"+
+      "RIESGOS IMPORTANTES: ( " + terap.medicamento.importantRiskEs + " ) \n\n" +
+      "RIESGOS POTENCIALES: ( " + terap.medicamento.importantPotentialRiskEs + " ) \n\n"+
+      "INFORMACION FALTANTE: ( "+ terap.medicamento.missingInfoEs+ " ) \n\n\n\n"; 
     });
 
     bod.push([{ content: 'CONCORDANCIA CON RIESGOS IDENTIFICADOS', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
@@ -719,8 +732,11 @@ export class EditarCuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let risk = "";
     data.terapeuticas.forEach(terap => {
-      risk = risk + "IMPORTANT RISK: ( " + terap.medicamento.importantRiskEn + " ) \n" +
-        "POTENTIAL RISK: ( " + terap.medicamento.importantPotentialRiskEn + " ) \n";
+      risk = risk + 
+      "DRUG: [ "+terap.medicamento.productName+" ] \n\n"+
+      "IMPORTANT RISK: ( " + terap.medicamento.importantRiskEn + " ) \n\n" +
+      "POTENTIAL RISK: ( " + terap.medicamento.importantPotentialRiskEn + " ) \n\n"+
+      "MISSING INFO: ( "+ terap.medicamento.missingInfoEn+ " ) \n\n\n\n"; 
     });
 
     bod.push([{ content: 'CONCORDANCE WITH IDENTIFIED RISKS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
@@ -874,8 +890,11 @@ export class EditarCuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let risk = "";
     data.terapeuticas.forEach(terap => {
-      risk = risk + "RIESGOS IMPORTANTES: ( " + terap.medicamento.importantRiskBr + " ) \n" +
-        "RIESGOS POTENCIALES: ( " + terap.medicamento.importantPotentialRiskBr + " ) \n";
+      risk = risk + 
+      "MEDICAMENTO: [ "+terap.medicamento.productName+" ] \n\n"+
+      "RISCOS IMPORTANTES: ( " + terap.medicamento.importantRiskBr + " ) \n\n" +
+      "RISCOS POTENCIAIS: ( " + terap.medicamento.importantPotentialRiskBr + " ) \n\n"+
+      "FALTA DE INFORMAÇÃO: ( "+ terap.medicamento.missingInfoBr+ " ) \n\n\n\n"; 
     });
 
     bod.push([{ content: 'CONCORDÂNCIA COM RISCOS IDENTIFICADOS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },

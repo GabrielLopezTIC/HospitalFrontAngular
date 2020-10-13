@@ -1,11 +1,17 @@
+<block-ui>
 <app-menuAdmUsers></app-menuAdmUsers>
 <div class="container d-flex justify-content-center">
     <div class="card">
         <div class="card-body">
+             <mat-progress-bar *ngIf="creandoUsuario" mode="indeterminate"></mat-progress-bar>
             <div class="row">
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4">
-                    <h2>Edición de usuario</h2>
+                    <h2 *ngIf="lang()=='es'">Editar usuario</h2>
+                    <h2 *ngIf="lang()=='en'">
+                        User edit</h2>
+                    <h2 *ngIf="lang()=='br'">
+                        Edição do usuário</h2>
                 </div>
                 <div class="col-sm-4"></div>
             </div>
@@ -13,21 +19,25 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label for="nombre">Nombre</label>
+                            <label *ngIf="lang()=='es'">Nombre</label>
+                            <label *ngIf="lang()=='en'">Name</label>
+                            <label *ngIf="lang()=='br'">Nome</label>
                             <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombre" id="nombre"
                                 class="form-control" [(ngModel)]="usuario.nombre" required>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label for="nombreUsuario">Nombre de Usuario</label>
+                            <label *ngIf="lang()=='es'">Nombre de usuario</label>
+                            <label *ngIf="lang()=='en'">Username</label>
+                            <label *ngIf="lang()=='br'">Nome do usuário</label>
                             <input oninput="this.value = this.value.replace(/ /g, '')" type="text" name="nombreUsuario"
                                 id="nombreUsuario" class="form-control" [(ngModel)]="usuario.nombreUsuario" required disabled>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label for="email">Correo Electrónico</label>
+                            <label for="email">Email</label>
                             <input type="email" name="email" id="email" class="form-control" [(ngModel)]="usuario.email"
                                 required email>
                         </div>
@@ -36,26 +46,45 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label for="password" [ngStyle]="{'color':password!=passwordConf?'red':''}">Contraseña (sin
-                                espacios)</label>
+                            <label *ngIf="lang()=='es'" for="password"
+                                [ngStyle]="{'color':password!=passwordConf?'red':''}">Contraseña (sin espacios)</label>
+                            <label *ngIf="lang()=='en'" for="password"
+                                [ngStyle]="{'color':password!=passwordConf?'red':''}">Password (no spaces)</label>
+                            <label *ngIf="lang()=='br'" for="password"
+                                [ngStyle]="{'color':password!=passwordConf?'red':''}">Senha (sem espaços)</label>
                             <input oninput="this.value = this.value.replace(/ /g, '')" type="password" name="password"
-                                id="password" class="form-control" [(ngModel)]="password">
+                                id="password" class="form-control" [(ngModel)]="password" >
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label for="password" [ngStyle]="{'color':password!=passwordConf?'red':''}">Confirmar
-                                contraseña</label>
+                            <label *ngIf="lang()=='es'" for="password"
+                                [ngStyle]="{'color':password!=passwordConf?'red':''}">Confirmar contraseña</label>
+                            <label *ngIf="lang()=='en'" for="password"
+                                [ngStyle]="{'color':password!=passwordConf?'red':''}">Confirm password</label>
+                            <label *ngIf="lang()=='br'" for="password"
+                                [ngStyle]="{'color':password!=passwordConf?'red':''}">Confirmar senha</label>
                             <input oninput="this.value = this.value.replace(/ /g, '')" type="password"
-                                name="passwordConf" id="passwordConf" class="form-control" [(ngModel)]="passwordConf">
+                                name="passwordConf" id="passwordConf" class="form-control" [(ngModel)]="passwordConf"
+                                >
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <div class="form-grup" *ngIf="roleType() == 'ROLE_ADMIN'">
                             <label for="password">Rol</label>
                             <p>
-                                <select name="miselect" [(ngModel)]="rolSelec">
+                                <select name="rol" [(ngModel)]="rolSelec">
                                     <option [value]="item" *ngFor="let item of rolesList">{{item | uppercase}}</option>
+                                </select>
+                            </p>
+                        </div>
+                    </div>
+                    <div  class="col-sm-2">
+                        <div class="form-grup ml-1" *ngIf="roleType() == 'ROLE_ADMIN'">
+                            <label>Status</label>
+                            <p>
+                                <select name="status" [(ngModel)]="statusSelect">
+                                    <option [value]="item.clave" *ngFor="let item of statusList">{{item.valor | uppercase}}</option>
                                 </select>
                             </p>
                         </div>
@@ -74,3 +103,4 @@
         </div>
     </div>
 </div>
+</block-ui>

@@ -5,6 +5,7 @@ import { LoginUsuario } from '../models/login-usuario';
 import { TokenService } from '../services/token.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl } from '@angular/forms';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,7 @@ import { FormControl } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
 
+  @BlockUI() blockUI: NgBlockUI;
   isLogged = false;
   isLoginFail = false;
   loginUsuario: LoginUsuario;
@@ -33,6 +35,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+   
     if (this.tokenService.getToken()) {
       this.isLogged = true;
       this.isLoginFail = false;
@@ -42,7 +45,10 @@ export class LoginComponent implements OnInit {
 
   cargando:boolean = false;
   onLogin(): void {
-    
+
+    let textoCargando = this.lang()=="en"? "Loading..." : this.lang()=="br"? "Carregando..." : "Cargando..." ;
+
+    this.blockUI.start(textoCargando);
     this.loginUsuario = new LoginUsuario(this.nombreUsuario, this.password);
     this.cargando = true;
     this.passInput.disable();
@@ -72,6 +78,7 @@ export class LoginComponent implements OnInit {
         }
         this.passInput.enable();
     this.userNameInput.enable();
+        this.blockUI.stop();
         this.router.navigate(['/cuestionario']);
       },
       err => {
@@ -95,6 +102,7 @@ export class LoginComponent implements OnInit {
         }
         this.passInput.enable();
         this.userNameInput.enable();
+        this.blockUI.stop();
       }
     );
   } 

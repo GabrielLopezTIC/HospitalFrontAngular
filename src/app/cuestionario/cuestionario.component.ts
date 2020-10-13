@@ -18,6 +18,7 @@ import * as moment from 'moment';
 import { TerapItem } from '../models/terap-item';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 export class ToxicOpc {
   clave: string;
@@ -35,10 +36,9 @@ export class GeneroOpc {
 })
 
 export class CuestionarioComponent implements OnInit {
-
+  @BlockUI() blockUI: NgBlockUI;
   
-
-  public registrando: boolean = false; // indica si se esta llevando a cabo el proceso de registro , se utiliza para animaciones
+  //public registrando: boolean = false; // indica si se esta llevando a cabo el proceso de registro , se utiliza para animaciones
   public turno: string; // turno
   ///////////////////////////////////////genero
   public genero: GeneroOpc[] = [{ clave: 'H', valor: this.lang() == 'br' ? 'H' : this.lang() == 'en' ? 'M' : 'H' }, { clave: 'M', valor: this.lang() == 'br' ? 'M' : this.lang() == 'en' ? 'F' : 'M' }];
@@ -317,10 +317,14 @@ export class CuestionarioComponent implements OnInit {
 
 
   public  registrar(): void {
+    
+
     let texto = this.lang() === "es" ? "Desea confirmar el registro" : this.lang() === "en" ? "Do you want to confirm the registration?" : "Quer confirmar o registro?";
+    let textoRegistrando = this.lang() === "es" ? "Registrando paciente..." : this.lang() === "en" ? "Registering patient?..." : "Registrando paciente...";
+    
 
     if (confirm(texto) === true) {
-      this.registrando = true; // habilita la animacion al registrar un cuestionario
+      this.blockUI.start(textoRegistrando); // habilita la animacion al registrar un cuestionario
       this.nuevoRegistro = new Cuestionario(
         this.lang(),
         moment().format("YYYY-MM-DD"), // fecha ingreso
@@ -356,12 +360,13 @@ export class CuestionarioComponent implements OnInit {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
 
-          this.registrando = false;
+          //this.registrando = false;
 
           let texto = this.lang() === "es" ? "¿Desea imprimir formato?" : this.lang() === "en" ? "Do you want to print format?" : "Você quer imprimir o formato?";
 
           if (confirm(texto)) {
             this.lang() === "es" ? this.imprimePDFEs(data) : this.lang() === "en" ? this.imprimePDFEn(data) : this.imprimePDFBr(data);
+            this.blockUI.stop();
             this.reestablece();
           }
         },
@@ -369,7 +374,7 @@ export class CuestionarioComponent implements OnInit {
           this.toastr.error("Error al registrar el paciente", 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
-          this.registrando = false;
+          this.blockUI.stop();
         }
       );
     }
@@ -866,7 +871,6 @@ export class CuestionarioComponent implements OnInit {
     // carga MEdra del primer ti´po
     this.lang() == 'br' ? this.cargarMedra(this.socMedraBr[0]) : this.lang() == 'en' ? this.cargarMedra(this.socMedraEn[0]) : this.cargarMedra(this.socMedraEs[0]);
   
-    this.registrando = false; 
     this.turno = "" 
     this.generoSel = ""
     this.nombre = "";

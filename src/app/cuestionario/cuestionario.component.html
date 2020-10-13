@@ -1,23 +1,10 @@
-<app-menuPrincipal *ngIf="registrando == false"></app-menuPrincipal>
+
+<block-ui>
+<app-menuPrincipal></app-menuPrincipal>
 <diV class="principal">
     <div class="card">
         <div class="card-body">
-            <div *ngIf="registrando == true" class="row wrapper">
-                <div class="inner">
-                    <div class="row">
-                        <div class="col-sm-4"></div>
-                        <div class="col-sm-4">
-                            <mat-spinner style="margin:0 auto;" matSuffix [diameter]="80"
-                                style="float: right; margin-left: 8px"></mat-spinner>
-                        </div>
-                        <div class="col-sm-4"></div>
-                    </div>
-                    <div class="row">
-                        <h3>Registrando paciente...</h3>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="registrando == false" class="contenedor">
+            <div class="contenedor">
                 <div class="row border border-top-0 border-success mt-1">
                     <div class="col-sm-12">
                         <h2 *ngIf="lang()=='es'">Información Del Paciente</h2>
@@ -114,7 +101,7 @@
                     <div class="col-sm-3">
                         <mat-form-field>
                             <input matInput [(ngModel)]="f_nac" type="date" [placeholder]="lang() == 'es'? 'Ingrese fecha de nacimiento' : 
-                                lang() == 'en'? 'Enter date of birth' : 'Digite a data de nascimento' " [ngStyle]="{'background-color':comparaFechaNacimiento(f_nac)?'#f57f7f':''}">
+                                lang() == 'en'? 'Enter date of birth' : 'Digite a data de nascimento' " [ngStyle]="{'color':comparaFechaNacimiento(f_nac)?'#f50505':''}">
                         </mat-form-field>
                     </div>
                     <div class="col-sm-3">
@@ -295,7 +282,7 @@
                                     </button>
                                     <mat-autocomplete #autoPade="matAutocomplete">
                                         <mat-option *ngFor="let option of filteredOptionsPade | async" [value]="option"
-                                            [matTooltip]="option">
+                                            [matTooltip]="option" matTooltipPosition="above" class="optionsMenu">
                                             {{option}}
                                         </mat-option>
                                     </mat-autocomplete>
@@ -365,7 +352,7 @@
                                     </button>
                                     <mat-autocomplete #autoMedra="matAutocomplete">
                                         <mat-option *ngFor="let option of filteredOptionsMedra | async" [value]="option"
-                                            [matTooltip]="option">
+                                            [matTooltip]="option" matTooltipPosition="above" class="optionsMenu">
                                             {{option}}
                                         </mat-option>
                                     </mat-autocomplete>
@@ -434,7 +421,7 @@
                                     </button>
                                     <mat-autocomplete #auto="matAutocomplete">
                                         <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
-                                            [matTooltip]="option">
+                                            [matTooltip]="option" matTooltipPosition="above" class="optionsMenu">
                                             {{option}}
                                         </mat-option>
                                     </mat-autocomplete>
@@ -530,7 +517,7 @@
                                                             <input matInput type="date" [(ngModel)]="terap.fInicio"
                                                                 [placeholder]="lang() == 'es'? 'Fecha de inicio' : 
                                                                     lang() == 'en'? 'Initial date' : 'Data inicial' "
-                                                                    [ngStyle]="{'background-color':comparaFechaInicioMed(terap.fInicio)?'#f57f7f':''}" >
+                                                                    [ngStyle]="{'color':comparaFechaInicioMed(terap.fInicio)?'#f50505':''}" >
                                                         </mat-form-field>
                                                     </div>
                                                 </div>
@@ -540,7 +527,7 @@
                                                             <input matInput type="date" [(ngModel)]="terap.fTermino"
                                                                 [placeholder]="lang() == 'es'? 'Fecha termino' : 
                                                                     lang() == 'en'? 'End date' : 'Date final' "
-                                                                    [ngStyle]="{'background-color':comparaFechaTerminoMed(terap.fInicio,terap.fTermino)?'#f57f7f':''}"
+                                                                    [ngStyle]="{'color':comparaFechaTerminoMed(terap.fInicio,terap.fTermino)?'#f50505':''}"
                                                                     >
                                                         </mat-form-field>
                                                     </div>
@@ -629,8 +616,8 @@
                                     {{op}}
                                 </mat-option>
                             </mat-select>
-                            <button mat-button *ngIf="gradoInf" matSuffix mat-icon-button aria-label="Clear"
-                                (click)="gradoInf=''">
+                            <button mat-button *ngIf="gradoInfo" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="gradoInfo=''">
                                 <mat-icon>x</mat-icon>
                             </button>
                         </mat-form-field>
@@ -645,3 +632,4 @@
         </div>
     </div>
 </diV>
+</block-ui>

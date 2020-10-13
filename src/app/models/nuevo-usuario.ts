@@ -3,6 +3,7 @@ export class NuevoUsuario {
     nombreUsuario: string;
     email: string;
     password: string;
+    enabled:boolean;
     roles: String[];
     sub:string[];
     sup:string[];
@@ -14,13 +15,15 @@ export class NuevoUsuario {
         nombreUsuario: string,
         email: string,
         password: string,
-        roles: String[],
+        enabled:boolean,
+        roles: string[],
         sub: string[],
         sup: string[]
         ) {
         this.nombre = nombre;
         this.nombreUsuario = nombreUsuario;
         this.email = email;
+        this.enabled = enabled;
         this.password = password;
         this.roles = roles;
         this.sub = sub;

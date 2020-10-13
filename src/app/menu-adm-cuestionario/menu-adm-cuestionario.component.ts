@@ -36,8 +36,12 @@ export class MenuAdmCuestionarioComponent implements OnInit {
   }
 
   onLogOut(): void {
+    let label = this.lang()=="en"? "Dou you want to close current session?" : this.lang() == "br"? "Você quer fechar a sessão atual" :
+    "¿Quieres cerrar la sesión actual?";
+    if(confirm(label)){
     this.tokenService.logOut();
-    this.router.navigate(['/']);
+    this.router.navigate(['login']);
+    }
   }
 
   getUser():string{

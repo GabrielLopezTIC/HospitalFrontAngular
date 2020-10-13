@@ -61,3 +61,12 @@ mat-form-field {
   font-size: medium;
   font-weight: 400;
 }
+
+/*
+[mattooltip] {
+  touch-action: auto !important;
+}*/
+
+.optionsMenu{
+  touch-action: auto !important;
+}

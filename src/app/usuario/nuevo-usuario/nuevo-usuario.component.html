@@ -1,7 +1,9 @@
+<block-ui>
 <app-menuAdmUsers></app-menuAdmUsers>
 <div class="container d-flex justify-content-center">
     <div class="card">
         <div class="card-body">
+            <mat-progress-bar *ngIf="creandoUsuario" mode="indeterminate"></mat-progress-bar>
             <div class="row">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
@@ -67,12 +69,22 @@
                                 required>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <div class="form-grup" *ngIf="roleType() == 'ROLE_ADMIN'">
                             <label for="password">Rol</label>
                             <p>
-                                <select name="miselect" [(ngModel)]="rolSelec">
+                                <select  name="rol" [(ngModel)]="rolSelec">
                                     <option [value]="item" *ngFor="let item of rolesList">{{item | uppercase}}</option>
+                                </select>
+                            </p>
+                        </div>
+                    </div>
+                    <div  class="col-sm-2 pl-1">
+                        <div class="form-grup" *ngIf="roleType() == 'ROLE_ADMIN'">
+                            <label>Status</label>
+                            <p>
+                                <select name="status" [(ngModel)]="statusSelect">
+                                   <option [value]="item.clave" *ngFor="let item of statusList">{{item.valor | uppercase}}</option>
                                 </select>
                             </p>
                         </div>
@@ -95,3 +107,4 @@
         </div>
     </div>
 </div>
+</block-ui>

@@ -19,6 +19,7 @@ export class ListaUsuarioComponent implements OnInit {
   clavePaciente:string;
   nombreUsuario:string;
   totalPages:number;
+  actualizandoLista:boolean = false;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -60,29 +61,35 @@ export class ListaUsuarioComponent implements OnInit {
 
 
   cargarRegistros(page: number, size: number, orderBy: string): void {
+    this.actualizandoLista = true;
       this.usuarioService.findAllPagination(page, size, orderBy).subscribe(
         data => {
           this.usuarios = data['content'];
           this.totalPages = data['totalPages'];
+          this.actualizandoLista = false;
         },
         error =>{
           this.toastr.error("Tu sesión expiró o no tienes los permisos para ver esto", 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
+          this.actualizandoLista = false;
         }
       );
   }
 
   buscar(){
+    this.actualizandoLista = true;
     this.usuarioService.details(this.nombreUsuario).subscribe(
       data => {
         this.usuarios = [];
         this.usuarios.push(data);
+        this.actualizandoLista = false;
       },
       error => {
         this.toastr.error("Usuario no encontrado", '', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
+        this.actualizandoLista = false;
       }
     );
   }
