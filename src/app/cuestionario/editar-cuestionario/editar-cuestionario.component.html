@@ -100,7 +100,7 @@
                     <div class="col-sm-3">
                         <mat-form-field>
                             <input matInput [(ngModel)]="f_nac" type="date" [placeholder]="lang() == 'es'? 'Ingrese fecha de nacimiento' : 
-                                lang() == 'en'? 'Enter date of birth' : 'Digite a data de nascimento' ">
+                                lang() == 'en'? 'Enter date of birth' : 'Digite a data de nascimento' " [ngStyle]="{'color':comparaFechaNacimiento(f_nac)?'#f50505':''}">
                         </mat-form-field>
                     </div>
                     <div class="col-sm-3">
@@ -330,7 +330,7 @@
                                                 lang() == 'en'? 'SOC' : 'SOC' " [(ngModel)]="socMedraSel"
                                         name="socMedraSel" [value]="socMedraSel"
                                         (selectionChange)="cargarMedra(socMedraSel)">
-                                        <mat-option *ngFor="let op of socMedra" [value]="op" [matTooltip]="op">
+                                        <mat-option *ngFor="let op of socMedra" [value]="op" [matTooltip]="op" matTooltipPosition="above" class="optionsMenu">
                                             {{op}}
                                         </mat-option>
                                     </mat-select>
@@ -515,7 +515,8 @@
                                                         <mat-form-field>
                                                             <input matInput type="date" [(ngModel)]="terap.fInicio"
                                                                 [placeholder]="lang() == 'es'? 'Fecha de inicio' : 
-                                                                    lang() == 'en'? 'Initial date' : 'Data inicial' ">
+                                                                    lang() == 'en'? 'Initial date' : 'Data inicial' "
+                                                                    [ngStyle]="{'color':comparaFechaInicioMed(terap.fInicio)?'#f50505':''}">
                                                         </mat-form-field>
                                                     </div>
                                                 </div>
@@ -524,14 +525,16 @@
                                                         <mat-form-field>
                                                             <input matInput type="date" [(ngModel)]="terap.fTermino"
                                                                 [placeholder]="lang() == 'es'? 'Fecha termino' : 
-                                                                    lang() == 'en'? 'End date' : 'Date final' ">
+                                                                    lang() == 'en'? 'End date' : 'Date final' "
+                                                                    [ngStyle]="{'color':comparaFechaTerminoMed(terap.fInicio,terap.fTermino)?'#f50505':''}">
                                                         </mat-form-field>
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <mat-form-field>
                                                             <input matInput type="date" [(ngModel)]="terap.caducidad"
                                                                 [placeholder]="lang() == 'es'? 'Caducidad' : 
-                                                                    lang() == 'en'? 'Expiration' : 'Expiração' ">
+                                                                    lang() == 'en'? 'Expiration' : 'Expiração' "
+                                                                    [ngStyle]="{'color':comparaFechaCaducidadMed(terap.caducidad)?'#f50505':''}">
                                                         </mat-form-field>
                                                     </div>
                                                     <div class="col-sm-4">
@@ -550,13 +553,6 @@
 
                                             </div>
                                             <div class="col-sm-1">
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <button class="btn btn-outline-info"><i class="fa fa-adn"
-                                                                aria-hidden="true"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <button class="btn btn-outline-info"

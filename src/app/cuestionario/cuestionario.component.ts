@@ -96,10 +96,8 @@ export class CuestionarioComponent implements OnInit {
   public selMedra: string; // variable que guarda el padecimiento elegido
   public medraList = []; //lista que guarda los padecimientos elegidos momentaneamente
 
-  public socMedraEs: string[] = ["TRASTORNOS CARDIACOS", "TRASTORNOS SANGUINEOS Y DEL SISTEMA LINFATICO"];
-  public socMedraEn: string[] = ["CARDIAC DISORDERS", "BLOOD AND LYMPHATIC SYSTEM DISORDERS"];
-  public socMedraBr: string[] = ["CARDIOPATIAS", "DOENÇAS DO SANGUE E DO SISTEMA LINFATICO"];
-  public socMedra: string[] = this.lang() === "es" ? this.socMedraEs : this.lang() === "en" ? this.socMedraEn : this.socMedraBr;
+ 
+  public socMedra: string[] = [];
   ///////////////////////////////Constructor
   public nuevoRegistro: Cuestionario;
 
@@ -119,12 +117,28 @@ export class CuestionarioComponent implements OnInit {
   ngOnInit() {
     // si existe un token carga las listas que se utilizaran
     if (this.tokenService.getToken()) {
+      this.cargaSoc();
       this.cargarMedicamentos("A"); // carga lista de medicamentos que comienzan con A
       this.cargarPadecimientos("A"); // carga lista de padecimientos que comientzan con A
       // carga MEdra del primer ti´po
-      this.lang() == 'br' ? this.cargarMedra(this.socMedraBr[0]) : this.lang() == 'en' ? this.cargarMedra(this.socMedraEn[0]) : this.cargarMedra(this.socMedraEs[0]);
+      
     }
   }
+
+  public cargaSoc():void{
+    this.medraService.findAllSoc(this.lang()).subscribe(
+      data =>{
+        this.socMedra = data;
+        this.cargarMedra(this.socMedra[0]);
+      },
+      error =>{
+        this.toastr.error("Error al cargar los soc", 'Fail', {
+          timeOut: 3000, positionClass: 'toast-top-center',
+        });
+      }
+    );
+  }
+
 
   public cargarMedra(soc: string):void {
     // segun el idioma se elige el mensaje de busqueda
@@ -869,7 +883,7 @@ export class CuestionarioComponent implements OnInit {
     this.cargarMedicamentos("A"); // carga lista de medicamentos que comienzan con A
     this.cargarPadecimientos("A"); // carga lista de padecimientos que comientzan con A
     // carga MEdra del primer ti´po
-    this.lang() == 'br' ? this.cargarMedra(this.socMedraBr[0]) : this.lang() == 'en' ? this.cargarMedra(this.socMedraEn[0]) : this.cargarMedra(this.socMedraEs[0]);
+    this.cargarMedra(this.socMedra[0]);
   
     this.turno = "" 
     this.generoSel = ""
@@ -896,15 +910,9 @@ export class CuestionarioComponent implements OnInit {
     this.iniTerap ="A" ;
     this.terapeuticasList= [];
     /////////////////////////////////////////Medra
-    this.socMedraSel=  this.lang() == 'br' ? this.socMedraBr[0] : this.lang() == 'en' ? this.socMedraEn[0] : this.socMedraEs[0];
+    this.socMedraSel=  this.socMedra[0];
     this.medraList = []; //lista que guarda los padecimientos elegidos momentaneamente
   }
-
-
-
-
-
-
 
  // regresa el lenguaje en el que se esta trabajando
   public lang(): string {

@@ -89,10 +89,7 @@ export class EditarCuestionarioComponent implements OnInit {
   public selMedra: string; // variable que guarda el padecimiento elegido
   public medraList = []; //lista que guarda los padecimientos elegidos momentaneamente
 
-  public socMedraEs: string[] = ["TRASTORNOS CARDIACOS", "TRASTORNOS SANGUINEOS Y DEL SISTEMA LINFATICO"];
-  public socMedraEn: string[] = ["CARDIAC DISORDERS", "BLOOD AND LYMPHATIC SYSTEM DISORDERS"];
-  public socMedraBr: string[] = ["CARDIOPATIAS", "DOENÇAS DO SANGUE E DO SISTEMA LINFATICO"];
-  public socMedra: string[] = this.lang() === "es" ? this.socMedraEs : this.lang() === "en" ? this.socMedraEn : this.socMedraBr;
+  public socMedra: string[] = [];
   ///////////////////////////////Constructor
   public nuevoRegistro: Cuestionario;
 
@@ -114,6 +111,7 @@ export class EditarCuestionarioComponent implements OnInit {
   ////////////////////////on init
   ngOnInit() {
     if (this.tokenService.getToken()) {
+      this.cargaSoc();
       // obtiene la clave del cuestionario
       this.claveCuestionario = this.activatedRoute.snapshot.params.claveCuestionario;
 
@@ -179,8 +177,22 @@ export class EditarCuestionarioComponent implements OnInit {
       //carga las listas por defecto
       this.cargarMedicamentos("A");
       this.cargarPadecimientos("A");
-      this.lang() == 'br' ? this.cargarMedra(this.socMedraBr[0]) : this.lang() == 'en' ? this.cargarMedra(this.socMedraEn[0]) : this.cargarMedra(this.socMedraEs[0]);
     }
+  }
+
+  
+  public cargaSoc():void{
+    this.medraService.findAllSoc(this.lang()).subscribe(
+      data =>{
+        this.socMedra = data;
+        this.cargarMedra(this.socMedra[0]);
+      },
+      error =>{
+        this.toastr.error("Error al cargar los soc", 'Fail', {
+          timeOut: 3000, positionClass: 'toast-top-center',
+        });
+      }
+    );
   }
 
   public cargarMedra(soc: string) {
@@ -921,6 +933,27 @@ export class EditarCuestionarioComponent implements OnInit {
   public lang(): string {
     return this.language.lang();
   }
+
+  
+  public comparaFechaNacimiento(fecha:string): boolean{
+    let fechaHoy =  moment().format("YYYY-MM-DD")
+    return moment(fecha).isAfter(fechaHoy);
+  }
+
+  public comparaFechaInicioMed(fecha:string): boolean{
+    let fechaAyer =  moment().subtract(1, "days").format("YYYY-MM-DD")
+    return !moment(fecha).isAfter(fechaAyer);
+  }
+
+  public comparaFechaTerminoMed(fechaIni:string,fechaTerm:string):boolean{
+    return !moment(fechaTerm).isAfter(moment(fechaIni).subtract(1, "days").format("YYYY-MM-DD"));
+  }
+  public comparaFechaCaducidadMed(fechaBase:string):boolean{
+    let fechaHoy =  moment().subtract(1, "days").format("YYYY-MM-DD")
+    return !moment(fechaBase).isAfter(fechaHoy);
+  }
+
+
 
   public onlyDecimalNumberKey(event): boolean {
     let charCode = (event.which) ? event.which : event.keyCode;

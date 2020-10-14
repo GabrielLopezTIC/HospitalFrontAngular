@@ -19,6 +19,10 @@ export class MedraService {
     public findAllBySoc(soc:string,lang:string): Observable<Medra[]> {
       return this.httpClient.get<Medra[]>(this.medraURL + "findAllBySoc/soc/"+soc+"/lang/"+lang);
     }
+
+    public findAllSoc(lang:string): Observable<string[]>{
+      return this.httpClient.get<string[]>(this.medraURL+"findAllSoc/lang/"+lang);
+    }
  
 
 

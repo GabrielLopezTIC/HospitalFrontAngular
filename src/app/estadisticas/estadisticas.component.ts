@@ -38,6 +38,8 @@ export class EstadisticasComponent implements OnInit {
   inicioSemana: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
   ///////////////////////////////////Padecimientos
+  tituloPade:string = this.lang()=="en"? "Summary of ailments" : this.lang()=="br"?
+  "Resumo das doenças" : "Resumen de padecimientos";
   iniPade: string;
   myControlPade = new FormControl();
   optionsPade: string[] = []; // lista donde se cargan los datos de los padecimientos desde el servidor
@@ -51,6 +53,8 @@ export class EstadisticasComponent implements OnInit {
   inicioSemanaPade: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
   /////////////////////////////////////////Medra
+  tituloMedra:string = this.lang()=="en"? "Summary of adverse medical reactions" : this.lang()=="br"?
+  "Resumo das reações médicas adversas" : "Resumen de reacciones medicas adversas";
   socMedraSel: string;
   myControlMedra = new FormControl();
   optionsMedra: string[] = []; // lista donde se cargan los datos de los padecimientos desde el servidor

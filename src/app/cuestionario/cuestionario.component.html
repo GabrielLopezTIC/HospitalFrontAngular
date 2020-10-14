@@ -331,7 +331,7 @@
                                                 lang() == 'en'? 'SOC' : 'SOC' " [(ngModel)]="socMedraSel"
                                         name="socMedraSel" [value]="socMedraSel"
                                         (selectionChange)="cargarMedra(socMedraSel)">
-                                        <mat-option *ngFor="let op of socMedra" [value]="op" [matTooltip]="op">
+                                        <mat-option *ngFor="let op of socMedra" [value]="op" [matTooltip]="op" matTooltipPosition="above" class="optionsMenu">
                                             {{op}}
                                         </mat-option>
                                     </mat-select>
@@ -536,7 +536,7 @@
                                                             <input matInput type="date" [(ngModel)]="terap.caducidad"
                                                                 [placeholder]="lang() == 'es'? 'Caducidad' : 
                                                                     lang() == 'en'? 'Expiration' : 'Expiração' "
-                                                                    [ngStyle]="{'background-color':comparaFechaCaducidadMed(terap.caducidad)?'#f57f7f':''}">
+                                                                    [ngStyle]="{'color':comparaFechaCaducidadMed(terap.caducidad)?'#f50505':''}">
                                                         </mat-form-field>
                                                     </div>
                                                     <div class="col-sm-4">
