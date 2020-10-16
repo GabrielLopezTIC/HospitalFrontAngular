@@ -380,9 +380,11 @@ export class CuestionarioComponent implements OnInit {
 
           if (confirm(texto)) {
             this.lang() === "es" ? this.imprimePDFEs(data) : this.lang() === "en" ? this.imprimePDFEn(data) : this.imprimePDFBr(data);
-            this.blockUI.stop();
-            this.reestablece();
+           
+            
           }
+          this.reestablece();
+          this.blockUI.stop();
         },
         err => {
           this.toastr.error("Error al registrar el paciente", 'Fail', {

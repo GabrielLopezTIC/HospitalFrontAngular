@@ -71,9 +71,8 @@ export class ListaCuestionarioComponent implements OnInit {
   cargarRegistros(page: number, size: number, orderBy: string): void {
       this.cuestionarioService.findAllPagination(page, size, orderBy).subscribe(
         data => {
-          this.cuestionarios = data['content'];
+          this.cuestionarios =   data['content'];
           this.totalPages = data['totalPages'];
-          console.log(this.totalPages);
         },
         error => {
           console.log(error);

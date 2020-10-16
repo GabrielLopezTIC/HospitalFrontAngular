@@ -13,6 +13,8 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { DatosGraficaPadecimientoDto } from '../models/datos-grafica-padecimiento-dto';
 import { MedraService } from '../services/medra.service';
+import { DatosGraficaCie10 } from '../models/datos-grafica-cie10';
+
 
 
 @Component({
@@ -27,15 +29,32 @@ export class EstadisticasComponent implements OnInit {
   cargando: boolean = false;
   cargandoPade: boolean = false;
   cargandoMedra: boolean = false;
+  cargandoCIE: boolean = false;
+  cargandoSoc: boolean = false;
 
   //////////////////////////////////labels emanal y mensual
   semanal = this.lang() == 'br' ? 'SEMANAL' : this.lang() == 'en' ? 'WEEKLY' : 'SEMANAL';
   mensual = this.lang() == 'br' ? 'POR MÊS' : this.lang() == 'en' ? 'MONTHLY' : 'MENSUAL';
+  always = this.lang() == 'br' ? 'TUDO' : this.lang() == 'en' ? 'ALL' : 'TODO';
 
   ////////////////////////////////////////Toxicomanias
   rangos: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }];
   rangoSel: string = "S";
   inicioSemana: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
+
+  /////////////////////////////////////////CIE10
+  rangoSelCIE: string = "S";
+  rangosCIE: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual },{clave: "T",valor: this.always}];
+  inicioSemanaCIE: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
+
+  /////////////////////////////////////////Soc
+  rangoSelSoc: string = "S";
+  rangosSOC: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual },{clave: "T",valor: this.always}];
+  inicioSemanaSoc: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
+
+ 
+
+
 
   ///////////////////////////////////Padecimientos
   tituloPade:string = this.lang()=="en"? "Summary of ailments" : this.lang()=="br"?
@@ -60,11 +79,8 @@ export class EstadisticasComponent implements OnInit {
   optionsMedra: string[] = []; // lista donde se cargan los datos de los padecimientos desde el servidor
   filteredOptionsMedra: Observable<string[]>;
   selMedra: string; // variable que guarda el padecimiento elegido
-  medraList = []; //lista que guarda los padecimientos elegidos momentaneamente
-  socMedraEs: string[] = ["TRASTORNOS CARDIACOS", "TRASTORNOS SANGUINEOS Y DEL SISTEMA LINFATICO"];
-  socMedraEn: string[] = ["CARDIAC DISORDERS", "BLOOD AND LYMPHATIC SYSTEM DISORDERS"];
-  socMedraBr: string[] = ["CARDIOPATIAS", "DOENÇAS DO SANGUE E DO SISTEMA LINFATICO"];
-  socMedra: string[] = this.lang() === "es" ? this.socMedraEs : this.lang() === "en" ? this.socMedraEn : this.socMedraBr;
+  medraList = []; //lista que guarda los padecimientos elegidos momentaneament
+  socMedra: string[] = [];
   rangosMedra: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }];
   rangoMedraSel: string = "S";
   inicioSemanaMedra: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
@@ -76,7 +92,9 @@ export class EstadisticasComponent implements OnInit {
 
   Highcharts: typeof Highcharts = Highcharts;
   graficaPrueba: Highcharts.Options;
-  graficaPastel: Highcharts.Options;
+  graficaPastelCIE10: Highcharts.Options;
+  graficaPastelSoc: Highcharts.Options;
+
   graficaCombinada: Highcharts.Options;
   graficaCombinadaMedra: Highcharts.Options;
 
@@ -97,16 +115,30 @@ export class EstadisticasComponent implements OnInit {
 
 
   ngOnInit() {
+    this.cargaGraficaSoc();
+    this.cargaGraficaCIE10();
+    this.cargaSoc();
     this.cargaGraficaToxic();
     this.cargarPadecimientos("A");
-    this.lang() == 'br' ? this.cargarMedra(this.socMedraBr[0]) : this.lang() == 'en' ? this.cargarMedra(this.socMedraEn[0]) : this.cargarMedra(this.socMedraEs[0]);
   }
-
-
 
   //////////////////////////Grafica de padecimientos////////////////////////////////////////////////////
   private _filterPade(value: string): string[] {
     return this.optionsPade.filter(option => option.includes(value));
+  }
+
+  public cargaSoc():void{
+    this.medraService.findAllSoc(this.lang()).subscribe(
+      data =>{
+        this.socMedra = data;
+        this.cargarMedra(this.socMedra[0]);
+      },
+      error =>{
+        this.toastr.error("Error al cargar los soc", 'Fail', {
+          timeOut: 3000, positionClass: 'toast-top-center',
+        });
+      }
+    );
   }
 
   cargarPadecimientos(letra: string) {
@@ -282,6 +314,181 @@ export class EstadisticasComponent implements OnInit {
       }
     );
   }
+
+
+  serie:any[];
+  creaGraficaCIE10(data: DatosGraficaCie10[]){
+
+    let total = 0;
+    data.forEach( e => {if(e.cantidad > 0) {total = total+ e.cantidad}});
+    let datos = [];
+    data.forEach( e => {
+     if(e.cantidad > 0)
+        datos.push({name: e.nombre, y:e.cantidad})
+    });
+    let titulo = this.lang()=="en"? "Total CIE10 registrations" : 
+    this.lang()=="br"? "Total de registros CIE10": "Total de registros CIE10";
+
+     this.serie =  [{
+      name: 'Brands',
+      colorByPoint: true,
+      data: datos
+  }];
+
+    this.graficaPastelCIE10 = {
+      chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: 'pie'
+      },
+      title: {
+          text: titulo
+      },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      accessibility: {
+          point: {
+              valueSuffix: '%'
+          }
+      },
+      plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                  enabled: true,
+                  format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              }
+          }
+      },
+      series:this.serie
+  };
+
+  }
+
+  cargaGraficaCIE10(){
+    this.cargandoCIE= true;
+    if(this.rangoSelCIE == "T"){
+      this.cuestService.datosGraficaCie10Pastel(this.lang()).subscribe(
+        data => {
+          this.creaGraficaCIE10(data);
+          this.cargandoCIE = false;
+        },
+        error => {
+          this.cargandoCIE = false;
+        }
+      );
+    } else if(this.rangoSelCIE == "M"){
+      this.cuestService.datosGraficaCie10PastelMounth(this.inicioSemanaCIE,this.lang()).subscribe(
+        data => {
+          this.creaGraficaCIE10(data);
+          this.cargandoCIE = false;
+        },
+        error => {
+          this.cargandoCIE = false;
+        }
+      );
+    }else{
+       this.cuestService.datosGraficaCie10PastelWeek(this.inicioSemanaCIE,this.lang()).subscribe(
+        data => {
+          this.creaGraficaCIE10(data);
+          this.cargandoCIE = false;
+        },
+        error => {
+          this.cargandoCIE = false;
+        }
+      );
+    }
+
+    }
+
+  serieSoc:any[]
+  creaGraficaSoc(data: DatosGraficaCie10[]){
+    let total = 0;
+    data.forEach( e => {if(e.cantidad > 0) {total = total+ e.cantidad}});
+    let datos = [];
+    data.forEach( e => {
+     if(e.cantidad > 0)
+        datos.push({name: e.nombre, y:e.cantidad})
+    });
+    let titulo = this.lang()=="en"? "Total SOC registrations" : 
+    this.lang()=="br"? "Total de registros SOC": "Total de registros SOC";
+
+     this.serieSoc =  [{
+      name: 'Brands',
+      colorByPoint: true,
+      data: datos
+  }];
+
+    this.graficaPastelSoc = {
+      chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: 'pie'
+      },
+      title: {
+          text: titulo
+      },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      accessibility: {
+          point: {
+              valueSuffix: '%'
+          }
+      },
+      plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                  enabled: true,
+                  format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              }
+          }
+      },
+      series:this.serieSoc
+  };
+  }
+
+  cargaGraficaSoc(){
+    this.cargandoSoc = true;
+    if(this.rangoSelSoc == "T"){
+      this.cuestService.datosGraficaSocPastel(this.lang()).subscribe(
+        data => {
+          this.creaGraficaSoc(data);
+          this.cargandoSoc = false;
+        },
+        error => {
+          this.cargandoSoc = false;
+        }
+      );
+    } else if(this.rangoSelSoc == "M"){
+      this.cuestService.datosGraficaSocPastelMounth(this.inicioSemanaSoc,this.lang()).subscribe(
+        data => {
+          this.creaGraficaSoc(data);
+          this.cargandoSoc = false;
+        },
+        error => {
+          this.cargandoSoc = false;
+        }
+      );
+    }else{
+       this.cuestService.datosGraficaSocPastelWeek(this.inicioSemanaSoc,this.lang()).subscribe(
+        data => {
+          this.creaGraficaSoc(data);
+          this.cargandoSoc = false;
+        },
+        error => {
+          this.cargandoSoc = false;
+        }
+      );
+    }
+  }
+
 
   seriesMedra: any[] = [];
   creaGraficaMedra(datos: DatosGraficaPadecimientoDto): void {
@@ -549,7 +756,6 @@ export class EstadisticasComponent implements OnInit {
   roleType(): string {
     return this.tokenService.getAuthorities()[0];
   }
-
 
 }
 

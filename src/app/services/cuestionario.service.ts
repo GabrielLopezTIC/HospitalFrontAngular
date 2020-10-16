@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Cuestionario } from '../models/cuestionario';
 import { DatosGraficaToxicomaniasDTO } from '../models/datos-grafica-toxicomanias-dto'
 import { DatosGraficaPadecimientoDto} from '../models/datos-grafica-padecimiento-dto'
+import { DatosGraficaCie10} from '../models/datos-grafica-cie10'
 import { from, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -115,6 +116,32 @@ export class CuestionarioService {
    */
   public datosGraficaMedraSemanales(fecha: string, medra: string): Observable<DatosGraficaPadecimientoDto> {
     return this.httpClient.get<DatosGraficaPadecimientoDto>(this.cuestionarioURL + "findDataMedraGraphWeek/date/"+fecha+"/medra/"+medra);
+  }
+
+
+  public datosGraficaCie10Pastel(lang:string): Observable<DatosGraficaCie10[]>{
+    return this.httpClient.get<DatosGraficaCie10[]>(this.cuestionarioURL+"findDataCIE10/lang/"+lang);
+  }
+
+  public datosGraficaCie10PastelWeek(fecha:string,lang:string): Observable<DatosGraficaCie10[]>{
+    return this.httpClient.get<DatosGraficaCie10[]>(this.cuestionarioURL+"findDataCIE10/week/"+fecha+"/lang/"+lang);
+  }
+
+  public datosGraficaCie10PastelMounth(fecha:string,lang:string): Observable<DatosGraficaCie10[]>{
+    return this.httpClient.get<DatosGraficaCie10[]>(this.cuestionarioURL+"findDataCIE10/mounth/"+fecha+"/lang/"+lang);
+  }
+
+
+  public datosGraficaSocPastel(lang:string): Observable<DatosGraficaCie10[]>{
+    return this.httpClient.get<DatosGraficaCie10[]>(this.cuestionarioURL+"findDataSoc/lang/"+lang);
+  }
+
+  public datosGraficaSocPastelWeek(fecha:string,lang:string): Observable<DatosGraficaCie10[]>{
+    return this.httpClient.get<DatosGraficaCie10[]>(this.cuestionarioURL+"findDataSoc/week/"+fecha+"/lang/"+lang);
+  }
+
+  public datosGraficaSocPastelMounth(fecha:string,lang:string): Observable<DatosGraficaCie10[]>{
+    return this.httpClient.get<DatosGraficaCie10[]>(this.cuestionarioURL+"findDataSoc/mounth/"+fecha+"/lang/"+lang);
   }
 
 

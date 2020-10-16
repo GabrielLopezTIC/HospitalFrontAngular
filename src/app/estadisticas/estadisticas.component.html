@@ -207,3 +207,79 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panelGraficaPade p-3 m-3">
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field>
+                        <mat-select matSelect
+                            [placeholder]="lang()=='br'? 'Intervalo de resumo': lang()=='en'? 'Summary range' : 'Rango Resumen'"
+                            [(ngModel)]="rangoSelCIE" name="rangoSelCIE" [value]="rangoSelCIE"
+                            (selectionChange)="cargaGraficaCIE10()">
+                            <div>
+                                <mat-option *ngFor="let op of rangosCIE" [value]="op.clave">
+                                    {{op.valor}}
+                                </mat-option>
+                            </div>
+                        </mat-select>
+                        <button mat-button *ngIf="rangoSelCIE" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="rangoSelCIE=''">
+                            <mat-icon>x</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                    <mat-form-field *ngIf="rangoSelSoc != 'T'">
+                        <input matInput [(ngModel)]="inicioSemanaCIE" type="date"
+                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'"
+                            (change)="cargaGraficaCIE10()">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div>
+                <mat-progress-bar *ngIf="cargandoCIE" mode="indeterminate"></mat-progress-bar>
+                <highcharts-chart [Highcharts]="Highcharts" [options]="graficaPastelCIE10"
+                style="width: 100%; height: 400px; display: block;">
+            </highcharts-chart>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="panelGraficaPade p-3 m-3">
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field>
+                        <mat-select matSelect
+                            [placeholder]="lang()=='br'? 'Intervalo de resumo': lang()=='en'? 'Summary range' : 'Rango Resumen'"
+                            [(ngModel)]="rangoSelSoc" name="rangoSelSoc" [value]="rangoSelSoc"
+                            (selectionChange)="cargaGraficaSoc()">
+                            <div>
+                                <mat-option *ngFor="let op of rangosSOC" [value]="op.clave">
+                                    {{op.valor}}
+                                </mat-option>
+                            </div>
+                        </mat-select>
+                        <button mat-button *ngIf="rangoSelSoc" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="rangoSelSoc=''">
+                            <mat-icon>x</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                    <mat-form-field *ngIf="rangoSelSoc != 'T'">
+                        <input matInput [(ngModel)]="inicioSemanaSoc" type="date"
+                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'"
+                            (change)="cargaGraficaSoc()">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div>
+                <mat-progress-bar *ngIf="cargandoSoc" mode="indeterminate"></mat-progress-bar>
+                <highcharts-chart [Highcharts]="Highcharts" [options]="graficaPastelSoc"
+            style="width: 100%; height: 400px; display: block;">
+        </highcharts-chart>
+            </div>
+        </div>
+    </div>
+</div>
