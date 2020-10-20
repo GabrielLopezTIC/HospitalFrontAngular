@@ -1,10 +1,10 @@
-<app-menu-padecimiento></app-menu-padecimiento>
+<app-menu-medra></app-menu-medra>
 <div class="row">
   <div class="col-sm-12">
     <div class="contenedor ml-3 mr-3 pl-2 pr-2 pt-2 pb-2">
       <div class="ml-2">
         <mat-form-field>
-          <input matInput type="text" oninput="this.value = this.value.replace(/ /g, '')"
+          <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
             [placeholder]="lang()=='br'? 'Chave de catálogo': lang()=='en'? 'Catalog yey' : 'Clave de catalogo'" [(ngModel)]="catalogKey"
             (keydown.enter)="buscar()">
           <button mat-button *ngIf="catalogKey" matSuffix mat-icon-button aria-label="Clear" (click)="catalogKey=''">
@@ -23,16 +23,15 @@
             <thead>
               <tr class="color-theme-green">
                 <th scope="col">
-                  <span *ngIf="lang()=='es'">Clave de catálogo</span>
-                  <span *ngIf="lang()=='en'">Catalog key</span>
-                  <span *ngIf="lang()=='br'">Chave de catálogo</span>
+                  <span *ngIf="lang()=='es'">MedDRA</span>
+                  <span *ngIf="lang()=='en'">MedDRA</span>
+                  <span *ngIf="lang()=='br'">MedDRA</span>
                 </th>
                 <th scope="col">
-                  <span *ngIf="lang()=='es'">Nombre</span>
-                  <span *ngIf="lang()=='en'">Name</span>
-                  <span *ngIf="lang()=='br'">Nome</span>
+                  <span *ngIf="lang()=='es'">Soc</span>
+                  <span *ngIf="lang()=='en'">Soc</span>
+                  <span *ngIf="lang()=='br'">Soc</span>
                 </th>
-                <th scope="col">Cie 10</th>
                 <th scope="col" *ngIf="roleType() == 'ROLE_ADMIN'">
                   <span *ngIf="lang()=='es'">Borrar</span>
                   <span *ngIf="lang()=='en'">Delete</span>
@@ -41,7 +40,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngIf="padecimientos.length == 0">
+              <tr *ngIf="medras.length == 0">
                 <td colspan="11">
                   <div class="row wrapper">
                     <div class="inner">
@@ -60,16 +59,26 @@
                     </div>
                 </td>
               </tr>
-              <tr *ngFor="let pade of padecimientos" class="color-theme-dark-ligth">
-                <td>{{pade.catalogKey}}</td>
-                <td>{{pade.nombreEs}}</td>
-                <td>{{pade.cie10Es}}</td>
-                <td *ngIf="roleType() == 'ROLE_ADMIN'"><button (click)="borrar(pade.catalogKey)"
-                    class="btn btn-outline-danger"><i class="far fa-trash-alt"></i><span
-                      *ngIf="lang()=='es'">Borrar</span>
-                    <span *ngIf="lang()=='en'">Delete</span>
-                    <span *ngIf="lang()=='br'">Excluir</span></button></td>
-              </tr>
+              <tr *ngFor="let med of medras" class="color-theme-dark-ligth">
+                <td>
+                  <span *ngIf="lang()=='es'">{{med.medDraEs}}</span>
+                  <span *ngIf="lang()=='en'">{{med.medDraEn}}</span>
+                  <span *ngIf="lang()=='br'">{{med.medDraBr}}</span>
+                </td>
+                <td>
+                  <span *ngIf="lang()=='es'">{{med.socEs}}</span>
+                  <span *ngIf="lang()=='en'">{{med.socEn}}</span>
+                  <span *ngIf="lang()=='br'">{{med.socBr}}</span>
+                </td>
+                <td *ngIf="roleType() == 'ROLE_ADMIN'">
+                  <button *ngIf="lang()=='es'" (click)="borrar(med.medDraEs)" class="btn btn-outline-danger">
+                    <i class="far fa-trash-alt"></i><span>Borrar</span></button>
+                  <button *ngIf="lang()=='en'" (click)="borrar(med.medDraEn)" class="btn btn-outline-danger">
+                    <i class="far fa-trash-alt"></i><span>Delete</span></button>
+                  <button *ngIf="lang()=='br'" (click)="borrar(med.medDraBr)" class="btn btn-outline-danger">
+                    <i class="far fa-trash-alt"></i><span>Excluir</span></button>
+                </td>
+              </tr> 
             </tbody>
           </table>
         </div>

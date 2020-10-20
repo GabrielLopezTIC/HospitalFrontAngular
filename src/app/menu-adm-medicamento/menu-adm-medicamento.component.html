@@ -38,7 +38,11 @@
                         <span *ngIf="lang()=='en'">Ailments</span>
                         <span *ngIf="lang()=='br'">
                             Doenças</span>
-
+                    </a>
+                    <a class="dropdown-item" routerLink="/listaMedra" *ngIf="roleType()=='ROLE_ADMIN'">
+                        <span *ngIf="lang()=='es'">MedDRA</span>
+                        <span *ngIf="lang()=='en'">MedDRA</span>
+                        <span *ngIf="lang()=='br'">MedDRA</span>
                     </a>
                     <a class="dropdown-item" routerLink="/listaMedicamento" *ngIf="roleType()=='ROLE_ADMIN'">
                         <span *ngIf="lang()=='es'">Medicamentos</span>

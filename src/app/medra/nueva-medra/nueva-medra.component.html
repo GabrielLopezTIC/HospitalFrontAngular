@@ -1,0 +1,68 @@
+<app-menu-padecimiento></app-menu-padecimiento>
+<div class="container d-flex justify-content-center">
+    <div class="card">
+        <div class="card-body">
+            <form #f="ngForm" (ngSubmit)="onRegister()" novalidate>
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6"><h2>Registro de nuevos MedDRA</h2></div>
+                    <div class="col-sm-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="nombre">MedDRA español</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="medraEs" id="medraEs"
+                                class="form-control" [(ngModel)]="medraEs" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="nombre">MedDRA Inglés</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="medraEn" id="medraEn"
+                                class="form-control" [(ngModel)]="medraEn" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="nombre">MedDRA Portugues</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="medraBr" id="medraBr"
+                                class="form-control" [(ngModel)]="medraBr" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="nombre">Soc Español</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="socEs" id="socEs"
+                                class="form-control" [(ngModel)]="socEs" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="nombre">Soc Inglés</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="socEn" id="socEn"
+                                class="form-control" [(ngModel)]="socEn" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="nombre">Soc Portugues</label>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="socBr" id="socBr"
+                                class="form-control" [(ngModel)]="socBr" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">
+                                <i class="fas fa-sign-in-alt"></i> Crear MedDRA</button>
+                        </div>
+                    </div>
+                </div>           
+            </form>
+        </div>
+    </div>
+</div>

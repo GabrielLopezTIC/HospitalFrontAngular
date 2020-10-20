@@ -13,7 +13,9 @@ import { PadecimientoListaComponent } from './padecimientos/padecimiento-lista/p
 import { NuevoPadecimientoComponent } from './padecimientos/nuevo-padecimiento/nuevo-padecimiento.component';
 import { NuevoMedicamentoComponent } from './medicamentos/nuevo-medicamento/nuevo-medicamento.component';
 import { EstadisticasComponent } from './estadisticas/estadisticas.component';
- 
+import { ListaMedraComponent} from './medra/lista-medra/lista-medra.component';
+import { NuevaMedraComponent } from './medra/nueva-medra/nueva-medra.component';
+  
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -21,12 +23,14 @@ const routes: Routes = [
   { path: 'listaUsuario', component: ListaUsuarioComponent, canActivate: [guard], data: { expectedRol: ['admin', 'medico'] } }, 
   { path: 'listaMedicamento', component: ListaMedicamentoComponent, canActivate: [guard], data: { expectedRol: ['admin'] } },
   { path: 'listaPadecimiento', component: PadecimientoListaComponent, canActivate: [guard], data: { expectedRol: ['admin'] } },
+  { path: 'listaMedra', component: ListaMedraComponent, canActivate: [guard], data: { expectedRol: ['admin'] } },  
   { path: 'listaCuestionario', component: ListaCuestionarioComponent, canActivate: [guard], data: { expectedRol: ['admin', 'medico'] } },
   { path: 'editarUsuario/:nombreUsuario', component: EditarUsuarioComponent, canActivate: [guard], data: { expectedRol: ['admin','medico'] } },
   { path: 'editarCuestionario/:claveCuestionario', component: EditarCuestionarioComponent, canActivate: [guard], data: { expectedRol: ['admin', 'medico'] } },
   { path: 'nuevoUsuario', component: NuevoUsuarioComponent, canActivate: [guard], data: { expectedRol: ['admin','medico'] } },
   { path: 'nuevoMedicamento', component: NuevoMedicamentoComponent, canActivate: [guard], data: { expectedRol: ['admin'] } },
   { path: 'nuevoPadecimiento', component: NuevoPadecimientoComponent, canActivate: [guard], data: { expectedRol: ['admin'] } },
+  { path: 'nuevoMedra', component: NuevaMedraComponent, canActivate: [guard], data: { expectedRol: ['admin'] } }, 
   { path: 'cuestionario', component: CuestionarioComponent, canActivate: [guard], data: { expectedRol: ['admin', 'medico', 'farmaceutico'] } },
   { path: 'estadisticas', component: EstadisticasComponent, canActivate: [guard], data: { expectedRol: ['admin','medico'] } },
   { path: '**', redirectTo: '', pathMatch: 'full' }

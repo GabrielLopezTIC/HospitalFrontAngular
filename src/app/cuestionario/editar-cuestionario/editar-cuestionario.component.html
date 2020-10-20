@@ -272,7 +272,7 @@
                                         lang() == 'en'? 'Diagnostic' : 'Diagnóstico' " aria-label="Number" matInput
                                         [formControl]="myControlPade" [matAutocomplete]="autoPade"
                                         [ngStyle]="{'background-color':optionsPade.length === 0?'#DBDAC1':''}"
-                                        [(ngModel)]="selPade" oninput="this.value = this.value.toUpperCase()">
+                                        [(ngModel)]="selPade" oninput="this.value = this.value.toUpperCase()" (keydown.enter)="agregarPade(selPade)">
                                     <mat-spinner *ngIf="optionsPade.length === 0" matSuffix [diameter]="18"
                                         style="float: right; margin-left: 8px"></mat-spinner>
                                     <button mat-button *ngIf="selPade" matSuffix mat-icon-button aria-label="Clear"
@@ -316,9 +316,9 @@
                 </div>
                 <div class="row border border-top-0 border-success mt-3">
                     <div class="col-sm-12">
-                        <h2 *ngIf="lang()=='es'">Reacciones Medicas Adversas</h2>
-                        <h2 *ngIf="lang()=='en'">Adverse Medical Reactions</h2>
-                        <h2 *ngIf="lang()=='br'">Reações Médicas Adversas</h2>
+                        <h2 *ngIf="lang()=='es'">Diccionario Médico para Actividades Reguladoras</h2>
+                        <h2 *ngIf="lang()=='en'">Medical Dictionary for Regulatory Activities</h2>
+                        <h2 *ngIf="lang()=='br'">Dicionário Médico para Atividades Regulatórias</h2>
                     </div>
                 </div>
                 <div class="row mt-4">
@@ -342,7 +342,7 @@
                                                 lang() == 'en'? 'MedDRA' : 'MedDRA' " aria-label="Number" matInput
                                         [formControl]="myControlMedra" [matAutocomplete]="autoMedra"
                                         [ngStyle]="{'background-color':optionsMedra.length === 0?'#DBDAC1':''}"
-                                        [(ngModel)]="selMedra" oninput="this.value = this.value.toUpperCase()">
+                                        [(ngModel)]="selMedra" oninput="this.value = this.value.toUpperCase()" (keydown.enter)="agregarMedra(selMedra)">
                                     <mat-spinner *ngIf="optionsMedra.length === 0" matSuffix [diameter]="18"
                                         style="float: right; margin-left: 8px"></mat-spinner>
                                     <button mat-button *ngIf="selMedra" matSuffix mat-icon-button aria-label="Clear"
@@ -411,7 +411,7 @@
                                         lang() == 'en'? 'Therapy' : 'Terapia' " aria-label="Number" matInput
                                         [ngStyle]="{'background-color':options.length === 0?'#DBDAC1':''}"
                                         [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="selTerap"
-                                        oninput="this.value = this.value.toUpperCase()">
+                                        oninput="this.value = this.value.toUpperCase()" (keydown.enter)="agregarTerap(selTerap)">
                                     <mat-spinner *ngIf="options.length === 0" matSuffix [diameter]="18"
                                         style="float: right; margin-left: 8px"></mat-spinner>
                                     <button mat-button *ngIf="selTerap" matSuffix mat-icon-button aria-label="Clear"

@@ -30,14 +30,19 @@
                         <span *ngIf="lang()=='en'">Users</span>
                         <span *ngIf="lang()=='br'">Comercial</span>
                     </a>
-                    <!--<a class="dropdown-item" routerLink="/listaPadecimiento" *ngIf="roleType()=='ROLE_ADMIN'">
+                    <a class="dropdown-item" routerLink="/listaPadecimiento" *ngIf="roleType()=='ROLE_ADMIN'">
                         <span *ngIf="lang()=='es'">Padecimientos</span>
                         <span *ngIf="lang()=='en'">Ailments</span>
                         <span *ngIf="lang()=='br'">
                             Doenças</span>
                         
                     </a>
-                    <a class="dropdown-item" routerLink="/listaMedicamento" *ngIf="roleType()=='ROLE_ADMIN'">
+                    <a class="dropdown-item" routerLink="/listaMedra" *ngIf="roleType()=='ROLE_ADMIN'">
+                        <span *ngIf="lang()=='es'">MedDRA</span>
+                        <span *ngIf="lang()=='en'">MedDRA</span>
+                        <span *ngIf="lang()=='br'">MedDRA</span>
+                    </a>
+                    <!--<a class="dropdown-item" routerLink="/listaMedicamento" *ngIf="roleType()=='ROLE_ADMIN'">
                         <span *ngIf="lang()=='es'">Medicamentos</span>
                         <span *ngIf="lang()=='en'">Medicament</span>
                         <span *ngIf="lang()=='br'">Medicação</span>

@@ -58,6 +58,9 @@ import { PadecimientoListaComponent } from './padecimientos/padecimiento-lista/p
 import { NuevoPadecimientoComponent } from './padecimientos/nuevo-padecimiento/nuevo-padecimiento.component';
 import { MenuPadecimientoComponent } from './menu-padecimiento/menu-padecimiento.component'; // fonts provided for pdfmake
 import { BlockUIModule } from 'ng-block-ui';
+import { NuevaMedraComponent } from './medra/nueva-medra/nueva-medra.component';
+import { ListaMedraComponent } from './medra/lista-medra/lista-medra.component';
+import { MenuMedraComponent } from './menu-medra/menu-medra.component';
 
 // Set the fonts to use
 PdfMakeWrapper.setFonts(pdfFonts);
@@ -85,8 +88,9 @@ PdfMakeWrapper.setFonts(pdfFonts);
     NuevoPadecimientoComponent,
     MenuPadecimientoComponent,
     NuevoPadecimientoComponent,
-    
-    
+    NuevaMedraComponent,
+    ListaMedraComponent,
+    MenuMedraComponent
   ],
   imports: [
     BrowserModule,
