@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts'
+import * as HighchartsExport from 'highcharts-exporting'
 import { DatosGraficaToxicomaniasDTO } from '../models/datos-grafica-toxicomanias-dto';
 import { CuestionarioService } from '../services/cuestionario.service';
 import { UsuarioService } from '../services/usuario.service';
@@ -14,8 +15,16 @@ import { Observable } from 'rxjs';
 import { DatosGraficaPadecimientoDto } from '../models/datos-grafica-padecimiento-dto';
 import { MedraService } from '../services/medra.service';
 import { DatosGraficaCie10 } from '../models/datos-grafica-cie10';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'
+import { ThemePalette } from '@angular/material/core';
 
-
+export interface Task {
+  name: string;
+  completed: boolean;
+  color: ThemePalette;
+  subtasks?: Task[];
+}
 
 @Component({
   selector: 'app-estadisticas',
@@ -44,21 +53,21 @@ export class EstadisticasComponent implements OnInit {
 
   /////////////////////////////////////////CIE10
   rangoSelCIE: string = "S";
-  rangosCIE: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual },{clave: "T",valor: this.always}];
+  rangosCIE: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }, { clave: "T", valor: this.always }];
   inicioSemanaCIE: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
   /////////////////////////////////////////Soc
   rangoSelSoc: string = "S";
-  rangosSOC: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual },{clave: "T",valor: this.always}];
+  rangosSOC: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }, { clave: "T", valor: this.always }];
   inicioSemanaSoc: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
- 
+
 
 
 
   ///////////////////////////////////Padecimientos
-  tituloPade:string = this.lang()=="en"? "Summary of ailments" : this.lang()=="br"?
-  "Resumo das doenças" : "Resumen de padecimientos";
+  tituloPade: string = this.lang() == "en" ? "Summary of ailments" : this.lang() == "br" ?
+    "Resumo das doenças" : "Resumen de padecimientos";
   iniPade: string;
   myControlPade = new FormControl();
   optionsPade: string[] = []; // lista donde se cargan los datos de los padecimientos desde el servidor
@@ -72,8 +81,8 @@ export class EstadisticasComponent implements OnInit {
   inicioSemanaPade: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
   /////////////////////////////////////////Medra
-  tituloMedra:string = this.lang()=="en"? "Summary of adverse medical reactions" : this.lang()=="br"?
-  "Resumo das reações médicas adversas" : "Resumen de reacciones medicas adversas";
+  tituloMedra: string = this.lang() == "en" ? "Medical Dictionary for Regulatory Activities" : this.lang() == "br" ?
+    "Dicionário Médico para Atividades Regulatóriass" : "Resumen de Diccionario Médico para Actividades Reguladoras";
   socMedraSel: string;
   myControlMedra = new FormControl();
   optionsMedra: string[] = []; // lista donde se cargan los datos de los padecimientos desde el servidor
@@ -90,6 +99,7 @@ export class EstadisticasComponent implements OnInit {
 
 
 
+  highcharts = Highcharts;
   Highcharts: typeof Highcharts = Highcharts;
   graficaPrueba: Highcharts.Options;
   graficaPastelCIE10: Highcharts.Options;
@@ -102,7 +112,11 @@ export class EstadisticasComponent implements OnInit {
   datosGraficaToxicomanias: DatosGraficaToxicomaniasDTO[];
   datosGraficaPadecimientos: DatosGraficaPadecimientoDto;
   datosGraficaMedra: DatosGraficaPadecimientoDto;
+  datosGraficaCie10: DatosGraficaCie10[];
+  datosGraficaSoc: DatosGraficaCie10[];
 
+  allComplete: boolean = false;
+  anyComplete: boolean = false;
 
   constructor(protected userService: UsuarioService,
     protected cuestService: CuestionarioService,
@@ -122,18 +136,304 @@ export class EstadisticasComponent implements OnInit {
     this.cargarPadecimientos("A");
   }
 
+  toxicLabel:string = this.lang()=="en"? "Drug Adiction":this.lang()=="br"? "Dependência de Drogas": "Toxicomanías";
+  padeLabel:string = this.lang()=="en"? "Ailments":this.lang()=="br"? "Doenças": "Padecimientos"
+  todosLabel:string = this.lang()=="en"? 'All/None':this.lang()=="br"? "Tudo/Nenhum": "Todos/Ninguno"
+
+  task: Task = {
+    name: this.todosLabel,
+    completed: false,
+    color: 'primary',
+    subtasks: [
+      { name: this.toxicLabel, completed: false, color: 'warn' },
+      { name: 'MedDRAs', completed: false, color: 'warn' },
+      { name: this.padeLabel, completed: false, color: 'warn' },
+      { name: 'CIE10', completed: false, color: 'warn' },
+      { name: 'Soc', completed: false, color: 'warn' }
+    ]
+  };
+
+  anyCompleteCalc() {
+    this.anyComplete = this.task.subtasks.filter(t => t.completed).length > 0;
+  }
+
+  updateAllComplete() {
+    this.anyCompleteCalc();
+    this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
+  }
+
+  someComplete(): boolean {
+    this.anyCompleteCalc();
+    if (this.task.subtasks == null) {
+      return false;
+    }
+    return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
+  }
+
+  setAll(completed: boolean) {
+    this.anyCompleteCalc();
+    this.allComplete = completed;
+    if (this.task.subtasks == null) {
+      return;
+    }
+    this.task.subtasks.forEach(t => t.completed = completed);
+  }
+
+
+  public descargaPdf() {
+
+    const doc = new jsPDF()
+    let fecha = this.lang() == "en" ? "Date" : this.lang() == "br" ? "Data" : "Fecha";
+    let hombres = this.lang() == "en" ? "Men" : this.lang() == "br" ? "Homens" : "Hombres";
+    let mujeres = this.lang() == "en" ? "Women" : this.lang() == "br" ? "Mulheres" : "Mujeres";
+
+    ////////////////////////////////////Toxicomanias
+
+    let datosToxic = this.datosGraficaToxicomanias;
+    if (this.task.subtasks[0].completed && datosToxic.length > 0) {
+      let bod = [];
+      let title_text = this.lang() == "br" ? "Resumo Semanal Dependência de Drogas" : this.lang() == "en" ? "Drug Addiction Weekly Summary" : "Resumen Semanal Toxicomanías";
+      let toxic_date = this.lang() == "br" ? "Data" : this.lang() == "en" ? "Date" : "Fecha";
+
+      if (this.rangoSel == "S") {
+        bod.push([{ content: title_text, colSpan: 16, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+        bod.push([
+          { content: toxic_date, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[0].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[1].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[2].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[3].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[4].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[5].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[6].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+        ]);
+        //Alcoholismo
+        for (let i = 0; i < datosToxic[0].toxicomanias.length; i++) {
+          bod.push([
+            { content: datosToxic[0].toxicomanias[i].nombre, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+            { content: datosToxic[0].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosToxic[1].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosToxic[2].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosToxic[3].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosToxic[4].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosToxic[5].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosToxic[6].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          ]);
+        }
+      } else if (this.rangoSel == "M") {
+        bod.push([{ content: "Resumen Mensual Toxicomanias", colSpan: 10, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+        bod.push([
+          { content: "Toxic/Fecha", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[0].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[1].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[2].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: datosToxic[3].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        ]);
+        for (let i = 0; i < datosToxic[0].toxicomanias.length; i++) {
+          bod.push([
+            { content: datosToxic[0].toxicomanias[i].nombre, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+            { content: datosToxic[0].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosToxic[1].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosToxic[2].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosToxic[3].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          ]);
+        }
+      }
+
+      autoTable(doc,
+        {
+          theme: "grid",
+          body: bod
+        }
+      );
+    }
+
+    /////////////////////////////////Medra
+
+    let datosMed = this.datosGraficaMedra;
+    if (this.task.subtasks[1].completed && datosMed != null) {
+
+      let medBod = [];
+      let titleMedra = "";
+      if (this.rangoMedraSel == "S") {
+        titleMedra = this.lang() == "en" ? "Weekly Summary Medical Dictionary for Regulatory Activities\n" :
+          this.lang() == "br" ? "Dicionário médico de resumo semanal para atividades regulatórias\n" :
+            "Resumen Semanal Diccionario Médico para Actividades Reguladoras\n";
+      } else {
+        titleMedra = this.lang() == "en" ? "Monthly Summary Medical Dictionary for Regulatory Activities\n" :
+          this.lang() == "br" ? "Dicionário Médico de Resumo Mensal para atividades regulatórias\n" :
+            "Resumen Mensual Diccionario Médico para Actividades Reguladoras\n";
+      }
+
+      medBod.push([{ content: titleMedra + this.selMedra, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      medBod.push([
+        { content: fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+      ]);
+
+      for (let i = 0; i < datosMed.datos.length; i++) {
+        medBod.push([
+          { content: datosMed.datos[i].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosMed.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosMed.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+        ]);
+      }
+
+      autoTable(doc,
+        {
+          theme: "grid",
+          body: medBod
+        }
+      );
+    }
+
+    /////////////////////////////////Padecimientos
+
+    let datosPad = this.datosGraficaPadecimientos;
+    if (this.task.subtasks[2].completed && datosPad != null) {
+
+      let padBod = [];
+
+      let titlePade = "";
+      if (this.rangoPadeSel == "S") {
+        titlePade = this.lang() == "en" ? "Weekly Summary Ailments\n" :
+          this.lang() == "br" ? "Resumo Semanal Doenças\n" :
+            "Resumen Semanal Padecimientos\n";
+      } else {
+        titlePade = this.lang() == "en" ? "Monthly Summary Ailments\n" :
+          this.lang() == "br" ? "Resumo Mensal Doenças\n" :
+            "Resumen Mensual Padecimientos\n";
+      }
+
+      padBod.push([{ content: titlePade + this.selPade, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      padBod.push([
+        { content: fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+      ]);
+
+      for (let i = 0; i < datosPad.datos.length; i++) {
+        padBod.push([
+          { content: datosPad.datos[i].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosPad.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosPad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+        ]);
+      }
+
+      autoTable(doc,
+        {
+          theme: "grid",
+          body: padBod
+        }
+      );
+    }
+
+    ///////////////////////////////////CIE10
+
+    let datosCie10 = this.datosGraficaCie10;
+    if (this.task.subtasks[3].completed && datosCie10.length > 0) {
+
+      let cieBod = [];
+
+      let titulo = () => {
+        if (this.rangoSelCIE == "S") {
+          return this.lang() == "en" ? "Weekly Summary By CIE10 starting on " + this.inicioSemanaCIE : this.lang() == "br" ? "Resumo semanal por CIE10 começando em " + this.inicioSemanaCIE : "Resumen Semanal Por CIE10 iniciando el " + this.inicioSemanaCIE;
+        } else if (this.rangoSelCIE == "M") {
+          return this.lang() == "en" ? "Monthly Summary By CIE10 starting on " + this.inicioSemanaCIE : this.lang() == "br" ? "Resumo mensal por CIE10 começando em " + this.inicioSemanaCIE : "Resumen Mensual Por CIE10 iniciando el " + this.inicioSemanaCIE;
+        } else {
+          return this.lang() == "en" ? "Total Data By CIE10" : this.lang() == "br" ? "Dados totais por CIE10" : "Datos Totales Por CIE10";
+        }
+      }
+
+      cieBod.push([{ content: titulo(), colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      cieBod.push([
+        { content: "CIE10", colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: "#", colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: "%", colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+      ]);
+
+      let total = 0;
+      datosCie10.forEach(e => { if (e.cantidad > 0) { total = total + e.cantidad } });
+      for (let i = 0; i < datosCie10.length; i++) {
+        if (datosCie10[i].cantidad > 0) {
+          cieBod.push([
+            { content: datosCie10[i].nombre, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosCie10[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: ((datosCie10[i].cantidad * 100) / total), colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+          ]);
+        }
+      }
+
+
+      autoTable(doc,
+        {
+          theme: "grid",
+          body: cieBod
+        }
+      );
+    }
+
+    ///////////////////////////////////Soc
+
+    let datosSoc = this.datosGraficaSoc;
+    if (this.task.subtasks[4].completed && datosSoc.length > 0) {
+
+      let socBod = [];
+
+      let titulo = () => {
+        if (this.rangoSelSoc == "S") {
+          return this.lang() == "en" ? "Weekly Summary By Soc starting on " + this.inicioSemanaSoc : this.lang() == "br" ? "Resumo semanal por Soc começando em " + this.inicioSemanaSoc : "Resumen Semanal Por Soc iniciando el " + this.inicioSemanaSoc;
+        } else if (this.rangoSelSoc == "M") {
+          return this.lang() == "en" ? "Monthly Summary By Soc starting on " + this.inicioSemanaSoc : this.lang() == "br" ? "Resumo mensal por Soc começando em " + this.inicioSemanaSoc : "Resumen Mensual Por Soc iniciando el " + this.inicioSemanaSoc;
+        } else {
+          return this.lang() == "en" ? "Total Data By Soc" : this.lang() == "br" ? "Dados totais por Soc" : "Datos Totales Por Soc";
+        }
+      }
+      socBod.push([{ content: titulo(), colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      socBod.push([
+        { content: "SOC", colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: "#", colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: "%", colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+      ]);
+
+      let total = 0;
+      datosSoc.forEach(e => { if (e.cantidad > 0) { total = total + e.cantidad } });
+      for (let i = 0; i < datosSoc.length; i++) {
+        if (datosSoc[i].cantidad > 0) {
+          socBod.push([
+            { content: datosSoc[i].nombre, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: datosSoc[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            { content: ((datosSoc[i].cantidad * 100) / total), colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+          ]);
+        }
+      }
+
+
+      autoTable(doc,
+        {
+          theme: "grid",
+          body: socBod
+        }
+      );
+    }
+
+    doc.output('dataurlnewwindow');
+  }
+
+
   //////////////////////////Grafica de padecimientos////////////////////////////////////////////////////
   private _filterPade(value: string): string[] {
     return this.optionsPade.filter(option => option.includes(value));
   }
 
-  public cargaSoc():void{
+  cargaSoc(): void {
     this.medraService.findAllSoc(this.lang()).subscribe(
-      data =>{
+      data => {
         this.socMedra = data;
         this.cargarMedra(this.socMedra[0]);
       },
-      error =>{
+      error => {
         this.toastr.error("Error al cargar los soc", 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
@@ -200,19 +500,19 @@ export class EstadisticasComponent implements OnInit {
     }
 
 
-    let hombres = this.lang() == 'en' ? "Mens" : this.lang() == 'br' ? "Masculino" : "Hombres";
+    let hombres = this.lang() == 'en' ? "Men" : this.lang() == 'br' ? "Masculino" : "Hombres";
     let mujeres = this.lang() == 'en' ? "Women" : this.lang() == 'br' ? "Mulheres" : "Mujeres";
     let total = this.lang() == 'en' ? "Total patients" : this.lang() == 'br' ? "Pacientes totais" : "Pacientes totales";
 
     this.seriesPade = [{
       type: 'column',
       name: hombres,
-      color: 'red',
+      color: '#e33232',
       data: datosHombre
     }, {
       type: 'column',
       name: mujeres,
-      color: 'blue',
+      color: '#3b32e3',
       data: datosMujer
     }, {
       type: 'pie',
@@ -220,11 +520,11 @@ export class EstadisticasComponent implements OnInit {
       data: [{
         name: hombres,
         y: datos.total[0],
-        color: 'red'//Highcharts.getOptions().colors[0] 
+        color: '#e33232'//Highcharts.getOptions().colors[0] 
       }, {
         name: mujeres,
         y: datos.total[1],
-        color: 'blue'//Highcharts.getOptions().colors[2] 
+        color: '#3b32e3'//Highcharts.getOptions().colors[2] 
       }],
       center: datos.total,
       size: [100, 80],
@@ -260,9 +560,8 @@ export class EstadisticasComponent implements OnInit {
     if (this.rangoPadeSel == "S") { // grafica semanañl
       this.cuestService.datosGraficaPadecimientosSemanales(this.inicioSemanaPade, this.selPade).subscribe(
         data => {
-          console.log("admin semanal")
+          this.datosGraficaPadecimientos = data;
           this.creaGraficaPade(data);
-          console.log(data);
           this.cargandoPade = false; // desactiva la animacion de carga
         },
         error => {
@@ -273,9 +572,8 @@ export class EstadisticasComponent implements OnInit {
     if (this.rangoPadeSel == "M") { // mensual
       this.cuestService.datosGraficaPadecimientosMensuales(this.inicioSemanaPade, this.selPade).subscribe(
         data => {
-          console.log("admin mensual")
+          this.datosGraficaPadecimientos = data;
           this.creaGraficaPade(data);
-          console.log(data);
           this.cargandoPade = false;
         },
         error => {
@@ -315,64 +613,65 @@ export class EstadisticasComponent implements OnInit {
     );
   }
 
-
-  serie:any[];
-  creaGraficaCIE10(data: DatosGraficaCie10[]){
+  serie: any[];
+  creaGraficaCIE10(data: DatosGraficaCie10[]) {
 
     let total = 0;
-    data.forEach( e => {if(e.cantidad > 0) {total = total+ e.cantidad}});
+    data.forEach(e => { if (e.cantidad > 0) { total = total + e.cantidad } });
     let datos = [];
-    data.forEach( e => {
-     if(e.cantidad > 0)
-        datos.push({name: e.nombre, y:e.cantidad})
+    data.forEach(e => {
+      if (e.cantidad > 0)
+        datos.push({ name: e.nombre, y: e.cantidad })
     });
-    let titulo = this.lang()=="en"? "Total CIE10 registrations" : 
-    this.lang()=="br"? "Total de registros CIE10": "Total de registros CIE10";
+    let titulo = this.lang() == "en" ? "Total CIE10 registrations" :
+      this.lang() == "br" ? "Total de registros CIE10" : "Total de registros CIE10";
 
-     this.serie =  [{
+    this.serie = [{
       name: 'Brands',
       colorByPoint: true,
       data: datos
-  }];
+    }];
 
     this.graficaPastelCIE10 = {
       chart: {
-          plotBackgroundColor: null,
-          plotBorderWidth: null,
-          plotShadow: false,
-          type: 'pie'
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
       },
       title: {
-          text: titulo
+        text: titulo
       },
       tooltip: {
-          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
       },
       accessibility: {
-          point: {
-              valueSuffix: '%'
-          }
+        point: {
+          valueSuffix: '%'
+        }
       },
       plotOptions: {
-          pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: {
-                  enabled: true,
-                  format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-              }
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
           }
+        }
       },
-      series:this.serie
-  };
+      series: this.serie
+    };
 
   }
 
-  cargaGraficaCIE10(){
-    this.cargandoCIE= true;
-    if(this.rangoSelCIE == "T"){
+  cargaGraficaCIE10() {
+    this.cargandoCIE = true;
+    if (this.rangoSelCIE == "T") {
+      console.log("Semanal todo cie");
       this.cuestService.datosGraficaCie10Pastel(this.lang()).subscribe(
         data => {
+          this.datosGraficaCie10 = data;
           this.creaGraficaCIE10(data);
           this.cargandoCIE = false;
         },
@@ -380,9 +679,12 @@ export class EstadisticasComponent implements OnInit {
           this.cargandoCIE = false;
         }
       );
-    } else if(this.rangoSelCIE == "M"){
-      this.cuestService.datosGraficaCie10PastelMounth(this.inicioSemanaCIE,this.lang()).subscribe(
+    } else if (this.rangoSelCIE == "M") {
+      console.log("Mensual cie");
+      console.log(this.inicioSemanaCIE);
+      this.cuestService.datosGraficaCie10PastelMounth(this.inicioSemanaCIE, this.lang()).subscribe(
         data => {
+          this.datosGraficaCie10 = data;
           this.creaGraficaCIE10(data);
           this.cargandoCIE = false;
         },
@@ -390,9 +692,13 @@ export class EstadisticasComponent implements OnInit {
           this.cargandoCIE = false;
         }
       );
-    }else{
-       this.cuestService.datosGraficaCie10PastelWeek(this.inicioSemanaCIE,this.lang()).subscribe(
+    } else {
+      console.log("Semanal cie");
+      console.log(this.inicioSemanaCIE);
+      this.cuestService.datosGraficaCie10PastelWeek(this.inicioSemanaCIE, this.lang()).subscribe(
         data => {
+          console.log(data);
+          this.datosGraficaCie10 = data;
           this.creaGraficaCIE10(data);
           this.cargandoCIE = false;
         },
@@ -402,63 +708,64 @@ export class EstadisticasComponent implements OnInit {
       );
     }
 
-    }
+  }
 
-  serieSoc:any[]
-  creaGraficaSoc(data: DatosGraficaCie10[]){
+  serieSoc: any[]
+  creaGraficaSoc(data: DatosGraficaCie10[]) {
     let total = 0;
-    data.forEach( e => {if(e.cantidad > 0) {total = total+ e.cantidad}});
+    data.forEach(e => { if (e.cantidad > 0) { total = total + e.cantidad } });
     let datos = [];
-    data.forEach( e => {
-     if(e.cantidad > 0)
-        datos.push({name: e.nombre, y:e.cantidad})
+    data.forEach(e => {
+      if (e.cantidad > 0)
+        datos.push({ name: e.nombre, y: e.cantidad })
     });
-    let titulo = this.lang()=="en"? "Total SOC registrations" : 
-    this.lang()=="br"? "Total de registros SOC": "Total de registros SOC";
+    let titulo = this.lang() == "en" ? "Total SOC registrations" :
+      this.lang() == "br" ? "Total de registros SOC" : "Total de registros SOC";
 
-     this.serieSoc =  [{
+    this.serieSoc = [{
       name: 'Brands',
       colorByPoint: true,
       data: datos
-  }];
+    }];
 
     this.graficaPastelSoc = {
       chart: {
-          plotBackgroundColor: null,
-          plotBorderWidth: null,
-          plotShadow: false,
-          type: 'pie'
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
       },
       title: {
-          text: titulo
+        text: titulo
       },
       tooltip: {
-          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
       },
       accessibility: {
-          point: {
-              valueSuffix: '%'
-          }
+        point: {
+          valueSuffix: '%'
+        }
       },
       plotOptions: {
-          pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: {
-                  enabled: true,
-                  format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-              }
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
           }
+        }
       },
-      series:this.serieSoc
-  };
+      series: this.serieSoc
+    };
   }
 
-  cargaGraficaSoc(){
+  cargaGraficaSoc() {
     this.cargandoSoc = true;
-    if(this.rangoSelSoc == "T"){
+    if (this.rangoSelSoc == "T") {
       this.cuestService.datosGraficaSocPastel(this.lang()).subscribe(
         data => {
+          this.datosGraficaSoc = data;
           this.creaGraficaSoc(data);
           this.cargandoSoc = false;
         },
@@ -466,9 +773,10 @@ export class EstadisticasComponent implements OnInit {
           this.cargandoSoc = false;
         }
       );
-    } else if(this.rangoSelSoc == "M"){
-      this.cuestService.datosGraficaSocPastelMounth(this.inicioSemanaSoc,this.lang()).subscribe(
+    } else if (this.rangoSelSoc == "M") {
+      this.cuestService.datosGraficaSocPastelMounth(this.inicioSemanaSoc, this.lang()).subscribe(
         data => {
+          this.datosGraficaSoc = data;
           this.creaGraficaSoc(data);
           this.cargandoSoc = false;
         },
@@ -476,9 +784,10 @@ export class EstadisticasComponent implements OnInit {
           this.cargandoSoc = false;
         }
       );
-    }else{
-       this.cuestService.datosGraficaSocPastelWeek(this.inicioSemanaSoc,this.lang()).subscribe(
+    } else {
+      this.cuestService.datosGraficaSocPastelWeek(this.inicioSemanaSoc, this.lang()).subscribe(
         data => {
+          this.datosGraficaSoc = data;
           this.creaGraficaSoc(data);
           this.cargandoSoc = false;
         },
@@ -533,12 +842,12 @@ export class EstadisticasComponent implements OnInit {
     this.seriesMedra = [{
       type: 'column',
       name: hombres,
-      color: 'red',
+      color: '#e33232',
       data: datosHombre
     }, {
       type: 'column',
       name: mujeres,
-      color: 'blue',
+      color: '#3b32e3',
       data: datosMujer
     }, {
       type: 'pie',
@@ -546,11 +855,11 @@ export class EstadisticasComponent implements OnInit {
       data: [{
         name: hombres,
         y: datos.total[0],
-        color: 'red'//Highcharts.getOptions().colors[0] 
+        color: '#e33232'//Highcharts.getOptions().colors[0] 
       }, {
         name: mujeres,
         y: datos.total[1],
-        color: 'blue'//Highcharts.getOptions().colors[2] 
+        color: '#3b32e3'//Highcharts.getOptions().colors[2] 
       }],
       center: datos.total,
       size: [100, 80],
@@ -587,7 +896,7 @@ export class EstadisticasComponent implements OnInit {
     if (this.rangoMedraSel == "S") { // grafica semanañl
       this.cuestService.datosGraficaMedraSemanales(this.inicioSemanaMedra, this.selMedra).subscribe(
         data => {
-          console.log("semanal");
+          this.datosGraficaMedra = data;
           console.log(data);
           this.creaGraficaMedra(data);
           this.cargandoMedra = false; // desactiva la animacion de carga
@@ -600,7 +909,7 @@ export class EstadisticasComponent implements OnInit {
     if (this.rangoMedraSel == "M") { // mensual
       this.cuestService.datosGraficaMedraMensuales(this.inicioSemanaMedra, this.selMedra).subscribe(
         data => {
-          console.log("mensual");
+          this.datosGraficaMedra = data;
           this.creaGraficaMedra(data);
           console.log(data);
           this.cargandoMedra = false;
@@ -643,7 +952,7 @@ export class EstadisticasComponent implements OnInit {
     }
     ];
 
-    let title_text = this.lang() == "br" ? "Resumo Semanal" : this.lang() == "en" ? "Weekly Summary" : "Resumen Semanal Toxicomanías";
+    let title_text = this.lang() == "br" ? "Resumo Semanal Dependência de Drogas" : this.lang() == "en" ? "Drug Addiction Weekly Summary" : "Resumen Semanal Toxicomanías";
     let y_label = this.lang() == "br" ? "Pacientes" : this.lang() == "en" ? "Patiens" : "Pacientes";
     let x_label = this.lang() == "br" ? "Data" : this.lang() == "en" ? "Date" : "Fecha";
 
@@ -685,6 +994,9 @@ export class EstadisticasComponent implements OnInit {
           fontSize: '15px',
           color: '#303030'
         }
+      },
+      exporting: {
+        enabled: true // hide button
       }
     };
 
@@ -728,6 +1040,7 @@ export class EstadisticasComponent implements OnInit {
     if (this.rangoSel == "S") { // si la grafica sera semanal
       this.cuestService.datosGraficaToxicomaniasSemanales(this.inicioSemana, this.lang()).subscribe(
         data => {
+          this.datosGraficaToxicomanias = data;
           this.graficaToxic(data); // genera la grafica
           this.cargando = false; // desactiva la animacion de carga
         },
@@ -739,6 +1052,7 @@ export class EstadisticasComponent implements OnInit {
     if (this.rangoSel == "M") { // si la grafica sera mensual
       this.cuestService.datosGraficaToxicomaniasMensuales(this.inicioSemana, this.lang()).subscribe(
         data => {
+          this.datosGraficaToxicomanias = data;
           this.graficaToxic(data);
           this.cargando = false;
         },

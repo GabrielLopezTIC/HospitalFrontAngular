@@ -61,6 +61,7 @@ import { BlockUIModule } from 'ng-block-ui';
 import { NuevaMedraComponent } from './medra/nueva-medra/nueva-medra.component';
 import { ListaMedraComponent } from './medra/lista-medra/lista-medra.component';
 import { MenuMedraComponent } from './menu-medra/menu-medra.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 // Set the fonts to use
 PdfMakeWrapper.setFonts(pdfFonts);
@@ -107,6 +108,7 @@ PdfMakeWrapper.setFonts(pdfFonts);
     MatRadioModule,
     MatFormFieldModule,
     MatTableModule,
+    MatCheckboxModule,
     MatSelectModule,
     MatDialogModule,
     MatAutocompleteModule,

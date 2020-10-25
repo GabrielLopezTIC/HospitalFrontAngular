@@ -63,7 +63,7 @@ export class NuevoMedicamentoComponent implements OnInit {
         this.missing_info_safetyConcernsEs,
         this.missing_info_safetyConcernsEn,
         this.missing_info_safetyConcernsBr,
-        null
+        []
       );
 
       

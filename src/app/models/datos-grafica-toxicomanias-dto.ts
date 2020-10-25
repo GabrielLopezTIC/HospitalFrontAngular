@@ -2,6 +2,13 @@ export class DatosGraficaToxicomaniasDTO {
 
     fecha:string;
     toxicomanias:Toxicomanias[];
+
+    constructor( fecha:string,
+        toxicomanias:Toxicomanias[]){
+            this.fecha = fecha;
+            this.toxicomanias = toxicomanias;
+        }
+
 }
 
 export class Toxicomanias{

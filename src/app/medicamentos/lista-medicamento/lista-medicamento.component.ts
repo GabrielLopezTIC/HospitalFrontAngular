@@ -69,6 +69,7 @@ export class ListaMedicamentoComponent implements OnInit {
   buscar(){
     this.medicamentoService.details(this.nombre).subscribe(
       data => {
+        this.medicamentos = [];
         this.medicamentos.push(data);
       },
       error => {

@@ -5,7 +5,8 @@
             <div class="ml-2">
                 <mat-form-field>
                     <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
-                    [placeholder]="lang() == 'es'? 'Nombre': lang() == 'en'? 'Name' : 'Nome'" [(ngModel)]="nombre">
+                    [placeholder]="lang() == 'es'? 'Nombre': lang() == 'en'? 'Name' : 'Nome'" [(ngModel)]="nombre"
+                    (keydown.enter)="buscar()">
                     <button mat-button *ngIf="nombre" matSuffix mat-icon-button aria-label="Clear"
                         (click)="nombre=''">
                         <mat-icon>x</mat-icon>

@@ -145,4 +145,8 @@ export class CuestionarioService {
   }
 
 
+  public highchartsServer(datos:any): Observable<any>{
+    return this.httpClient.post<any>("http://export.highcharts.com",datos,{headers:{skip:"true"}});
+  }
+
 }
