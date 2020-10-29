@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts'
-import * as HighchartsExport from 'highcharts-exporting'
 import { DatosGraficaToxicomaniasDTO } from '../models/datos-grafica-toxicomanias-dto';
 import { CuestionarioService } from '../services/cuestionario.service';
 import { UsuarioService } from '../services/usuario.service';
@@ -99,13 +98,21 @@ export class EstadisticasComponent implements OnInit {
 
 
 
-  highcharts = Highcharts;
-  Highcharts: typeof Highcharts = Highcharts;
-  graficaPrueba: Highcharts.Options;
+  //highcharts = Highcharts;
+  //Highcharts: typeof Highcharts = Highcharts;
+  HighToxic: typeof Highcharts = Highcharts;
+  HighPade: typeof Highcharts = Highcharts;
+  HighMedra: typeof Highcharts = Highcharts;
+  HighCie: typeof Highcharts = Highcharts;
+  HighSoc: typeof Highcharts = Highcharts;
+
+
+
+  graficaToxic: Highcharts.Options;
   graficaPastelCIE10: Highcharts.Options;
   graficaPastelSoc: Highcharts.Options;
 
-  graficaCombinada: Highcharts.Options;
+  graficaCombinadaPade: Highcharts.Options;
   graficaCombinadaMedra: Highcharts.Options;
 
 
@@ -183,6 +190,10 @@ export class EstadisticasComponent implements OnInit {
   public descargaPdf() {
 
     const doc = new jsPDF()
+    
+
+
+
     let fecha = this.lang() == "en" ? "Date" : this.lang() == "br" ? "Data" : "Fecha";
     let hombres = this.lang() == "en" ? "Men" : this.lang() == "br" ? "Homens" : "Hombres";
     let mujeres = this.lang() == "en" ? "Women" : this.lang() == "br" ? "Mulheres" : "Mujeres";
@@ -433,8 +444,9 @@ export class EstadisticasComponent implements OnInit {
         this.socMedra = data;
         this.cargarMedra(this.socMedra[0]);
       },
-      error => {
-        this.toastr.error("Error al cargar los soc", 'Fail', {
+      err => {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -458,7 +470,8 @@ export class EstadisticasComponent implements OnInit {
         this.myControlPade.setValue("");
       },
       err => {
-        this.toastr.error("Error al cargar los padecimientos", 'Fail', {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -466,6 +479,7 @@ export class EstadisticasComponent implements OnInit {
   }
 
   seriesPade: any[] = [];
+  graficaPadeTemp: any;
   creaGraficaPade(datos: DatosGraficaPadecimientoDto): void {
 
     let datosHombre = [];
@@ -504,6 +518,7 @@ export class EstadisticasComponent implements OnInit {
     let mujeres = this.lang() == 'en' ? "Women" : this.lang() == 'br' ? "Mulheres" : "Mujeres";
     let total = this.lang() == 'en' ? "Total patients" : this.lang() == 'br' ? "Pacientes totais" : "Pacientes totales";
 
+
     this.seriesPade = [{
       type: 'column',
       name: hombres,
@@ -537,7 +552,7 @@ export class EstadisticasComponent implements OnInit {
 
 
 
-    this.graficaCombinada = {
+    this.graficaPadeTemp = {
       title: {
         text: title + this.selPade
       },
@@ -554,6 +569,10 @@ export class EstadisticasComponent implements OnInit {
       },
       series: this.seriesPade
     };
+
+    this.graficaCombinadaPade = this.graficaPadeTemp;
+
+    
   }
   cargarGraficaPade(): void {
     this.cargandoPade = true; // activa la animacion de carga
@@ -564,8 +583,12 @@ export class EstadisticasComponent implements OnInit {
           this.creaGraficaPade(data);
           this.cargandoPade = false; // desactiva la animacion de carga
         },
-        error => {
+        err => {
           this.cargandoPade = false;
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
         }
       );
     }
@@ -606,14 +629,15 @@ export class EstadisticasComponent implements OnInit {
         this.myControlMedra.setValue("");
       },
       err => {
-        this.toastr.error("Error al cargar los MedDRA", 'Fail', {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
     );
   }
 
-  serie: any[];
+  serieCie: any[];
   creaGraficaCIE10(data: DatosGraficaCie10[]) {
 
     let total = 0;
@@ -626,7 +650,7 @@ export class EstadisticasComponent implements OnInit {
     let titulo = this.lang() == "en" ? "Total CIE10 registrations" :
       this.lang() == "br" ? "Total de registros CIE10" : "Total de registros CIE10";
 
-    this.serie = [{
+    this.serieCie = [{
       name: 'Brands',
       colorByPoint: true,
       data: datos
@@ -660,7 +684,7 @@ export class EstadisticasComponent implements OnInit {
           }
         }
       },
-      series: this.serie
+      series: this.serieCie 
     };
 
   }
@@ -668,7 +692,6 @@ export class EstadisticasComponent implements OnInit {
   cargaGraficaCIE10() {
     this.cargandoCIE = true;
     if (this.rangoSelCIE == "T") {
-      console.log("Semanal todo cie");
       this.cuestService.datosGraficaCie10Pastel(this.lang()).subscribe(
         data => {
           this.datosGraficaCie10 = data;
@@ -680,24 +703,23 @@ export class EstadisticasComponent implements OnInit {
         }
       );
     } else if (this.rangoSelCIE == "M") {
-      console.log("Mensual cie");
-      console.log(this.inicioSemanaCIE);
       this.cuestService.datosGraficaCie10PastelMounth(this.inicioSemanaCIE, this.lang()).subscribe(
         data => {
           this.datosGraficaCie10 = data;
           this.creaGraficaCIE10(data);
           this.cargandoCIE = false;
         },
-        error => {
+        err => {
           this.cargandoCIE = false;
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
         }
       );
     } else {
-      console.log("Semanal cie");
-      console.log(this.inicioSemanaCIE);
       this.cuestService.datosGraficaCie10PastelWeek(this.inicioSemanaCIE, this.lang()).subscribe(
         data => {
-          console.log(data);
           this.datosGraficaCie10 = data;
           this.creaGraficaCIE10(data);
           this.cargandoCIE = false;
@@ -769,8 +791,12 @@ export class EstadisticasComponent implements OnInit {
           this.creaGraficaSoc(data);
           this.cargandoSoc = false;
         },
-        error => {
+        err => {
           this.cargandoSoc = false;
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
         }
       );
     } else if (this.rangoSelSoc == "M") {
@@ -780,8 +806,12 @@ export class EstadisticasComponent implements OnInit {
           this.creaGraficaSoc(data);
           this.cargandoSoc = false;
         },
-        error => {
+        err => {
           this.cargandoSoc = false;
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
         }
       );
     } else {
@@ -791,8 +821,12 @@ export class EstadisticasComponent implements OnInit {
           this.creaGraficaSoc(data);
           this.cargandoSoc = false;
         },
-        error => {
+        err => {
           this.cargandoSoc = false;
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
         }
       );
     }
@@ -897,12 +931,15 @@ export class EstadisticasComponent implements OnInit {
       this.cuestService.datosGraficaMedraSemanales(this.inicioSemanaMedra, this.selMedra).subscribe(
         data => {
           this.datosGraficaMedra = data;
-          console.log(data);
           this.creaGraficaMedra(data);
           this.cargandoMedra = false; // desactiva la animacion de carga
         },
-        error => {
+        err => {
           this.cargandoMedra = false;
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
         }
       );
     }
@@ -911,11 +948,14 @@ export class EstadisticasComponent implements OnInit {
         data => {
           this.datosGraficaMedra = data;
           this.creaGraficaMedra(data);
-          console.log(data);
           this.cargandoMedra = false;
         },
-        error => {
+        err => {
           this.cargandoMedra = false;
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
         }
       );
     }
@@ -923,7 +963,7 @@ export class EstadisticasComponent implements OnInit {
 
   //////////////////////////////Grafica de toxicomanias
   seriesToxic: any[] = [];
-  graficaToxic(listaDatos: DatosGraficaToxicomaniasDTO[]): void {
+  creaGraficaToxic(listaDatos: DatosGraficaToxicomaniasDTO[]): void {
 
     this.seriesToxic = [{
       name: listaDatos[0].toxicomanias[0].nombre,
@@ -956,7 +996,7 @@ export class EstadisticasComponent implements OnInit {
     let y_label = this.lang() == "br" ? "Pacientes" : this.lang() == "en" ? "Patiens" : "Pacientes";
     let x_label = this.lang() == "br" ? "Data" : this.lang() == "en" ? "Date" : "Fecha";
 
-    this.graficaPrueba = {
+    this.graficaToxic = {
       title: {
         text: title_text
       },
@@ -1001,13 +1041,13 @@ export class EstadisticasComponent implements OnInit {
     };
 
     if (this.rangoSel == "S") {
-      this.graficaPrueba.xAxis['categories'] = [listaDatos[0].fecha, listaDatos[1].fecha, listaDatos[2].fecha, listaDatos[3].fecha,
+      this.graficaToxic.xAxis['categories'] = [listaDatos[0].fecha, listaDatos[1].fecha, listaDatos[2].fecha, listaDatos[3].fecha,
       listaDatos[4].fecha, listaDatos[5].fecha, listaDatos[6].fecha]
 
 
       let dia = 0;
       for (let toxmania = 0; toxmania < listaDatos[0].toxicomanias.length; toxmania++) {
-        this.graficaPrueba.series[dia]['data'] = [
+        this.graficaToxic.series[dia]['data'] = [
           listaDatos[0].toxicomanias[toxmania].cantidad, //alcoholismo dia 1
           listaDatos[1].toxicomanias[toxmania].cantidad, // alcoholismo dia 2
           listaDatos[2].toxicomanias[toxmania].cantidad, // alcoholismo dia 3
@@ -1019,12 +1059,12 @@ export class EstadisticasComponent implements OnInit {
       }
     } else if (this.rangoSel == "M") {
 
-      this.graficaPrueba.xAxis['categories'] = [listaDatos[0].fecha, listaDatos[1].fecha, listaDatos[2].fecha, listaDatos[3].fecha]
+      this.graficaToxic.xAxis['categories'] = [listaDatos[0].fecha, listaDatos[1].fecha, listaDatos[2].fecha, listaDatos[3].fecha]
 
 
       let dia = 0;
       for (let toxmania = 0; toxmania < listaDatos[0].toxicomanias.length; toxmania++) {
-        this.graficaPrueba.series[dia]['data'] = [
+        this.graficaToxic.series[dia]['data'] = [
           listaDatos[0].toxicomanias[toxmania].cantidad, //alcoholismo dia 1
           listaDatos[1].toxicomanias[toxmania].cantidad, // alcoholismo dia 2
           listaDatos[2].toxicomanias[toxmania].cantidad, // alcoholismo dia 3
@@ -1041,11 +1081,15 @@ export class EstadisticasComponent implements OnInit {
       this.cuestService.datosGraficaToxicomaniasSemanales(this.inicioSemana, this.lang()).subscribe(
         data => {
           this.datosGraficaToxicomanias = data;
-          this.graficaToxic(data); // genera la grafica
+          this.creaGraficaToxic(data); // genera la grafica
           this.cargando = false; // desactiva la animacion de carga
         },
-        error => {
+        err => {
           this.cargando = false; // desactiva la animacion de carga
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
         }
       );
     }
@@ -1053,11 +1097,15 @@ export class EstadisticasComponent implements OnInit {
       this.cuestService.datosGraficaToxicomaniasMensuales(this.inicioSemana, this.lang()).subscribe(
         data => {
           this.datosGraficaToxicomanias = data;
-          this.graficaToxic(data);
+          this.creaGraficaToxic(data);
           this.cargando = false;
         },
-        error => {
+        err => {
           this.cargando = false;
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
         }
       );
     }

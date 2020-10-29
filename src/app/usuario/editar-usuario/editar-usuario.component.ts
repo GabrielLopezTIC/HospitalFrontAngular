@@ -54,7 +54,8 @@ export class EditarUsuarioComponent implements OnInit {
         this.statusSelect = this.usuario.enabled;
       },
       err => {
-        this.toastr.error(err.error.mensaje, 'Fail', {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
         this.router.navigate(['/listaUsuario']);
@@ -81,7 +82,8 @@ export class EditarUsuarioComponent implements OnInit {
           this.router.navigate(['/listaUsuario']);
         },
         err => {
-          this.toastr.error(err.error.mensaje, 'Fail', {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
           this.creandoUsuario= false;

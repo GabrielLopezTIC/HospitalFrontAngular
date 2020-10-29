@@ -68,8 +68,9 @@ export class ListaUsuarioComponent implements OnInit {
           this.totalPages = data['totalPages'];
           this.actualizandoLista = false;
         },
-        error =>{
-          this.toastr.error("Tu sesión expiró o no tienes los permisos para ver esto", 'Fail', {
+        err =>{
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
           this.actualizandoLista = false;
@@ -85,8 +86,9 @@ export class ListaUsuarioComponent implements OnInit {
         this.usuarios.push(data);
         this.actualizandoLista = false;
       },
-      error => {
-        this.toastr.error("Usuario no encontrado", '', {
+      err => {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
         this.actualizandoLista = false;
@@ -113,7 +115,8 @@ export class ListaUsuarioComponent implements OnInit {
         this.cargarRegistros(this.paginas[0] - 1, 10, "nombreUsuario");
       },
       err => {
-        this.toastr.error(err.error.mensaje, 'Fail', {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }

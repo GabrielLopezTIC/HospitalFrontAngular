@@ -5,7 +5,7 @@
       <div class="mr-2">
         <mat-form-field>
           <input matInput type="text"
-            [placeholder]="lang() == 'es'? 'Clave de catalogo': lang() == 'en'? 'Catalog key' : 'Chave de catálogo'"
+            [placeholder]="lang() == 'es'? 'Clave de catálogo': lang() == 'en'? 'Catálog key' : 'Chave de catálogo'"
             [(ngModel)]="clavePaciente">
           <button mat-button *ngIf="clavePaciente" matSuffix mat-icon-button aria-label="Clear"
             (click)="clavePaciente=''">
@@ -39,7 +39,7 @@
                   <label *ngIf="lang()=='br'">Registrado ou atualizado por:</label>
                 </th>
                 <th scope="col">
-                  <label *ngIf="lang()=='es'">Medico tratante</label>
+                  <label *ngIf="lang()=='es'">Médico tratante</label>
                   <label *ngIf="lang()=='en'">Prescribing doctor</label>
                   <label *ngIf="lang()=='br'">Médico prescritor</label>
                 </th>
@@ -62,7 +62,7 @@
                   <label *ngIf="lang()=='en'">MedDRA</label>
                   <label *ngIf="lang()=='br'">medDRA</label></th>
                 <th scope="col">
-                  <label *ngIf="lang()=='es'">Terapeutica indicada</label>
+                  <label *ngIf="lang()=='es'">Terapéutica indicada</label>
                   <label *ngIf="lang()=='en'">Indicated therapeutic</label>
                   <label *ngIf="lang()=='br'">Terapêutica indicada</label>
                 </th>

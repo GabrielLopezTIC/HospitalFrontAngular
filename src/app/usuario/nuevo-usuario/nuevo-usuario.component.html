@@ -80,7 +80,7 @@
                         </div>
                     </div>
                     <div  class="col-sm-2 pl-1">
-                        <div class="form-grup" *ngIf="roleType() == 'ROLE_ADMIN'">
+                        <div class="form-grup" *ngIf="roleType() == 'ROLE_ADMIN' || roleType()=='ROLE_MEDICO'">
                             <label>Status</label>
                             <p>
                                 <select name="status" [(ngModel)]="statusSelect">
@@ -94,7 +94,7 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <button class="btn btn-outline-success btn-block"
-                                [disabled]="!f.valid || !(password === passwordConf) || !(rolSelec != null)">
+                                [disabled]="!f.valid || !(password === passwordConf) || !(rolSelec != null) || !(statusSelect != null)">
                                 <i class="fas fa-sign-in-alt"></i>
                                 <p *ngIf="lang()=='es'">Crear cuenta</p>
                                 <p *ngIf="lang()=='en'">Create account</p>

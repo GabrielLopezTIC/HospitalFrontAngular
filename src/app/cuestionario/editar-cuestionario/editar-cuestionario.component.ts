@@ -167,8 +167,9 @@ export class EditarCuestionarioComponent implements OnInit {
           this.terapeuticasList = terapItems;
         
         },
-        error => {
-          this.toastr.error("Error al cargar los datos del paciente", 'Fail', {
+        err => {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -187,8 +188,9 @@ export class EditarCuestionarioComponent implements OnInit {
         this.socMedra = data;
         this.cargarMedra(this.socMedra[0]);
       },
-      error =>{
-        this.toastr.error("Error al cargar los soc", 'Fail', {
+      err =>{
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -213,7 +215,8 @@ export class EditarCuestionarioComponent implements OnInit {
         this.myControlMedra.setValue("");
       },
       err => {
-        this.toastr.error("Error al cargar los MedDRA", 'Fail', {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -240,7 +243,8 @@ export class EditarCuestionarioComponent implements OnInit {
         this.myControlPade.setValue("");
       },
       err => {
-        this.toastr.error("Error al cargar los padecimientos", 'Fail', {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -267,7 +271,8 @@ export class EditarCuestionarioComponent implements OnInit {
         this.myControl.setValue("");
       },
       err => {
-        this.toastr.error("Error al cargar los medicamentos", 'Fail', {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -289,7 +294,6 @@ export class EditarCuestionarioComponent implements OnInit {
   //////////////////////////////////////agregar y borrar  pade y terap
 
   public agregarPade(pade: string): boolean {
-    console.log(pade);
     if (pade != null && pade != "") {
       // si el padecimiento ya esta en la lista no lo ingresa
       for (let i = 0; i < this.padecimientosList.length; i++) {
@@ -305,7 +309,6 @@ export class EditarCuestionarioComponent implements OnInit {
   }
 
   public agregarMedra(medra: string): boolean {
-    console.log(medra);
     if (medra != null && medra != "") {
       // si el padecimiento ya esta en la lista no lo ingresa
       for (let i = 0; i < this.medraList.length; i++) {
@@ -316,7 +319,6 @@ export class EditarCuestionarioComponent implements OnInit {
       // si no esta en la lista lo ingresa
       this.medraList.push(medra);
       this.selMedra = '';
-      console.log(this.medraList);
       return true;
     }
   }
@@ -425,7 +427,6 @@ export class EditarCuestionarioComponent implements OnInit {
       this.blockUI.start(textoCargando);
       this.cuestionarioService.update(this.claveCuestionario, this.nuevoRegistro).subscribe( // registro de cuestionario
         data => {
-          console.log(data);
           this.toastr.success('Paciente Actualizado', 'OK', {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
@@ -441,9 +442,10 @@ export class EditarCuestionarioComponent implements OnInit {
           this.blockUI.stop();
         },
         err => {
-          this.toastr.error("Error al actualizar el paciente", 'Fail', {
-            timeOut: 3000, positionClass: 'toast-top-center',
-          });
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          timeOut: 3000, positionClass: 'toast-top-center',
+        });
           this.registrando = false;
           this.blockUI.stop();
         }

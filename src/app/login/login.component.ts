@@ -81,21 +81,24 @@ export class LoginComponent implements OnInit {
         this.blockUI.stop();
         this.router.navigate(['/cuestionario']);
       },
+
       err => {
         if(err != null){
           this.isLogged = false;
           this.cargando = false;
-        this.errMsj = err.error.message;
         if(this.lang() === "es"){
-          this.toastr.error(this.errMsj, 'No autorizado', {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'No autorizado', {
             timeOut: 3000,  positionClass: 'toast-top-center',
           });
         }else if(this.lang() === "en"){
-          this.toastr.error(this.errMsj, 'Not authorized', {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Not authorized', {
             timeOut: 3000,  positionClass: 'toast-top-center',
           });
         } else if(this.lang() === "br"){
-          this.toastr.error(this.errMsj, 'Não autorizado', {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Não autorizado', {
             timeOut: 3000,  positionClass: 'toast-top-center',
           });
         }

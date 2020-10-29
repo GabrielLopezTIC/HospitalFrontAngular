@@ -48,7 +48,6 @@ export class NuevoMedicamentoComponent implements OnInit {
 
   onRegister() {
     if (confirm("¿Desea registrar el nuevo medicamento?") === true) {
-      console.log(this.missing_info_safetyConcernsEs);
       this.nuevoMedicmento = new Medicamento(
         this.productName,
         this.mrpDcp,
@@ -66,8 +65,6 @@ export class NuevoMedicamentoComponent implements OnInit {
         []
       );
 
-      
-        console.log(this.nuevoMedicmento);
       this.medicService.nuevo(this.nuevoMedicmento).subscribe(
         data => {
           this.toastr.success('Medicamento añadido', 'OK', {

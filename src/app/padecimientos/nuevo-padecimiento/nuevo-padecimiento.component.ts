@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Padecimiento } from 'src/app/models/padecimiento';
 import { PadecimientoService } from 'src/app/services/padecimiento.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-nuevo-padecimiento',
@@ -26,7 +27,8 @@ export class NuevoPadecimientoComponent implements OnInit {
     private tokenService: TokenService,
     private padecimientoService: PadecimientoService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private language: AuthService
   ) { }
 
   ngOnInit() {
@@ -53,7 +55,8 @@ export class NuevoPadecimientoComponent implements OnInit {
           this.router.navigate(['/listaPadecimiento']);
         },
         err => {
-          this.toastr.error("Error al registrar padecimiento", 'Fail', {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -73,5 +76,10 @@ export class NuevoPadecimientoComponent implements OnInit {
   roleType() {
     return this.tokenService.getAuthorities()[0];
   }
+
+  public lang():string{
+    return this.language.lang();
+  }
+
 
 }

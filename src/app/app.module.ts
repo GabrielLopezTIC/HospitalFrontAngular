@@ -51,9 +51,6 @@ import {MatStepperModule} from '@angular/material/stepper';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatProgressBarModule} from '@angular/material/progress-bar'; 
 
-// Import pdfmake-wrapper and the fonts to use
-import { PdfMakeWrapper } from 'pdfmake-wrapper';
-import pdfFonts from "pdfmake/build/vfs_fonts";
 import { PadecimientoListaComponent } from './padecimientos/padecimiento-lista/padecimiento-lista.component';
 import { NuevoPadecimientoComponent } from './padecimientos/nuevo-padecimiento/nuevo-padecimiento.component';
 import { MenuPadecimientoComponent } from './menu-padecimiento/menu-padecimiento.component'; // fonts provided for pdfmake
@@ -63,8 +60,6 @@ import { ListaMedraComponent } from './medra/lista-medra/lista-medra.component';
 import { MenuMedraComponent } from './menu-medra/menu-medra.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
-// Set the fonts to use
-PdfMakeWrapper.setFonts(pdfFonts);
 
 @NgModule({
   declarations: [

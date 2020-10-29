@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Medra } from 'src/app/models/medra';
+import { AuthService } from 'src/app/services/auth.service';
 import { MedraService } from 'src/app/services/medra.service';
 import { TokenService } from 'src/app/services/token.service';
 
@@ -24,7 +25,8 @@ export class NuevaMedraComponent implements OnInit {
     private tokenService: TokenService,
     private medraService: MedraService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private language: AuthService
   ) { }
 
   ngOnInit() {
@@ -50,7 +52,8 @@ export class NuevaMedraComponent implements OnInit {
           this.router.navigate(['/listaMedra']);
         },
         err => {
-          this.toastr.error("Error al registrar MedDRA", 'Fail', {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -70,4 +73,9 @@ export class NuevaMedraComponent implements OnInit {
   roleType() {
     return this.tokenService.getAuthorities()[0];
   }
+
+  public lang():string{
+    return this.language.lang();
+  }
+
 }

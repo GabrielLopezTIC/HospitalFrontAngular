@@ -73,7 +73,6 @@ export class NuevoUsuarioComponent implements OnInit {
         this.sub, // sub
         this.sup // sup
         );
-        console.log(this.nuevoUsuario);
         this.creandoUsuario = true;
         let textoCargando = this.lang()=="en"? "Registering user..." : this.lang()=="br"? "Registrando usuário..." : "Registrando usuario..." ;
         this.blockUI.start(textoCargando);
@@ -88,7 +87,8 @@ export class NuevoUsuarioComponent implements OnInit {
           this.router.navigate(['/listaUsuario']);
         },
         err => {
-          this.toastr.error("Error al registrar el usuario", 'Fail', {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000,  positionClass: 'toast-top-center',
           });
           this.creandoUsuario = false;

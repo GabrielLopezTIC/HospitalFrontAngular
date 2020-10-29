@@ -408,7 +408,7 @@
                             </div>
                             <div class="col-sm-9">
                                 <mat-form-field class="example-full-width filterInput">
-                                    <input type="text" [placeholder]="lang() == 'es'? 'Terapeutica' : 
+                                    <input type="text" [placeholder]="lang() == 'es'? 'Terapéutica' : 
                                         lang() == 'en'? 'Therapy' : 'Terapia' " aria-label="Number" matInput
                                         [ngStyle]="{'background-color':options.length === 0?'#DBDAC1':''}"
                                         [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="selTerap"
@@ -525,7 +525,7 @@
                                                     <div class="col-sm-4">
                                                         <mat-form-field>
                                                             <input matInput type="date" [(ngModel)]="terap.fTermino"
-                                                                [placeholder]="lang() == 'es'? 'Fecha termino' : 
+                                                                [placeholder]="lang() == 'es'? 'Fecha término' : 
                                                                     lang() == 'en'? 'End date' : 'Date final' "
                                                                     [ngStyle]="{'color':comparaFechaTerminoMed(terap.fInicio,terap.fTermino)?'#f50505':''}"
                                                                     >
@@ -589,7 +589,7 @@
                 <div class="row mt-4">
                     <div class="col-sm-4">
                         <mat-form-field>
-                            <mat-label *ngIf="lang() === 'es'">Observaciones clinicas</mat-label>
+                            <mat-label *ngIf="lang() === 'es'">Observaciones clinícas</mat-label>
                             <mat-label *ngIf="lang() === 'en'">Clinical observations</mat-label>
                             <mat-label *ngIf="lang() === 'br'">Observações clínicas</mat-label>
                             <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
@@ -610,7 +610,7 @@
                     <div class="col-sm-4">
                         <mat-form-field>
                             <mat-select matSelect
-                                [placeholder]="lang() === 'es'? 'Grado de informacion': lang() === 'en'? 'Degree of information' : 'Grau de informação'  "
+                                [placeholder]="lang() === 'es'? 'Grado de información': lang() === 'en'? 'Degree of information' : 'Grau de informação'  "
                                 [(ngModel)]="gradoInfo" name="gInfo" [value]="gradoInfo">
                                 <mat-option *ngFor="let op of opcGradoInfo" [value]="op">
                                     {{op}}

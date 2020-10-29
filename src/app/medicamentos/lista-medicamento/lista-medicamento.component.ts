@@ -57,8 +57,9 @@ export class ListaMedicamentoComponent implements OnInit {
           this.medicamentos = data['content'];
           this.totalPages = data['totalPages'];
         },
-        error => {
-          this.toastr.error(error.error.mensaje, 'Tu sesion expiró o no tienes los permisos para ver esto', {
+        err => {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Tu sesion expiró o no tienes los permisos para ver esto', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -72,8 +73,9 @@ export class ListaMedicamentoComponent implements OnInit {
         this.medicamentos = [];
         this.medicamentos.push(data);
       },
-      error => {
-        this.toastr.error("No se encontro padecimiento", '', {
+      err => {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -90,7 +92,8 @@ export class ListaMedicamentoComponent implements OnInit {
         this.cargarRegistros(this.paginas[0] - 1, 10, "catalogKey");
       },
       err => {
-        this.toastr.error("Error a borrar padecimiento", 'Fail', {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }

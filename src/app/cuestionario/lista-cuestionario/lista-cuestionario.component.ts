@@ -74,9 +74,9 @@ export class ListaCuestionarioComponent implements OnInit {
           this.cuestionarios =   data['content'];
           this.totalPages = data['totalPages'];
         },
-        error => {
-          console.log(error);
-          this.toastr.error(error.error.mensaje, 'Tu sesion expiró o no tienes los permisos para ver esto', {
+        err => {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -86,14 +86,12 @@ export class ListaCuestionarioComponent implements OnInit {
   buscar(){
     this.cuestionarioService.details(this.clavePaciente).subscribe(
       data => {
-        console.log(data);
         this.cuestionarios = [];
         this.cuestionarios.push(data);
-        console.log(this.cuestionarios);
       },
-      error => {
-        console.log(error);
-        this.toastr.error(error.error.mensaje, 'Tu sesion expiró o no tienes los permisos para ver esto', {
+      err => {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -110,9 +108,10 @@ export class ListaCuestionarioComponent implements OnInit {
           this.cargarRegistros(this.paginas[0] - 1, 10, "catalogKey");
         },
         err => {
-          this.toastr.error(err.error.mensaje, 'Fail', {
-            timeOut: 3000, positionClass: 'toast-top-center',
-          });
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          timeOut: 3000, positionClass: 'toast-top-center',
+        });
         }
       );
     }

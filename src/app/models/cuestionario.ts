@@ -75,10 +75,18 @@ export class Cuestionario {
         this.padecimientos=padecimientos;
         this.listaMedra = listaMedra;
         this.terapeuticas=terapeuticas;
+        this.riesgosIdent=riesgosIdent;
+        
+
+        obsClin==null? this.obsClin="" : this.obsClin=obsClin;
+        datosLabo==null? this.datosLabo="" : this.datosLabo=datosLabo;
+        gradoInfo==null? this.gradoInfo="" : this.gradoInfo=gradoInfo;
+        
+
+        /*
         this.obsClin=obsClin;
         this.datosLabo=datosLabo;
-        this.riesgosIdent=riesgosIdent;
-        this.gradoInfo=gradoInfo;
+        this.gradoInfo=gradoInfo;*/
     }
 
 

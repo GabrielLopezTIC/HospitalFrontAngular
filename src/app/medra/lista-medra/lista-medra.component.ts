@@ -56,8 +56,9 @@ export class ListaMedraComponent implements OnInit {
           this.medras = data['content'];
           this.totalPages = data['totalPages'];
         },
-        error => {
-          this.toastr.error(error.error.mensaje, 'Tu sesion expiró o no tienes los permisos para ver esto', {
+        err => {
+          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Tu sesion expiró o no tienes los permisos para ver esto', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -66,14 +67,14 @@ export class ListaMedraComponent implements OnInit {
   }
 
   buscar(){
-    console.log("buscando")
     this.medraService.findByName(this.catalogKey,this.lang()).subscribe(
       data => {
         this.medras = [];
         this.medras.push(data);
       },
-      error => {
-        this.toastr.error("No se encontro padecimiento", '', {
+      err => {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -81,7 +82,6 @@ export class ListaMedraComponent implements OnInit {
   }
 
   borrar(medra:string): void{
-    console.log("Borrando");
     if(confirm("Borrar registro de "+medra) === true){
 
     this.medraService.elimina(medra,this.lang()).subscribe(
@@ -92,7 +92,8 @@ export class ListaMedraComponent implements OnInit {
         this.cargarRegistros(this.paginas[0] - 1, 10, "catalogKey");
       },
       err => {
-        this.toastr.error("Error al borrar MedDRA", 'Fail', {
+        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
+        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       } 
