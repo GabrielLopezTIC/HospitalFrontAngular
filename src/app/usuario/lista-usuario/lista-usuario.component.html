@@ -6,7 +6,7 @@
         <mat-form-field>
           <input matInput type="text"
             [placeholder]="lang()=='br'? 'Nome do usuário' : lang()=='en'? 'Username' : 'Nombre de usuario'"
-            [(ngModel)]="nombreUsuario" (keydown.enter)="buscar()">
+            (keypress)="verifLeterAndNumberAndGuion($event)" [(ngModel)]="nombreUsuario" (keydown.enter)="buscar()">
           <button mat-button *ngIf="nombreUsuario" matSuffix mat-icon-button aria-label="Clear"
             (click)="nombreUsuario=''">
             <mat-icon>x</mat-icon>

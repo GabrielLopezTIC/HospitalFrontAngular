@@ -12,29 +12,29 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="nombre">Clave de catalogo</label>
-                            <input type="text" oninput="this.value = this.value.replace(/ /g, '').toUpperCase()" name="catalogKey"
-                                id="catalogKey" class="form-control" [(ngModel)]="catalogKey" required>
+                            <input type="text" name="catalogKey"
+                                (keypress)="claveCatalogo($event)" id="catalogKey" class="form-control" [(ngModel)]="catalogKey" required>
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="nombre">Nombre Español</label>
                             <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombeEs" id="nombreEs"
-                                class="form-control" [(ngModel)]="nombreEs" required>
+                                (keypress)="nombres($event)" class="form-control" [(ngModel)]="nombreEs" required>
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="nombre">Nombre Inglés</label>
                             <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombreEn" id="nombreEn"
-                                class="form-control" [(ngModel)]="nombreEn" required>
+                            (keypress)="nombres($event)" class="form-control" [(ngModel)]="nombreEn" required>
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="nombre">Nombre Portugues</label>
                             <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombreBr" id="nombreBr"
-                                class="form-control" [(ngModel)]="nombreBr" required>
+                            (keypress)="nombres($event)" class="form-control" [(ngModel)]="nombreBr" required>
                         </div>
                     </div>
                 </div>
@@ -43,21 +43,21 @@
                         <div class="form-group">
                             <label for="nombre">CIE10 Español</label>
                             <input type="text" oninput="this.value = this.value.toUpperCase()" name="cie10Es" id="cie10Es"
-                                class="form-control" [(ngModel)]="cie10Es" required>
+                            (keypress)="nombres($event)" class="form-control" [(ngModel)]="cie10Es" required>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label for="nombre">CIE10 Inglés</label>
                             <input type="text" oninput="this.value = this.value.toUpperCase()" name="cie10En" id="cie10En"
-                                class="form-control" [(ngModel)]="cie10En" required>
+                            (keypress)="nombres($event)" class="form-control" [(ngModel)]="cie10En" required>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label for="nombre">CIE10 Portugues</label>
                             <input type="text" oninput="this.value = this.value.toUpperCase()" name="cie10Br" id="cie10Br"
-                                class="form-control" [(ngModel)]="cie10Br" required>
+                            (keypress)="nombres($event)" class="form-control" [(ngModel)]="cie10Br" required>
                         </div>
                     </div>
                 </div>

@@ -15,7 +15,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 export class NuevoUsuarioComponent implements OnInit {
 
 
-  public rolesList:string[] = this.roleType()=="ROLE_ADMIN"? ["medico","admin"] : ["farmaceutico"];
+  public rolesList: string[] = this.roleType() == "ROLE_ADMIN" ? ["medico", "admin"] : ["farmaceutico"];
   public rolSelec: string;
   public statusList = [{ clave: true, valor: 'Enable' }, { clave: false, valor: "Disable" }];
   public statusSelect: boolean;
@@ -25,13 +25,13 @@ export class NuevoUsuarioComponent implements OnInit {
   public nombreUsuario: string;
   public email: string;
   public password: string;
-  public passwordConf:string;
-  
-  sub:string[] = [];
-  sup:string[] = [];
+  public passwordConf: string;
 
-  public passConfirm:string='#f00';
-  public creandoUsuario:boolean = false;
+  sub: string[] = [];
+  sup: string[] = [];
+
+  public passConfirm: string = '#f00';
+  public creandoUsuario: boolean = false;
   @BlockUI() blockUI: NgBlockUI;
 
   constructor(
@@ -43,7 +43,7 @@ export class NuevoUsuarioComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(this.roleType() == "ROLE_MEDICO"){
+    if (this.roleType() == "ROLE_MEDICO") {
       this.rolSelec = "farmaceutico";
       this.sup.push(this.tokenService.getUserName());
     }
@@ -52,17 +52,47 @@ export class NuevoUsuarioComponent implements OnInit {
   /**
    * Verifica que las contraseñas introduccidas sean iguales y su no marca de rojo el campo
    */
-  public verifPass(): void{
-    if(this.password != '' && (this.password == this.passwordConf)){
+  public verifPass(): void {
+    if (this.password != '' && (this.password == this.passwordConf)) {
       this.passConfirm = 'white';
-    }else{
-      this.passConfirm='#f00';
+    } else {
+      this.passConfirm = '#f00';
     }
   }
 
+
+  public emailPermit(event){
+    var regex = new RegExp("^[a-zA-Z0-9_@.-]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+  }
+
+  public verifLeter(event) {
+    var regex = new RegExp("^[a-zA-Z ]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+  }
+
+  public verifLeterAndNumberAndGuion(event) {
+    var regex = new RegExp("^[a-zA-Z0-9_]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+  }
+
+
+
   public onRegister(): void {
-    
-    if(confirm("Desea registrar al usuario") === true ){
+
+    if (confirm("Desea registrar al usuario") === true) {
       this.nuevoUsuario = new NuevoUsuario(
         this.nombre, // nombre
         this.nombreUsuario, //nombre usuario
@@ -72,13 +102,13 @@ export class NuevoUsuarioComponent implements OnInit {
         [this.rolSelec], //roles
         this.sub, // sub
         this.sup // sup
-        );
-        this.creandoUsuario = true;
-        let textoCargando = this.lang()=="en"? "Registering user..." : this.lang()=="br"? "Registrando usuário..." : "Registrando usuario..." ;
-        this.blockUI.start(textoCargando);
+      );
+      this.creandoUsuario = true;
+      let textoCargando = this.lang() == "en" ? "Registering user..." : this.lang() == "br" ? "Registrando usuário..." : "Registrando usuario...";
+      this.blockUI.start(textoCargando);
       this.usuarioService.nuevo(this.nuevoUsuario).subscribe(
         data => {
-        
+
           this.toastr.success('Cuenta Creada', 'OK', {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
@@ -87,9 +117,9 @@ export class NuevoUsuarioComponent implements OnInit {
           this.router.navigate(['/listaUsuario']);
         },
         err => {
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
-            timeOut: 3000,  positionClass: 'toast-top-center',
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
           });
           this.creandoUsuario = false;
           this.blockUI.stop();
@@ -98,11 +128,11 @@ export class NuevoUsuarioComponent implements OnInit {
     }
   }
 
-  public roleType(): string{
+  public roleType(): string {
     return this.tokenService.getAuthorities()[0];
   }
 
-  public lang():string{
+  public lang(): string {
     return this.language.lang();
   }
 }

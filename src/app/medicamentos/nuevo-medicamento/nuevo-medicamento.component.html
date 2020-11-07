@@ -13,7 +13,7 @@
                             <div class="form-group">
                                 <label for="nombre">Nombre</label>
                                 <input type="text" name="nombre" id="nombre" class="form-control"
-                                    [(ngModel)]="productName" required>
+                                (keypress)="nombres($event)" [(ngModel)]="productName" required>
                             </div>
                         </div>
                         <div class="col-sm-3">

@@ -1,4 +1,6 @@
 <app-menu-adm-cuestionario></app-menu-adm-cuestionario>
+
+<!--Inicio de fila 1 panel pdf y toxicomanias -->
 <div class="row">
     <div class="col-sm-6 pl-2">
         <div class="panelGraficaToxic p-3 m-3">
@@ -53,7 +55,7 @@
                 <div class="col-sm-6">
                     <mat-form-field>
                         <input matInput [(ngModel)]="inicioSemana" type="date"
-                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'"
+                            [placeholder]="lang()=='br'? 'Início': lang()=='en'? 'Beginning' : 'Inicio'"
                             (change)="cargaGraficaToxic()">
                     </mat-form-field>
                 </div>
@@ -67,13 +69,14 @@
         </div>
     </div>
 </div>
+<!--Inicio de fila 2 graficas de fechas-->
 <div class="row">
     <div class="col-sm-6">
         <div class="panelGraficaPade p-3 m-3">
             <div class="row">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-8">
-                    <h3>{{tituloMedra}}</h3>
+                    <h3 style="text-align: center">{{tituloMedra}}</h3>
                 </div>
                 <div class="col-sm-2"></div>
             </div>
@@ -99,7 +102,7 @@
                 <div class="col-sm-4">
                     <mat-form-field>
                         <input matInput [(ngModel)]="inicioSemanaMedra" type="date"
-                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'">
+                            [placeholder]="lang()=='br'? 'Início': lang()=='en'? 'Beginning' : 'Inicio'">
                     </mat-form-field>
                 </div>
                 <div class="col-sm-4">
@@ -157,7 +160,7 @@
             <div class="row">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
-                    <h3>{{tituloPade}}</h3>
+                    <h3 style="text-align: center">{{tituloPade}}</h3>
                 </div>
                 <div class="col-sm-3"></div>
             </div>
@@ -183,7 +186,7 @@
                 <div class="col-sm-4">
                     <mat-form-field>
                         <input matInput [(ngModel)]="inicioSemanaPade" type="date"
-                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'">
+                            [placeholder]="lang()=='br'? 'Início': lang()=='en'? 'Beginning' : 'Inicio'">
                     </mat-form-field>
                 </div>
                 <div class="col-sm-4">
@@ -237,6 +240,180 @@
         </div>
     </div>
 </div>
+<!--Inicio de fila 3 graficas de edades-->
+<div class="row">
+    <!--Grafica de MedDRA-->
+    <div class="col-sm-6">
+        <div class="panelGraficaPade p-3 m-3">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-10">
+                    <h3 style="text-align: center">{{tituloMedraEdad}}</h3>
+                </div>
+                <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <mat-form-field>
+                        <mat-select matSelect
+                            [placeholder]="lang()=='br'? 'Intervalo de resumo': lang()=='en'? 'Summary range' : 'Rango Resumen'"
+                            [(ngModel)]="rangoMedraSelEdad" name="rangoMedraSelEdad" [value]="rangoMedraSelEdad"
+                            (selectionChange)="cargarGraficaMedraVsEdad()">
+                            <div>
+                                <mat-option *ngFor="let op of rangosMedraEdad" [value]="op.clave">
+                                    {{op.valor}}
+                                </mat-option>
+                            </div>
+                        </mat-select>
+                        <button mat-button *ngIf="rangoMedraSelEdad" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="rangoMedraSelEdad=''">
+                            <mat-icon>x</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                    <mat-form-field  *ngIf="this.rangoMedraSelEdad != 'T'">
+                        <input matInput [(ngModel)]="inicioSemanaMedraEdad" type="date"
+                            [placeholder]="lang()=='br'? 'Início': lang()=='en'? 'Beginning' : 'Inicio'">
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-outline-success" (click)="cargarGraficaMedraVsEdad()">
+                        <label *ngIf="lang() === 'es'">Mostrar</label>
+                        <label *ngIf="lang() === 'en'">Show</label>
+                        <label *ngIf="lang() === 'br'">Mostrar</label>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <mat-form-field class="iniFiltro">
+                        <mat-select matSelect [placeholder]="lang() == 'es'? 'SOC' : 
+                                    lang() == 'en'? 'SOC' : 'SOC' " [(ngModel)]="socMedraSelEdad" name="socMedraSelEdad"
+                            [value]="socMedraSelEdad" (selectionChange)="cargarMedra(socMedraSelEdad)">
+                            <mat-option *ngFor="let op of socMedra" [value]="op" [matTooltip]="op">
+                                {{op}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-7">
+                    <mat-form-field class="example-full-width filterInput">
+                        <input type="text" [placeholder]="lang() == 'es'? 'MedDRA' : 
+                                    lang() == 'en'? 'MedDRA' : 'MedDRA' " aria-label="Number" matInput
+                            [formControl]="myControlMedraEdad" [matAutocomplete]="autoMedra"
+                            [ngStyle]="{'background-color':optionsMedra.length === 0?'#DBDAC1':''}"
+                            [(ngModel)]="selMedraEdad" oninput="this.value = this.value.toUpperCase()">
+                        <mat-spinner *ngIf="optionsMedra.length === 0" matSuffix [diameter]="18"
+                            style="float: right; margin-left: 8px"></mat-spinner>
+                        <button mat-button *ngIf="selMedraEdad" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="selMedraEdad=''">
+                            <mat-icon>x</mat-icon>
+                        </button>
+                        <mat-autocomplete #autoMedra="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOptionsMedra | async" [value]="option"
+                                [matTooltip]="option">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div>
+                <mat-progress-bar *ngIf="cargandoMedraEdad" mode="indeterminate"></mat-progress-bar>
+                <highcharts-chart [Highcharts]="HighMedEdad" [options]="graficaCombinadaMedraEdad"
+                    style="width: 100%; height: 400px; display: block;">
+                </highcharts-chart>
+            </div>
+        </div>
+    </div>
+    <!--Grafica de padeciminenots-->
+    <div class="col-sm-6">
+        <div class="panelGraficaPade p-3 m-3">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-10">
+                    <h3 style="text-align: center">{{tituloPadeEdad}}</h3>
+                </div>
+                <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <mat-form-field>
+                        <mat-select matSelect
+                            [placeholder]="lang()=='br'? 'Intervalo de resumo': lang()=='en'? 'Summary range' : 'Rango Resumen'"
+                            [(ngModel)]="rangoPadeSelEdad" name="rangoPadeSelEdad" [value]="rangoPadeSelEdad"
+                            (selectionChange)="cargarGraficaPadeVsEdad()">
+                            <div>
+                                <mat-option *ngFor="let op of rangosPadeEdad" [value]="op.clave">
+                                    {{op.valor}}
+                                </mat-option>
+                            </div>
+                        </mat-select>
+                        <button mat-button *ngIf="rangoPadeSelEdad" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="rangoPadeSelEdad=''">
+                            <mat-icon>x</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                    <mat-form-field *ngIf="this.rangoPadeSelEdad != 'T'">
+                        <input matInput [(ngModel)]="inicioSemanaPadeEdad" type="date"
+                            [placeholder]="lang()=='br'? 'Início': lang()=='en'? 'Beginning' : 'Inicio'">
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-outline-success" (click)="cargarGraficaPadeVsEdad()">
+                        <label *ngIf="lang() === 'es'">Mostrar</label>
+                        <label *ngIf="lang() === 'en'">Show</label>
+                        <label *ngIf="lang() === 'br'">Mostrar</label>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <mat-form-field class="iniFiltro">
+                        <mat-select matSelect [placeholder]="lang() == 'es'? 'Letra' : 
+                        lang() == 'en'? 'Letter' : 'Carta' " [(ngModel)]="iniPadeEdad" name="iniPadeEdad" [value]="iniPadeEdad"
+                            (selectionChange)="cargarPadecimientos(iniPadeEdad)">
+                            <mat-option *ngFor="let op of inicialesPade" [value]="op">
+                                {{op}}
+                            </mat-option> 
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-10">
+                    <mat-form-field class="example-full-width filterInput">
+                        <input type="text" [placeholder]="lang() == 'es'? 'Diagnostico' : 
+                        lang() == 'en'? 'Diagnostic' : 'Diagnóstico' " aria-label="Number" matInput
+                            [ngStyle]="{'background-color':optionsPade.length === 0?'#DBDAC1':''}"
+                            [formControl]="myControlPadeEdad" [matAutocomplete]="autoPade" [(ngModel)]="selPadeEdad"
+                            oninput="this.value = this.value.toUpperCase()">
+                        <mat-spinner *ngIf="optionsPade.length === 0" matSuffix [diameter]="18"
+                            style="float: right; margin-left: 8px"></mat-spinner>
+                        <button mat-button *ngIf="selPadeEdad" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="selPadeEdad=''">
+                            <mat-icon>x</mat-icon>
+                        </button>
+                        <mat-autocomplete #autoPade="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOptionsPade | async" [value]="option"
+                                [matTooltip]="option">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div>
+                <mat-progress-bar *ngIf="cargandoPadeEdad" mode="indeterminate"></mat-progress-bar>
+                <highcharts-chart [Highcharts]="HighPadeEdad" [options]="graficaCombinadaPadeEdad"
+                    style="width: 100%; height: 400px; display: block;">
+                </highcharts-chart>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Inicio de fila 4 graficas pasteles-->
 <div class="row">
     <div class="col-sm-6">
         <div class="panelGraficaPade p-3 m-3">
@@ -262,7 +439,7 @@
                 <div class="col-sm-6">
                     <mat-form-field *ngIf="rangoSelCIE != 'T'">
                         <input matInput [(ngModel)]="inicioSemanaCIE" type="date"
-                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'"
+                            [placeholder]="lang()=='br'? 'Início': lang()=='en'? 'Beginning' : 'Inicio'"
                             (change)="cargaGraficaCIE10()">
                     </mat-form-field>
                 </div>
@@ -299,7 +476,7 @@
                 <div class="col-sm-6">
                     <mat-form-field *ngIf="rangoSelSoc != 'T'">
                         <input matInput [(ngModel)]="inicioSemanaSoc" type="date"
-                            [placeholder]="lang()=='br'? 'Início da semana': lang()=='en'? 'Beginning of the week' : 'Inicio de semana'"
+                            [placeholder]="lang()=='br'? 'Início': lang()=='en'? 'Beginning' : 'Inicio'"
                             (change)="cargaGraficaSoc()">
                     </mat-form-field>
                 </div>

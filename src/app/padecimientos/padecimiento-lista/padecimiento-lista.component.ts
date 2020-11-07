@@ -100,6 +100,15 @@ export class PadecimientoListaComponent implements OnInit {
     }
   }
 
+  public claveCatalogo(event){
+    var regex = new RegExp("^[a-zA-Z0-9]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false; 
+    }
+  }
+
   roleType(): string {
     return this.tokenService.getAuthorities()[0];
   }

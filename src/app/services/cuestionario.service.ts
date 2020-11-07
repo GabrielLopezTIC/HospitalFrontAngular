@@ -144,9 +144,36 @@ export class CuestionarioService {
     return this.httpClient.get<DatosGraficaCie10[]>(this.cuestionarioURL+"findDataSoc/mounth/"+fecha+"/lang/"+lang);
   }
 
-
-  public highchartsServer(datos:any): Observable<any>{
-    return this.httpClient.post<any>("http://export.highcharts.com",datos,{headers:{skip:"true"}});
+  //////Graficas de edades padecimientos
+  /////Todo
+  public datosGraficaPadecimientoEdadesTodo(lang:string,pade:string): Observable<any>{
+    return this.httpClient.get<any>(this.cuestionarioURL+"findDataGraphEdadesTotal/lang/"+lang+"/pade/"+pade)
   }
+  /////Semanal
+  public datosGraficaPadecimientoEdadesWeek(lang:string,date:string,pade:string): Observable<any>{
+    return this.httpClient.get<any>(this.cuestionarioURL+"findDataGraphEdadesWeek/lang/"+lang+"/date/"+date+"/pade/"+pade)
+  }
+  /////Mensual
+  public datosGraficaPadecimientoEdadesMounth(lang:string,date:string,pade:string): Observable<any>{
+    return this.httpClient.get<any>(this.cuestionarioURL+"findDataGraphEdadesMounth/lang/"+lang+"/date/"+date+"/pade/"+pade)
+  }
+
+
+  //////Graficas de edades medra
+  /////Todo
+  public datosGraficaMedraEdadesTodo(lang:string,medra:string): Observable<any>{
+    return this.httpClient.get<any>(this.cuestionarioURL+"findDataGraphMedraEdadesTotal/lang/"+lang+"/medra/"+medra)
+  }
+  /////Semanal
+  public datosGraficaMedraEdadesWeek(lang:string,date:string,medra:string): Observable<any>{
+    return this.httpClient.get<any>(this.cuestionarioURL+"findDataGraphMedraEdadesWeek/lang/"+lang+"/date/"+date+"/medra/"+medra)
+  }
+  /////Mensual
+  public datosGraficaMedraEdadesMounth(lang:string,date:string,medra:string): Observable<any>{
+    return this.httpClient.get<any>(this.cuestionarioURL+"findDataGraphMedraEdadesMounth/lang/"+lang+"/date/"+date+"/medra/"+medra)
+  }
+
+  
+ 
 
 }

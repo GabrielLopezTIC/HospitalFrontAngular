@@ -6,7 +6,7 @@
         <mat-form-field>
           <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
             [placeholder]="lang()=='br'? 'MedDRA': lang()=='en'? 'MedDRA' : 'MedDRA'" [(ngModel)]="catalogKey"
-            (keydown.enter)="buscar()">
+            (keypress)="nombres($event)" (keydown.enter)="buscar()">
           <button mat-button *ngIf="catalogKey" matSuffix mat-icon-button aria-label="Clear" (click)="catalogKey=''">
             <mat-icon>x</mat-icon>
           </button>
@@ -53,7 +53,7 @@
                             <div class="col-sm-4"></div>
                         </div>
                         <div class="row">
-                            <h3>Cargando padecimientos...</h3>
+                            <h3>Cargando MedDRA...</h3>
                         </div>
                     </div>
                     </div>

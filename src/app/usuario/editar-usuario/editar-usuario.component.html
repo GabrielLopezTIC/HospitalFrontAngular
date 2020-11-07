@@ -23,7 +23,7 @@
                             <label *ngIf="lang()=='en'">Name</label>
                             <label *ngIf="lang()=='br'">Nome</label>
                             <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombre" id="nombre"
-                                class="form-control" [(ngModel)]="usuario.nombre" required>
+                            (keypress)="verifLeter($event)" class="form-control" [(ngModel)]="usuario.nombre" required>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -32,14 +32,14 @@
                             <label *ngIf="lang()=='en'">Username</label>
                             <label *ngIf="lang()=='br'">Nome do usuário</label>
                             <input oninput="this.value = this.value.replace(/ /g, '')" type="text" name="nombreUsuario"
-                                id="nombreUsuario" class="form-control" [(ngModel)]="usuario.nombreUsuario" required disabled>
+                            (keypress)="verifLeterAndNumberAndGuion($event)" id="nombreUsuario" class="form-control" [(ngModel)]="usuario.nombreUsuario" required disabled>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" name="email" id="email" class="form-control" [(ngModel)]="usuario.email"
-                                required email>
+                            (keypress)="emailPermit($event)" required email>
                         </div>
                     </div>
                 </div>

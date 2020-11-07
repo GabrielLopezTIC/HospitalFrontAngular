@@ -111,6 +111,15 @@ export class ListaMedraComponent implements OnInit {
     return sinEspacios;
   }
 
+   public nombres(event){
+    var regex = new RegExp("^[a-zA-Z0-9 ]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+  }
+
   public lang():string{
     return this.language.lang();
   }

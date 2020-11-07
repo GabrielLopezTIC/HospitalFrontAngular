@@ -559,6 +559,7 @@ export class CuestionarioComponent implements OnInit {
         body: bod
       }
     );
+    doc.save('MedicalSoftware_'+data.clavePaciente+"_"+data.fechaIngreso+"_"+data.nombre+".pdf");
     doc.output('dataurlnewwindow');
   }
 
@@ -718,6 +719,7 @@ export class CuestionarioComponent implements OnInit {
         body: bod,
       }
     );
+    doc.save('MedicalSoftware_'+data.clavePaciente+"_"+data.fechaIngreso+"_"+data.nombre+".pdf");
     doc.output('dataurlnewwindow');
   }
 
@@ -878,6 +880,7 @@ export class CuestionarioComponent implements OnInit {
         body: bod
       }
     );
+    doc.save('MedicalSoftware_'+data.clavePaciente+"_"+data.fechaIngreso+"_"+data.nombre+".pdf");
     doc.output('dataurlnewwindow');
   }
 

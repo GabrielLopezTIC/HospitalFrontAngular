@@ -85,6 +85,15 @@ export class NuevoMedicamentoComponent implements OnInit {
     return this.authService.lang();
   }
 
+  public nombres(event){
+    var regex = new RegExp("^[a-zA-Z0-9 ]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+  }
+
   roleType() {
     return this.tokenService.getAuthorities()[0];
   }

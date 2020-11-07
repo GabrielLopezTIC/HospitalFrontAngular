@@ -101,6 +101,33 @@ export class EditarUsuarioComponent implements OnInit {
     }
   }
 
+  public emailPermit(event){
+    var regex = new RegExp("^[a-zA-Z0-9_@.-]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+  }
+
+  public verifLeter(event) {
+    var regex = new RegExp("^[a-zA-Z ]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault(); 
+      return false;
+    }
+  }
+
+  public verifLeterAndNumberAndGuion(event) {
+    var regex = new RegExp("^[a-zA-Z0-9_]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+  }
+
   public roleType(): string {
     return this.tokenService.getAuthorities()[0];
   }

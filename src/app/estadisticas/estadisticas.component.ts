@@ -12,6 +12,7 @@ import { map, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { DatosGraficaPadecimientoDto } from '../models/datos-grafica-padecimiento-dto';
+import { DatosGraficaEdadesDto } from '../models/datos-grafica-edades-dto';
 import { MedraService } from '../services/medra.service';
 import { DatosGraficaCie10 } from '../models/datos-grafica-cie10';
 import jsPDF from 'jspdf';
@@ -39,6 +40,8 @@ export class EstadisticasComponent implements OnInit {
   cargandoMedra: boolean = false;
   cargandoCIE: boolean = false;
   cargandoSoc: boolean = false;
+  cargandoPadeEdad: boolean = false;
+  cargandoMedraEdad: boolean = false;
 
   //////////////////////////////////labels emanal y mensual
   semanal = this.lang() == 'br' ? 'SEMANAL' : this.lang() == 'en' ? 'WEEKLY' : 'SEMANAL';
@@ -72,12 +75,23 @@ export class EstadisticasComponent implements OnInit {
   optionsPade: string[] = []; // lista donde se cargan los datos de los padecimientos desde el servidor
   filteredOptionsPade: Observable<string[]>;
   selPade: string; // variable que guarda el padecimiento elegido
-  padecimientosList = []; //lista que guarda los padecimientos elegidos momentaneamente
   inicialesPade: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
   rangosPade: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }];
   rangoPadeSel: string = "S";
   inicioSemanaPade: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
+
+  ///////////////////////////////////Padecimientos vs edades
+  tituloPadeEdad: string = this.lang() == "en" ? "Summary of ailments by age range" : this.lang() == "br" ?
+    "Resumo das doenças por faixa etária" : "Resumen de padecimientos por rango de edades";
+  iniPadeEdad: string;
+  myControlPadeEdad = new FormControl();
+  filteredOptionsPadeEdad: Observable<string[]>;
+  selPadeEdad: string; // variable que guarda el padecimiento elegido
+  rangosPadeEdad: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual },{ clave: "T", valor: this.always}];
+  rangoPadeSelEdad: string = "S";
+  inicioSemanaPadeEdad: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
+
 
   /////////////////////////////////////////Medra
   tituloMedra: string = this.lang() == "en" ? "Medical Dictionary for Regulatory Activities" : this.lang() == "br" ?
@@ -93,32 +107,54 @@ export class EstadisticasComponent implements OnInit {
   rangoMedraSel: string = "S";
   inicioSemanaMedra: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
+  /////////////////////////////////////////MedraEdad
+  tituloMedraEdad: string = this.lang() == "en" ? "Medical Dictionary for Regulatory Activities by age range" : this.lang() == "br" ?
+    "Dicionário Médico para Atividades Regulatóriass por faixa etária" : "Resumen de Diccionario Médico para Actividades Reguladoras por rango de edad";
+  socMedraSelEdad: string;
+  myControlMedraEdad = new FormControl();
+  filteredOptionsMedraEdad: Observable<string[]>;
+  selMedraEdad: string; // variable que guarda el padecimiento elegido
+  rangosMedraEdad: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual },{clave:"T",valor:this.always}];
+  rangoMedraSelEdad: string = "S";
+  inicioSemanaMedraEdad: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
 
 
 
 
-  //highcharts = Highcharts;
-  //Highcharts: typeof Highcharts = Highcharts;
+
+
+
+
+
+
+
+
+
   HighToxic: typeof Highcharts = Highcharts;
   HighPade: typeof Highcharts = Highcharts;
   HighMedra: typeof Highcharts = Highcharts;
   HighCie: typeof Highcharts = Highcharts;
   HighSoc: typeof Highcharts = Highcharts;
+  HighPadeEdad: typeof Highcharts = Highcharts;
+  HighMedEdad: typeof Highcharts = Highcharts;
 
 
 
   graficaToxic: Highcharts.Options;
   graficaPastelCIE10: Highcharts.Options;
   graficaPastelSoc: Highcharts.Options;
-
   graficaCombinadaPade: Highcharts.Options;
   graficaCombinadaMedra: Highcharts.Options;
+  graficaCombinadaPadeEdad: Highcharts.Options;
+  graficaCombinadaMedraEdad: Highcharts.Options;
 
 
   datosGraficaToxicomanias: DatosGraficaToxicomaniasDTO[];
   datosGraficaPadecimientos: DatosGraficaPadecimientoDto;
+  datosGraficaPadecimientosEdad: DatosGraficaEdadesDto;
   datosGraficaMedra: DatosGraficaPadecimientoDto;
+  datosGraficaMedraEdad: DatosGraficaEdadesDto;
   datosGraficaCie10: DatosGraficaCie10[];
   datosGraficaSoc: DatosGraficaCie10[];
 
@@ -143,9 +179,13 @@ export class EstadisticasComponent implements OnInit {
     this.cargarPadecimientos("A");
   }
 
-  toxicLabel:string = this.lang()=="en"? "Drug Adiction":this.lang()=="br"? "Dependência de Drogas": "Toxicomanías";
-  padeLabel:string = this.lang()=="en"? "Ailments":this.lang()=="br"? "Doenças": "Padecimientos"
-  todosLabel:string = this.lang()=="en"? 'All/None':this.lang()=="br"? "Tudo/Nenhum": "Todos/Ninguno"
+  toxicLabel: string = this.lang() == "en" ? "Drug Adiction" : this.lang() == "br" ? "Dependência de Drogas" : "Toxicomanías";
+  medraEdadLabel: string = this.lang() == "en" ? "MedDRA by age range" : this.lang() == "br" ? "MedDRA por faixa etária" : "MedDRA por rango de edad";
+  padeEdadLabel: string = this.lang() == "en" ? "Ailment by age range" : this.lang() == "br" ? "Doença por faixa etária" : "Padecimiento por rango de edad";
+
+  
+  padeLabel: string = this.lang() == "en" ? "Ailments" : this.lang() == "br" ? "Doenças" : "Padecimientos"
+  todosLabel: string = this.lang() == "en" ? 'All/None' : this.lang() == "br" ? "Tudo/Nenhum" : "Todos/Ninguno"
 
   task: Task = {
     name: this.todosLabel,
@@ -153,8 +193,10 @@ export class EstadisticasComponent implements OnInit {
     color: 'primary',
     subtasks: [
       { name: this.toxicLabel, completed: false, color: 'warn' },
-      { name: 'MedDRAs', completed: false, color: 'warn' },
+      { name: 'MedDRA', completed: false, color: 'warn' },
+      { name: this.medraEdadLabel, completed: false, color: 'warn' },
       { name: this.padeLabel, completed: false, color: 'warn' },
+      { name: this.padeEdadLabel, completed: false, color: 'warn' },
       { name: 'CIE10', completed: false, color: 'warn' },
       { name: 'Soc', completed: false, color: 'warn' }
     ]
@@ -190,11 +232,12 @@ export class EstadisticasComponent implements OnInit {
   public descargaPdf() {
 
     const doc = new jsPDF()
-    
+
 
 
 
     let fecha = this.lang() == "en" ? "Date" : this.lang() == "br" ? "Data" : "Fecha";
+    let edad = this.lang() == "en" ? "Age" : this.lang() == "br" ? "Era" : "Edad";
     let hombres = this.lang() == "en" ? "Men" : this.lang() == "br" ? "Homens" : "Hombres";
     let mujeres = this.lang() == "en" ? "Women" : this.lang() == "br" ? "Mulheres" : "Mujeres";
 
@@ -299,10 +342,54 @@ export class EstadisticasComponent implements OnInit {
       );
     }
 
+    /////////////////////////////////Medra por edades
+    let datosMedEdad = this.datosGraficaMedraEdad;
+    if (this.task.subtasks[2].completed && datosMedEdad != null) {
+
+      console.log(datosMedEdad);
+      let medBod = [];
+      let titleMedra = "";
+      if (this.rangoMedraSelEdad == "S") {
+        titleMedra = this.lang() == "en" ? "Weekly Summary Medical Dictionary for Regulatory Activities\n" :
+          this.lang() == "br" ? "Resumo semanal Dicionário médico de resumo semanal para atividades regulatórias\n" :
+            "Resumen Semanal Diccionario Médico para Actividades Reguladoras\n";
+      }else if (this.rangoMedraSelEdad == "M") {
+        titleMedra = this.lang() == "en" ? "Monthly Summary Medical Dictionary for Regulatory Activities\n" :
+          this.lang() == "br" ? "Resumo mensal Dicionário Médico de Resumo Mensal para atividades regulatórias\n" :
+            "Resumen Mensual Diccionario Médico para Actividades Reguladoras\n";
+      }else{
+        titleMedra = this.lang() == "en" ? "Total Medical Dictionary for Regulatory Activities\n" :
+        this.lang() == "br" ? "Total Dicionário Médico de Resumo Mensal para atividades regulatórias\n" :
+          "Total Diccionario Médico para Actividades Reguladoras\n";
+      }
+
+      medBod.push([{ content: titleMedra + this.selMedra, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      medBod.push([
+        { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+      ]);
+
+      for (let i = 0; i < datosMedEdad.datos.length; i++) {
+        medBod.push([
+          { content: datosMedEdad.datos[i].rango, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosMedEdad.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosMedEdad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+        ]);
+      }
+
+      autoTable(doc,
+        {
+          theme: "grid",
+          body: medBod
+        }
+      );
+    }
+
     /////////////////////////////////Padecimientos
 
     let datosPad = this.datosGraficaPadecimientos;
-    if (this.task.subtasks[2].completed && datosPad != null) {
+    if (this.task.subtasks[3].completed && datosPad != null) {
 
       let padBod = [];
 
@@ -340,10 +427,54 @@ export class EstadisticasComponent implements OnInit {
       );
     }
 
+    //////////////////////////////Padecimientos por edades
+    let datosPadEdad = this.datosGraficaPadecimientosEdad;
+    if (this.task.subtasks[4].completed && datosPadEdad != null) {
+
+      let padBod = [];
+
+      let titlePade = "";
+      if (this.rangoPadeSelEdad == "S") {
+        titlePade = this.lang() == "en" ? "Weekly Summary Ailments\n" :
+          this.lang() == "br" ? "Resumo Semanal Doenças\n" :
+            "Resumen Semanal Padecimientos\n";
+      } else if (this.rangoPadeSelEdad == "M") {
+        titlePade = this.lang() == "en" ? "Monthly Summary Ailments\n" :
+          this.lang() == "br" ? "Resumo Mensal Doenças\n" :
+            "Resumen Mensual Padecimientos\n";
+      } else {
+        titlePade = this.lang() == "en" ? "Total Summary Ailments\n" :
+          this.lang() == "br" ? "Total Doenças\n" :
+            "Total Padecimientos\n";
+      }
+
+      padBod.push([{ content: titlePade + this.selPade, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      padBod.push([
+        { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+      ]);
+
+      for (let i = 0; i < datosPadEdad.datos.length; i++) {
+        padBod.push([
+          { content: datosPadEdad.datos[i].rango, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosPadEdad.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosPadEdad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+        ]);
+      }
+
+      autoTable(doc,
+        {
+          theme: "grid",
+          body: padBod
+        }
+      );
+    }
+
     ///////////////////////////////////CIE10
 
     let datosCie10 = this.datosGraficaCie10;
-    if (this.task.subtasks[3].completed && datosCie10.length > 0) {
+    if (this.task.subtasks[5].completed && datosCie10.length > 0) {
 
       let cieBod = [];
 
@@ -388,7 +519,7 @@ export class EstadisticasComponent implements OnInit {
     ///////////////////////////////////Soc
 
     let datosSoc = this.datosGraficaSoc;
-    if (this.task.subtasks[4].completed && datosSoc.length > 0) {
+    if (this.task.subtasks[6].completed && datosSoc.length > 0) {
 
       let socBod = [];
 
@@ -428,7 +559,6 @@ export class EstadisticasComponent implements OnInit {
         }
       );
     }
-
     doc.output('dataurlnewwindow');
   }
 
@@ -445,8 +575,8 @@ export class EstadisticasComponent implements OnInit {
         this.cargarMedra(this.socMedra[0]);
       },
       err => {
-        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+        this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+          this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -470,8 +600,8 @@ export class EstadisticasComponent implements OnInit {
         this.myControlPade.setValue("");
       },
       err => {
-        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+        this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+          this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -572,7 +702,7 @@ export class EstadisticasComponent implements OnInit {
 
     this.graficaCombinadaPade = this.graficaPadeTemp;
 
-    
+
   }
   cargarGraficaPade(): void {
     this.cargandoPade = true; // activa la animacion de carga
@@ -585,8 +715,8 @@ export class EstadisticasComponent implements OnInit {
         },
         err => {
           this.cargandoPade = false;
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -605,6 +735,127 @@ export class EstadisticasComponent implements OnInit {
       );
     }
   }
+
+  seriesPadeEdad: any[] = [];
+  creaGraficaPadeEdad(datos: any): void {
+
+    let datosHombre = [];
+    let datosMujer = [];
+    let datosTotal = [];
+    let categorias = [];
+    let title = "";
+    let fecha = this.lang() == 'en' ? "Age" : this.lang() == 'br' ? "Era" : "Edad";
+    let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
+
+    if (this.rangoPadeSel == "S") { // grafica semanal
+      title = this.lang() == 'en' ? "Weekly disease summary\n"+this.selPadeEdad : this.lang() == 'br' ? "Resumo semanal da doença\n"+this.selPadeEdad : "Resumen semanal padecimiento\n"+this.selPadeEdad;
+    } else { // grafica mensual
+      title = this.lang() == 'en' ? "Monthly disease summary\n"+this.selPadeEdad : this.lang() == 'br' ? "Resumo mensal da doença\n"+this.selPadeEdad : "Resumen mensual padecimiento\n"+this.selPadeEdad;
+    }
+
+      // labels de las fechas
+      categorias = [datos.datos[0].rango, datos.datos[1].rango, datos.datos[2].rango,
+      datos.datos[3].rango, datos.datos[4].rango, datos.datos[5].rango, datos.datos[6].rango];
+      // datos de hombres
+      datosHombre = [datos.datos[0].hombres, datos.datos[1].hombres, datos.datos[2].hombres,
+      datos.datos[3].hombres, datos.datos[4].hombres, datos.datos[5].hombres, datos.datos[6].hombres];
+      //datos de mujeres
+      datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
+      datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
+      //datos total
+      datosTotal = [datos.datos[0].total, datos.datos[1].total, datos.datos[2].total,
+      datos.datos[3].total, datos.datos[4].total, datos.datos[5].total, datos.datos[6].total];
+
+
+    let hombresLabel = this.lang() == 'en' ? "Men" : this.lang() == 'br' ? "Masculino" : "Hombres";
+    let mujeresLabel = this.lang() == 'en' ? "Women" : this.lang() == 'br' ? "Mulheres" : "Mujeres";
+    let totalLabel = this.lang() == 'en' ? "Total" : this.lang() == 'br' ? "Total" : "Total";
+    let total = this.lang() == 'en' ? "Total patients" : this.lang() == 'br' ? "Pacientes totais" : "Pacientes totales";
+
+
+    this.seriesPadeEdad = [{
+      type: 'column',
+      name: totalLabel,
+      color: '#51eb49',
+      data: datosTotal
+    },{
+      type: 'column',
+      name: hombresLabel,
+      color: '#e84343',
+      data: datosHombre
+    }, {
+      type: 'column',
+      name: mujeresLabel,
+      color: '#4956eb',
+      data: datosMujer
+    }
+    ]
+
+
+
+
+    this.graficaCombinadaPadeEdad = {
+      title: {
+        text: title + this.selPade
+      },
+      xAxis: {
+        title: {
+          text: fecha
+        },
+        categories: categorias
+      },
+      yAxis: {
+        title: {
+          text: pacientes
+        }
+      },
+      series: this.seriesPadeEdad
+    };
+
+  }
+  cargarGraficaPadeVsEdad() {
+    this.cargandoPadeEdad = true; // activa la animacion de carga
+    if (this.rangoPadeSelEdad == "T") { // grafica semanañl
+      this.cuestService.datosGraficaPadecimientoEdadesTodo(this.lang(),this.selPadeEdad).subscribe(
+        data => {
+          this.cargandoPadeEdad = false; 
+          this.creaGraficaPadeEdad(data);
+          this.datosGraficaPadecimientosEdad = data;
+        },
+        err => {
+          this.cargandoPadeEdad = false; 
+
+        }
+      );
+    }
+    if (this.rangoPadeSelEdad == "S") { // mensual
+      this.cuestService.datosGraficaPadecimientoEdadesWeek(this.lang(),this.inicioSemanaPadeEdad, this.selPadeEdad).subscribe(
+        data => {
+          this.cargandoPadeEdad = false; 
+          this.creaGraficaPadeEdad(data);
+          this.datosGraficaPadecimientosEdad = data;
+        },
+        error => {
+          this.cargandoPadeEdad = false; 
+
+        }
+      );
+    }
+    if (this.rangoPadeSelEdad == "M") { // mensual
+      this.cuestService.datosGraficaPadecimientoEdadesMounth(this.lang(),this.inicioSemanaPadeEdad, this.selPadeEdad).subscribe(
+        data => {
+          this.cargandoPadeEdad = false; 
+          this.creaGraficaPadeEdad(data);
+          this.datosGraficaPadecimientosEdad = data;
+        },
+        error => {
+          this.cargandoPadeEdad = false; 
+
+        }
+      );
+    }
+  }
+
 
   ///////////////////////Grafica medra///////////////////////////////////////////////////7
   private _filterMedra(value: string): string[] {
@@ -629,8 +880,8 @@ export class EstadisticasComponent implements OnInit {
         this.myControlMedra.setValue("");
       },
       err => {
-        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+        this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+          this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -684,7 +935,7 @@ export class EstadisticasComponent implements OnInit {
           }
         }
       },
-      series: this.serieCie 
+      series: this.serieCie
     };
 
   }
@@ -711,8 +962,8 @@ export class EstadisticasComponent implements OnInit {
         },
         err => {
           this.cargandoCIE = false;
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -793,8 +1044,8 @@ export class EstadisticasComponent implements OnInit {
         },
         err => {
           this.cargandoSoc = false;
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -808,8 +1059,8 @@ export class EstadisticasComponent implements OnInit {
         },
         err => {
           this.cargandoSoc = false;
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -823,8 +1074,8 @@ export class EstadisticasComponent implements OnInit {
         },
         err => {
           this.cargandoSoc = false;
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -936,8 +1187,8 @@ export class EstadisticasComponent implements OnInit {
         },
         err => {
           this.cargandoMedra = false;
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -952,10 +1203,131 @@ export class EstadisticasComponent implements OnInit {
         },
         err => {
           this.cargandoMedra = false;
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
+        }
+      );
+    }
+  }
+
+  seriesMedraEdad:any;
+  crearGraficaMedraVsEdad(datos:any): void{
+    
+    let datosHombre = [];
+    let datosMujer = [];
+    let datosTotal = [];
+    let categorias = [];
+    let title = "";
+    let fecha = this.lang() == 'en' ? "Age" : this.lang() == 'br' ? "Era" : "Edad";
+    let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
+
+    if (this.rangoPadeSel == "S") { // grafica semanal
+      title = this.lang() == 'en' ? "Weekly disease summary\n"+this.selMedraEdad : this.lang() == 'br' ? "Resumo semanal da doença\n"+this.selMedraEdad : "Resumen semanal padecimiento\n"+this.selMedraEdad;
+    } else { // grafica mensual
+      title = this.lang() == 'en' ? "Monthly disease summary\n"+this.selMedraEdad : this.lang() == 'br' ? "Resumo mensal da doença\n"+this.selMedraEdad : "Resumen mensual padecimiento\n"+this.selMedraEdad;
+    }
+
+      // labels de las fechas
+      categorias = [datos.datos[0].rango, datos.datos[1].rango, datos.datos[2].rango,
+      datos.datos[3].rango, datos.datos[4].rango, datos.datos[5].rango, datos.datos[6].rango];
+      // datos de hombres
+      datosHombre = [datos.datos[0].hombres, datos.datos[1].hombres, datos.datos[2].hombres,
+      datos.datos[3].hombres, datos.datos[4].hombres, datos.datos[5].hombres, datos.datos[6].hombres];
+      //datos de mujeres
+      datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
+      datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
+      //datos total
+      datosTotal = [datos.datos[0].total, datos.datos[1].total, datos.datos[2].total,
+      datos.datos[3].total, datos.datos[4].total, datos.datos[5].total, datos.datos[6].total];
+
+
+    let hombresLabel = this.lang() == 'en' ? "Men" : this.lang() == 'br' ? "Masculino" : "Hombres";
+    let mujeresLabel = this.lang() == 'en' ? "Women" : this.lang() == 'br' ? "Mulheres" : "Mujeres";
+    let totalLabel = this.lang() == 'en' ? "Total" : this.lang() == 'br' ? "Total" : "Total";
+    let total = this.lang() == 'en' ? "Total patients" : this.lang() == 'br' ? "Pacientes totais" : "Pacientes totales";
+
+
+    this.seriesMedraEdad = [{
+      type: 'column',
+      name: totalLabel,
+      color: '#51eb49',
+      data: datosTotal
+    },{
+      type: 'column',
+      name: hombresLabel,
+      color: '#e84343',
+      data: datosHombre
+    }, {
+      type: 'column',
+      name: mujeresLabel,
+      color: '#4956eb',
+      data: datosMujer
+    }
+    ]
+
+
+
+
+    this.graficaCombinadaMedraEdad = {
+      title: {
+        text: title + this.selPade
+      },
+      xAxis: {
+        title: {
+          text: fecha
+        },
+        categories: categorias
+      },
+      yAxis: {
+        title: {
+          text: pacientes
+        }
+      },
+      series: this.seriesMedraEdad
+    };
+
+  }
+
+  cargarGraficaMedraVsEdad(): void{
+    this.cargandoMedraEdad = true; // activa la animacion de carga
+    if (this.rangoMedraSelEdad == "T") { // grafica semanañl
+      this.cuestService. datosGraficaMedraEdadesTodo(this.lang(),this.selMedraEdad).subscribe(
+        data => {
+          this.cargandoMedraEdad = false; 
+          this.datosGraficaMedraEdad = data;
+         this.crearGraficaMedraVsEdad(data);
+        },
+        err => {
+          this.cargandoMedraEdad = false; 
+
+        }
+      );
+    }
+    if (this.rangoMedraSelEdad == "S") { // mensual
+      this.cuestService.datosGraficaMedraEdadesWeek(this.lang(),this.inicioSemanaMedraEdad, this.selMedraEdad).subscribe(
+        data => {
+          this.cargandoMedraEdad = false; 
+          this.datosGraficaMedraEdad = data;
+          this.crearGraficaMedraVsEdad(data);
+        },
+        error => {
+          this.cargandoMedraEdad = false; 
+
+        }
+      );
+    }
+    if (this.rangoMedraSelEdad == "M") { // mensual
+      this.cuestService.datosGraficaMedraEdadesMounth(this.lang(),this.inicioSemanaMedraEdad, this.selMedraEdad).subscribe(
+        data => {
+          this.cargandoMedraEdad = false; 
+          this.datosGraficaMedraEdad = data;
+          this.crearGraficaMedraVsEdad(data);
+        },
+        error => {
+          this.cargandoMedraEdad = false; 
+
         }
       );
     }
@@ -1086,8 +1458,8 @@ export class EstadisticasComponent implements OnInit {
         },
         err => {
           this.cargando = false; // desactiva la animacion de carga
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }
@@ -1102,8 +1474,8 @@ export class EstadisticasComponent implements OnInit {
         },
         err => {
           this.cargando = false;
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-          this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
         }

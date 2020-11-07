@@ -13,8 +13,8 @@ import { JwtDto } from '../models/jwt-dto';
 export class AuthService {
  
 
-  servidor = "http://localhost:5555"; // locale 
-  //servidor = "https://hospital-tsis.herokuapp.com"; // web
+  //servidor = "http://localhost:5555"; // locale 
+  servidor = "https://hospital-tsis.herokuapp.com"; // web
   
   authURL = this.servidor+'/auth/';
 

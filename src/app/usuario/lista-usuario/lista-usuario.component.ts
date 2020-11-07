@@ -128,6 +128,15 @@ export class ListaUsuarioComponent implements OnInit {
     return this.tokenService.getAuthorities()[0];
   }
 
+  public verifLeterAndNumberAndGuion(event) {
+    var regex = new RegExp("^[a-zA-Z0-9_]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+  } 
+
   username(){
     return this.tokenService.getUserName();
   }

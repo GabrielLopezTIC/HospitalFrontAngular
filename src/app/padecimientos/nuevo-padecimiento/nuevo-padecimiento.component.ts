@@ -65,11 +65,26 @@ export class NuevoPadecimientoComponent implements OnInit {
   }
 
 
-  claveFormat(palabra:string):string{
-    let mayusculas = palabra.toUpperCase();
-    let sinEspacios = mayusculas.replace(/ /g, '');
-    return sinEspacios;
+ 
+  public claveCatalogo(event){
+    var regex = new RegExp("^[a-zA-Z0-9]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
   }
+
+  public nombres(event){
+    var regex = new RegExp("^[a-zA-Z0-9 ]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+  }
+
+
 
 
 

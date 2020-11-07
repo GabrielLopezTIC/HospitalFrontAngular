@@ -6,7 +6,7 @@
         <mat-form-field>
           <input matInput type="text" oninput="this.value = this.value.replace(/ /g, '')"
             [placeholder]="lang()=='br'? 'Chave de catálogo': lang()=='en'? 'Catalog yey' : 'Clave de catálogo'" [(ngModel)]="catalogKey"
-            (keydown.enter)="buscar()">
+            (keypress)="claveCatalogo($event)" (keydown.enter)="buscar()">
           <button mat-button *ngIf="catalogKey" matSuffix mat-icon-button aria-label="Clear" (click)="catalogKey=''">
             <mat-icon>x</mat-icon>
           </button>
