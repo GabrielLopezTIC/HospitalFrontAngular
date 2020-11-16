@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Padecimiento } from 'src/app/models/padecimiento';
 import { PadecimientoService } from 'src/app/services/padecimiento.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-nuevo-padecimiento',
@@ -21,6 +22,7 @@ export class NuevoPadecimientoComponent implements OnInit {
   cie10Es:string;
   cie10En:string;
   cie10Br:string;
+  @BlockUI() blockUI: NgBlockUI;
 
 
   constructor(
@@ -38,6 +40,7 @@ export class NuevoPadecimientoComponent implements OnInit {
 
   onRegister(): void {
     if (confirm("¿Desea registrar el nuevo padecimiento?") === true) {
+      this.blockUI.start(" ");
       this.nuevoPadecimiento = new Padecimiento(
         this.catalogKey,
         this.nombreEs,
@@ -52,6 +55,7 @@ export class NuevoPadecimientoComponent implements OnInit {
           this.toastr.success('Padecimiento añadido', 'OK', {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
+          this.blockUI.stop()
           this.router.navigate(['/listaPadecimiento']);
         },
         err => {
@@ -59,6 +63,7 @@ export class NuevoPadecimientoComponent implements OnInit {
           this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
+          this.blockUI.stop()
         }
       );
     }

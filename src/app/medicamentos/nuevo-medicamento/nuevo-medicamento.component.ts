@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Medicamento } from 'src/app/models/medicamento';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-nuevo-medicamento',
@@ -13,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class NuevoMedicamentoComponent implements OnInit {
 
-
+  @BlockUI() blockUI: NgBlockUI;
   nuevoMedicmento: Medicamento;
   productName: string;
   mrpDcp: string;
@@ -48,6 +49,7 @@ export class NuevoMedicamentoComponent implements OnInit {
 
   onRegister() {
     if (confirm("¿Desea registrar el nuevo medicamento?") === true) {
+      this.blockUI.start(" ");
       this.nuevoMedicmento = new Medicamento(
         this.productName,
         this.mrpDcp,
@@ -70,12 +72,14 @@ export class NuevoMedicamentoComponent implements OnInit {
           this.toastr.success('Medicamento añadido', 'OK', {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
+          this.blockUI.stop();
           this.router.navigate(['/listaMedicamento']);
         },
         err => {
           this.toastr.error("Error al registrar medicamento", 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
+          this.blockUI.stop();
         }
       );
     }

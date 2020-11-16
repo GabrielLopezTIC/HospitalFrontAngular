@@ -110,6 +110,7 @@ export class EditarCuestionarioComponent implements OnInit {
   public claveCuestionario:string = "";
   ////////////////////////on init
   ngOnInit() {
+    this.blockUI.start(" ");
     if (this.tokenService.getToken()) {
       this.cargaSoc();
       // obtiene la clave del cuestionario
@@ -165,13 +166,17 @@ export class EditarCuestionarioComponent implements OnInit {
               ))
           });
           this.terapeuticasList = terapItems;
-        
+          if(data != null){
+            this.blockUI.stop();
+          }
         },
         err => {
           this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
           this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
+          this.blockUI.stop();
+          this.router.navigate(['/listaCuestionario']);
         }
       );
 

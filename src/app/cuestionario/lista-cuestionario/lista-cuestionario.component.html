@@ -29,9 +29,9 @@
                   <label *ngIf="lang()=='br'">Chave</label>
                 </th>
                 <th scope="col">
-                  <label *ngIf="lang()=='es'">Fecha de registro</label>
-                  <label *ngIf="lang()=='en'">Registration date</label>
-                  <label *ngIf="lang()=='br'">Data de registro</label>
+                  <label *ngIf="lang()=='es'">Fecha de registro o actualizacion</label>
+                  <label *ngIf="lang()=='en'">Registration or update date</label>
+                  <label *ngIf="lang()=='br'">Data ou atualizado de registro</label>
                 </th>
                 <th scope="col">
                   <label *ngIf="lang()=='es'">Registrado o actualizado por:</label>
@@ -122,20 +122,20 @@
                 <td>{{paciente.apellido}}</td>
                 <td>
                   <label *ngFor="let pade of paciente.padecimientos">
-                    <p *ngIf="lang()=='es'">{{pade.nombreEs}}</p>
-                    <p *ngIf="lang()=='en'">{{pade.nombreEn}}</p>
-                    <p *ngIf="lang()=='br'">{{pade.nombreBr}}</p>
+                    <p *ngIf="lang()=='es'">- {{pade.nombreEs}}</p>
+                    <p *ngIf="lang()=='en'">- {{pade.nombreEn}}</p>
+                    <p *ngIf="lang()=='br'">- {{pade.nombreBr}}</p>
                   </label>
                 </td>
                 <td>
                   <label *ngFor="let medra of paciente.medraList">
-                    <p *ngIf="lang()=='es'">{{medra.medDraEs}}</p>
-                    <p *ngIf="lang()=='en'">{{medra.medDraEn}}</p>
-                    <p *ngIf="lang()=='br'">{{medra.medDraBr}}</p>
+                    <p *ngIf="lang()=='es'">- {{medra.medDraEs}}</p>
+                    <p *ngIf="lang()=='en'">- {{medra.medDraEn}}</p>
+                    <p *ngIf="lang()=='br'">- {{medra.medDraBr}}</p>
                   </label>
                 </td>
                 <td>
-                  <label *ngFor="let terap of paciente.terapeuticas">{{terap.medicamento.productName}}</label>
+                  <label *ngFor="let terap of paciente.terapeuticas">- {{terap.medicamento.productName}}</label>
                 </td>
                 <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button
                     class="btn btn-outline-info" routerLink="/editarCuestionario/{{paciente.clavePaciente}}"><i

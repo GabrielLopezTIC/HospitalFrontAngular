@@ -1,12 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { CuestionarioService } from 'src/app/services/cuestionario.service';
 import { ToastrService } from 'ngx-toastr';
 import { TokenService } from 'src/app/services/token.service';
 import { Cuestionario } from 'src/app/models/cuestionario';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import * as moment from 'moment';
 import { AuthService } from 'src/app/services/auth.service';
 
 
@@ -24,6 +20,7 @@ export class ListaCuestionarioComponent implements OnInit {
   isAdmin = false;
   clavePaciente:string;
   totalPages:number;
+  orderBy:string = "fechaIngreso";
 
 
   constructor(
@@ -32,12 +29,11 @@ export class ListaCuestionarioComponent implements OnInit {
     private tokenService: TokenService,
     private language: AuthService
   ) { }
-
+ 
   //moment:moment.Moment;
 
   ngOnInit() {
-    this.cargarRegistros(this.paginas[0] - 1, 10, "clavePaciente");
-
+    this.cargarRegistros(this.paginas[0] - 1, 10, this.orderBy);
     this.roles = this.tokenService.getAuthorities();
     this.roles.forEach(
       rol => {
@@ -51,15 +47,15 @@ export class ListaCuestionarioComponent implements OnInit {
       this.paginas[i] -= 9;
   }
 
-  primeroButton() { this.cargarRegistros(this.paginas[0] - 1, 10, "clavePaciente"); }
-  segundoButton() { this.cargarRegistros(this.paginas[1] - 1, 10, "clavePaciente"); }
-  terceroButton() { this.cargarRegistros(this.paginas[2] - 1, 10, "clavePaciente"); }
-  cuartoButton() { this.cargarRegistros(this.paginas[3] - 1, 10, "clavePaciente"); }
-  quintoButton() { this.cargarRegistros(this.paginas[4] - 1, 10, "clavePaciente"); }
-  sextoButton() { this.cargarRegistros(this.paginas[5] - 1, 10, "clavePaciente"); }
-  septimoButton() { this.cargarRegistros(this.paginas[6] - 1, 10, "clavePaciente"); }
-  octavoButton() { this.cargarRegistros(this.paginas[7] - 1, 10, "clavePaciente"); }
-  novenoButton() { this.cargarRegistros(this.paginas[8] - 1, 10, "clavePaciente"); }
+  primeroButton() { this.cargarRegistros(this.paginas[0] - 1, 10, this.orderBy); }
+  segundoButton() { this.cargarRegistros(this.paginas[1] - 1, 10, this.orderBy); }
+  terceroButton() { this.cargarRegistros(this.paginas[2] - 1, 10, this.orderBy); }
+  cuartoButton() { this.cargarRegistros(this.paginas[3] - 1, 10, this.orderBy); }
+  quintoButton() { this.cargarRegistros(this.paginas[4] - 1, 10, this.orderBy); }
+  sextoButton() { this.cargarRegistros(this.paginas[5] - 1, 10, this.orderBy); }
+  septimoButton() { this.cargarRegistros(this.paginas[6] - 1, 10, this.orderBy); }
+  octavoButton() { this.cargarRegistros(this.paginas[7] - 1, 10, this.orderBy); }
+  novenoButton() { this.cargarRegistros(this.paginas[8] - 1, 10, this.orderBy); }
 
   avanza() {
     for (let i = 0; i < this.paginas.length; i++)
@@ -99,13 +95,17 @@ export class ListaCuestionarioComponent implements OnInit {
   }
 
   borrar(nombre: String): void {
-    if (confirm("Borrar registro de paciente: " + nombre) === true) {
+
+    let textoConfirm = this.lang()=="en"? "Do you want delete patient?" : this.lang()=="br"? 
+    "Você quer deletar paciente?" :  "Borrar registro de paciente?" ; 
+
+    if (confirm(`${textoConfirm}: ${nombre}`) === true) {
       this.cuestionarioService.elimina(nombre).subscribe(
         data => {
           this.toastr.success('Paciente Eliminado', 'OK', {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
-          this.cargarRegistros(this.paginas[0] - 1, 10, "catalogKey");
+          this.cargarRegistros(this.paginas[0] - 1, 10, this.orderBy);
         },
         err => {
           this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 

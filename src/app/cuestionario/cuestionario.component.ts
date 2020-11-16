@@ -41,7 +41,7 @@ export class CuestionarioComponent implements OnInit {
   //public registrando: boolean = false; // indica si se esta llevando a cabo el proceso de registro , se utiliza para animaciones
   public turno: string; // turno
   ///////////////////////////////////////genero
-  public genero: GeneroOpc[] = [{ clave: 'H', valor: this.lang() == 'br' ? 'H' : this.lang() == 'en' ? 'M' : 'H' }, { clave: 'M', valor: this.lang() == 'br' ? 'M' : this.lang() == 'en' ? 'F' : 'M' }];
+  public genero: GeneroOpc[] = [{ clave: 'H', valor: this.lang() == 'br' ? 'H' : this.lang() == 'en' ? 'M' : 'H' }, { clave: 'M', valor: this.lang() == 'br' ? 'M' : this.lang() == 'en' ? 'W' : 'M' }];
   public generoSel: string; // genero
   public nombre: string; //nombre cuestionario
   public apellido: string; //apellido cuestionario
@@ -808,10 +808,9 @@ export class CuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     data.medraList.forEach(med => {
       let m = [{ content: med.socBr, colSpan: 3, rowSpan: 1, styles: { halign: 'left' } },
-      { content: med.medDraBR, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }];
+      { content: med.medDraBr, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }];
       bod.push(m);
     });
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);

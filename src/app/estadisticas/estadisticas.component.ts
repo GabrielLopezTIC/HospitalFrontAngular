@@ -42,6 +42,7 @@ export class EstadisticasComponent implements OnInit {
   cargandoSoc: boolean = false;
   cargandoPadeEdad: boolean = false;
   cargandoMedraEdad: boolean = false;
+  cargandoRamEdad:boolean = false;
 
   //////////////////////////////////labels emanal y mensual
   semanal = this.lang() == 'br' ? 'SEMANAL' : this.lang() == 'en' ? 'WEEKLY' : 'SEMANAL';
@@ -86,9 +87,10 @@ export class EstadisticasComponent implements OnInit {
     "Resumo das doenças por faixa etária" : "Resumen de padecimientos por rango de edades";
   iniPadeEdad: string;
   myControlPadeEdad = new FormControl();
+  optionsPadeEdad: string[] = []; // lista donde se cargan los datos de los padecimientos desde el servidor
   filteredOptionsPadeEdad: Observable<string[]>;
   selPadeEdad: string; // variable que guarda el padecimiento elegido
-  rangosPadeEdad: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual },{ clave: "T", valor: this.always}];
+  rangosPadeEdad: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }, { clave: "T", valor: this.always }];
   rangoPadeSelEdad: string = "S";
   inicioSemanaPadeEdad: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
@@ -114,22 +116,38 @@ export class EstadisticasComponent implements OnInit {
   myControlMedraEdad = new FormControl();
   filteredOptionsMedraEdad: Observable<string[]>;
   selMedraEdad: string; // variable que guarda el padecimiento elegido
-  rangosMedraEdad: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual },{clave:"T",valor:this.always}];
+  rangosMedraEdad: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }, { clave: "T", valor: this.always }];
   rangoMedraSelEdad: string = "S";
   inicioSemanaMedraEdad: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
+  ///RAM/////////////////////////////////////////////// riesgo edad
+  rangoRam: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }, { clave: "T", valor: this.always }];
+  tipoRam: Rango[] = [{ clave: "R", valor: "Riesgo Importante" }, { clave: "PR", valor: "Riesgo potencial" }, { clave: "M", valor: "Informacion faltante" }];
+  rangoRamSel:string = "S";
+  tipoRamSel:string = "R"; 
+  riskRam:string;
+  dateRam:string= moment().subtract(7, 'd').format('YYYY-MM-DD');
+
+   ///RAM/////////////////////////////////////////////// riesgo edad
+   rangoToxicEdadSel:string = "S";
+   rangosToxicEdad: Rango[] = [
+     { clave: "S", valor: this.semanal },
+     { clave: "M", valor: this.mensual },
+     { clave: "T", valor: this.always }];
+  tipoToxicEdadSel:string = "Alc";
+   tiposToxicEdad: Rango[] = [
+     { clave: "Alc", valor: this.lang()=="en"? "Alcoholism" : this.lang()=="br"? "Alcoolismo": "Alcoholismo"},
+     { clave: "Tab", valor: this.lang()=="en"? "Smoking" : this.lang()=="br"? "Fumar": "Tabaquismo"},
+     { clave: "Drog", valor: this.lang()=="en"? "Drugs" : this.lang()=="br"? "Drogas": "Drogas"},
+     { clave: "Supl", valor: this.lang()=="en"? "Supplements" : this.lang()=="br"? "Suplementos": "Suplementos"},
+     { clave: "Herb", valor: this.lang()=="en"? "Herbalist" : this.lang()=="br"? "Herbalist": "Herbolaria"},
+     { clave: "MTrad", valor: this.lang()=="en"? "Trad. Medic" : this.lang()=="br"? "Med. Tradic": "Med. Tradic"}];
+   
 
 
 
 
-
-
-
-
-
-
-
-
+  
 
   HighToxic: typeof Highcharts = Highcharts;
   HighPade: typeof Highcharts = Highcharts;
@@ -138,6 +156,7 @@ export class EstadisticasComponent implements OnInit {
   HighSoc: typeof Highcharts = Highcharts;
   HighPadeEdad: typeof Highcharts = Highcharts;
   HighMedEdad: typeof Highcharts = Highcharts;
+  HighRamEdad: typeof Highcharts = Highcharts;
 
 
 
@@ -148,6 +167,7 @@ export class EstadisticasComponent implements OnInit {
   graficaCombinadaMedra: Highcharts.Options;
   graficaCombinadaPadeEdad: Highcharts.Options;
   graficaCombinadaMedraEdad: Highcharts.Options;
+  graficaCombinadaRamEdad: Highcharts.Options;
 
 
   datosGraficaToxicomanias: DatosGraficaToxicomaniasDTO[];
@@ -155,8 +175,10 @@ export class EstadisticasComponent implements OnInit {
   datosGraficaPadecimientosEdad: DatosGraficaEdadesDto;
   datosGraficaMedra: DatosGraficaPadecimientoDto;
   datosGraficaMedraEdad: DatosGraficaEdadesDto;
+  datosGraficaRamEdad: DatosGraficaEdadesDto;
   datosGraficaCie10: DatosGraficaCie10[];
   datosGraficaSoc: DatosGraficaCie10[];
+
 
   allComplete: boolean = false;
   anyComplete: boolean = false;
@@ -177,13 +199,14 @@ export class EstadisticasComponent implements OnInit {
     this.cargaSoc();
     this.cargaGraficaToxic();
     this.cargarPadecimientos("A");
+    //this.crearGraficaRisk("R","T","REACCION DE HIPERSENSIBILIDAD");
   }
 
   toxicLabel: string = this.lang() == "en" ? "Drug Adiction" : this.lang() == "br" ? "Dependência de Drogas" : "Toxicomanías";
   medraEdadLabel: string = this.lang() == "en" ? "MedDRA by age range" : this.lang() == "br" ? "MedDRA por faixa etária" : "MedDRA por rango de edad";
   padeEdadLabel: string = this.lang() == "en" ? "Ailment by age range" : this.lang() == "br" ? "Doença por faixa etária" : "Padecimiento por rango de edad";
 
-  
+
   padeLabel: string = this.lang() == "en" ? "Ailments" : this.lang() == "br" ? "Doenças" : "Padecimientos"
   todosLabel: string = this.lang() == "en" ? 'All/None' : this.lang() == "br" ? "Tudo/Nenhum" : "Todos/Ninguno"
 
@@ -197,6 +220,7 @@ export class EstadisticasComponent implements OnInit {
       { name: this.medraEdadLabel, completed: false, color: 'warn' },
       { name: this.padeLabel, completed: false, color: 'warn' },
       { name: this.padeEdadLabel, completed: false, color: 'warn' },
+      { name: "RAM", completed: false, color: 'warn' },
       { name: 'CIE10', completed: false, color: 'warn' },
       { name: 'Soc', completed: false, color: 'warn' }
     ]
@@ -229,7 +253,7 @@ export class EstadisticasComponent implements OnInit {
   }
 
 
-  public descargaPdf() {
+  descargaPdf() {
 
     const doc = new jsPDF()
 
@@ -346,21 +370,20 @@ export class EstadisticasComponent implements OnInit {
     let datosMedEdad = this.datosGraficaMedraEdad;
     if (this.task.subtasks[2].completed && datosMedEdad != null) {
 
-      console.log(datosMedEdad);
       let medBod = [];
       let titleMedra = "";
       if (this.rangoMedraSelEdad == "S") {
         titleMedra = this.lang() == "en" ? "Weekly Summary Medical Dictionary for Regulatory Activities\n" :
           this.lang() == "br" ? "Resumo semanal Dicionário médico de resumo semanal para atividades regulatórias\n" :
             "Resumen Semanal Diccionario Médico para Actividades Reguladoras\n";
-      }else if (this.rangoMedraSelEdad == "M") {
+      } else if (this.rangoMedraSelEdad == "M") {
         titleMedra = this.lang() == "en" ? "Monthly Summary Medical Dictionary for Regulatory Activities\n" :
           this.lang() == "br" ? "Resumo mensal Dicionário Médico de Resumo Mensal para atividades regulatórias\n" :
             "Resumen Mensual Diccionario Médico para Actividades Reguladoras\n";
-      }else{
+      } else {
         titleMedra = this.lang() == "en" ? "Total Medical Dictionary for Regulatory Activities\n" :
-        this.lang() == "br" ? "Total Dicionário Médico de Resumo Mensal para atividades regulatórias\n" :
-          "Total Diccionario Médico para Actividades Reguladoras\n";
+          this.lang() == "br" ? "Total Dicionário Médico de Resumo Mensal para atividades regulatórias\n" :
+            "Total Diccionario Médico para Actividades Reguladoras\n";
       }
 
       medBod.push([{ content: titleMedra + this.selMedra, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
@@ -471,10 +494,53 @@ export class EstadisticasComponent implements OnInit {
       );
     }
 
-    ///////////////////////////////////CIE10
+    //////////////////////////////Ram por rango de edades
+    let datosRamEdad = this.datosGraficaRamEdad;
+    if (this.task.subtasks[5].completed && datosRamEdad != null) {
 
+      let padBod = [];
+
+      let titlePade = "";
+      if (this.rangoRamSel == "S") {
+        titlePade = this.lang() == "en" ? "Weekly Summary RAM\n" :
+          this.lang() == "br" ? "Resumo Semanal RAM\n" :
+            "Resumen Semanal RAM\n";
+      } else if (this.rangoRamSel == "M") {
+        titlePade = this.lang() == "en" ? "Monthly Summary RAM\n" :
+          this.lang() == "br" ? "Resumo Mensal RAM\n" :
+            "Resumen Mensual RAM\n";
+      } else {
+        titlePade = this.lang() == "en" ? "Total Summary RAM\n" :
+          this.lang() == "br" ? "Total RAM\n" :
+            "Total RAM\n";
+      }
+
+      padBod.push([{ content: titlePade + this.selPade, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      padBod.push([
+        { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+      ]);
+
+      for (let i = 0; i < datosRamEdad.datos.length; i++) {
+        padBod.push([
+          { content: datosRamEdad.datos[i].rango, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosRamEdad.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosRamEdad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+        ]);
+      }
+
+      autoTable(doc,
+        {
+          theme: "grid",
+          body: padBod
+        }
+      );
+    }
+
+    ///////////////////////////////////CIE10
     let datosCie10 = this.datosGraficaCie10;
-    if (this.task.subtasks[5].completed && datosCie10.length > 0) {
+    if (this.task.subtasks[6].completed && datosCie10.length > 0) {
 
       let cieBod = [];
 
@@ -517,9 +583,8 @@ export class EstadisticasComponent implements OnInit {
     }
 
     ///////////////////////////////////Soc
-
     let datosSoc = this.datosGraficaSoc;
-    if (this.task.subtasks[6].completed && datosSoc.length > 0) {
+    if (this.task.subtasks[7].completed && datosSoc.length > 0) {
 
       let socBod = [];
 
@@ -559,6 +624,7 @@ export class EstadisticasComponent implements OnInit {
         }
       );
     }
+
     doc.output('dataurlnewwindow');
   }
 
@@ -707,7 +773,7 @@ export class EstadisticasComponent implements OnInit {
   cargarGraficaPade(): void {
     this.cargandoPade = true; // activa la animacion de carga
     if (this.rangoPadeSel == "S") { // grafica semanañl
-      this.cuestService.datosGraficaPadecimientosSemanales(this.inicioSemanaPade, this.selPade).subscribe(
+      this.cuestService.datosGraficaPadecimientosSemanales(this.lang(),this.inicioSemanaPade, this.selPade).subscribe(
         data => {
           this.datosGraficaPadecimientos = data;
           this.creaGraficaPade(data);
@@ -723,7 +789,7 @@ export class EstadisticasComponent implements OnInit {
       );
     }
     if (this.rangoPadeSel == "M") { // mensual
-      this.cuestService.datosGraficaPadecimientosMensuales(this.inicioSemanaPade, this.selPade).subscribe(
+      this.cuestService.datosGraficaPadecimientosMensuales(this.lang(),this.inicioSemanaPade, this.selPade).subscribe(
         data => {
           this.datosGraficaPadecimientos = data;
           this.creaGraficaPade(data);
@@ -748,23 +814,23 @@ export class EstadisticasComponent implements OnInit {
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
     if (this.rangoPadeSel == "S") { // grafica semanal
-      title = this.lang() == 'en' ? "Weekly disease summary\n"+this.selPadeEdad : this.lang() == 'br' ? "Resumo semanal da doença\n"+this.selPadeEdad : "Resumen semanal padecimiento\n"+this.selPadeEdad;
+      title = this.lang() == 'en' ? "Weekly disease summary\n" + this.selPadeEdad : this.lang() == 'br' ? "Resumo semanal da doença\n" + this.selPadeEdad : "Resumen semanal padecimiento\n" + this.selPadeEdad;
     } else { // grafica mensual
-      title = this.lang() == 'en' ? "Monthly disease summary\n"+this.selPadeEdad : this.lang() == 'br' ? "Resumo mensal da doença\n"+this.selPadeEdad : "Resumen mensual padecimiento\n"+this.selPadeEdad;
+      title = this.lang() == 'en' ? "Monthly disease summary\n" + this.selPadeEdad : this.lang() == 'br' ? "Resumo mensal da doença\n" + this.selPadeEdad : "Resumen mensual padecimiento\n" + this.selPadeEdad;
     }
 
-      // labels de las fechas
-      categorias = [datos.datos[0].rango, datos.datos[1].rango, datos.datos[2].rango,
-      datos.datos[3].rango, datos.datos[4].rango, datos.datos[5].rango, datos.datos[6].rango];
-      // datos de hombres
-      datosHombre = [datos.datos[0].hombres, datos.datos[1].hombres, datos.datos[2].hombres,
-      datos.datos[3].hombres, datos.datos[4].hombres, datos.datos[5].hombres, datos.datos[6].hombres];
-      //datos de mujeres
-      datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
-      datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
-      //datos total
-      datosTotal = [datos.datos[0].total, datos.datos[1].total, datos.datos[2].total,
-      datos.datos[3].total, datos.datos[4].total, datos.datos[5].total, datos.datos[6].total];
+    // labels de las fechas
+    categorias = [datos.datos[0].rango, datos.datos[1].rango, datos.datos[2].rango,
+    datos.datos[3].rango, datos.datos[4].rango, datos.datos[5].rango, datos.datos[6].rango];
+    // datos de hombres
+    datosHombre = [datos.datos[0].hombres, datos.datos[1].hombres, datos.datos[2].hombres,
+    datos.datos[3].hombres, datos.datos[4].hombres, datos.datos[5].hombres, datos.datos[6].hombres];
+    //datos de mujeres
+    datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
+    datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
+    //datos total
+    datosTotal = [datos.datos[0].total, datos.datos[1].total, datos.datos[2].total,
+    datos.datos[3].total, datos.datos[4].total, datos.datos[5].total, datos.datos[6].total];
 
 
     let hombresLabel = this.lang() == 'en' ? "Men" : this.lang() == 'br' ? "Masculino" : "Hombres";
@@ -778,7 +844,7 @@ export class EstadisticasComponent implements OnInit {
       name: totalLabel,
       color: '#51eb49',
       data: datosTotal
-    },{
+    }, {
       type: 'column',
       name: hombresLabel,
       color: '#e84343',
@@ -813,44 +879,43 @@ export class EstadisticasComponent implements OnInit {
     };
 
   }
-  cargarGraficaPadeVsEdad() {
+  cargarGraficaPadeVsEdad(rango: string) {
     this.cargandoPadeEdad = true; // activa la animacion de carga
-    if (this.rangoPadeSelEdad == "T") { // grafica semanañl
-      this.cuestService.datosGraficaPadecimientoEdadesTodo(this.lang(),this.selPadeEdad).subscribe(
+    if (rango == "T") { // grafica semanañl
+      this.cuestService.datosGraficaPadecimientoEdadesTodo(this.lang(), this.selPade).subscribe(
         data => {
-          this.cargandoPadeEdad = false; 
+          this.cargandoPadeEdad = false;
           this.creaGraficaPadeEdad(data);
           this.datosGraficaPadecimientosEdad = data;
         },
         err => {
-          this.cargandoPadeEdad = false; 
+          this.cargandoPadeEdad = false;
 
         }
       );
     }
-    if (this.rangoPadeSelEdad == "S") { // mensual
-      this.cuestService.datosGraficaPadecimientoEdadesWeek(this.lang(),this.inicioSemanaPadeEdad, this.selPadeEdad).subscribe(
+    if (rango == "S") { // mensual
+      this.cuestService.datosGraficaPadecimientoEdadesWeek(this.lang(), this.inicioSemanaPade, this.selPade).subscribe(
         data => {
-          this.cargandoPadeEdad = false; 
+          this.cargandoPadeEdad = false;
           this.creaGraficaPadeEdad(data);
           this.datosGraficaPadecimientosEdad = data;
         },
         error => {
-          this.cargandoPadeEdad = false; 
+          this.cargandoPadeEdad = false;
 
         }
       );
     }
-    if (this.rangoPadeSelEdad == "M") { // mensual
-      this.cuestService.datosGraficaPadecimientoEdadesMounth(this.lang(),this.inicioSemanaPadeEdad, this.selPadeEdad).subscribe(
+    if (rango == "M") { // mensual
+      this.cuestService.datosGraficaPadecimientoEdadesMounth(this.lang(), this.inicioSemanaPade, this.selPade).subscribe(
         data => {
-          this.cargandoPadeEdad = false; 
+          this.cargandoPadeEdad = false;
           this.creaGraficaPadeEdad(data);
           this.datosGraficaPadecimientosEdad = data;
         },
         error => {
-          this.cargandoPadeEdad = false; 
-
+          this.cargandoPadeEdad = false;
         }
       );
     }
@@ -1179,9 +1244,11 @@ export class EstadisticasComponent implements OnInit {
   cargarGraficaMedra(): void {
     this.cargandoMedra = true; // activa la animacion de carga
     if (this.rangoMedraSel == "S") { // grafica semanañl
-      this.cuestService.datosGraficaMedraSemanales(this.inicioSemanaMedra, this.selMedra).subscribe(
+      this.cuestService.datosGraficaMedraSemanales(this.lang(),this.inicioSemanaMedra, this.selMedra).subscribe(
         data => {
           this.datosGraficaMedra = data;
+          console.log("Datos semanales medra")
+          console.log(data)
           this.creaGraficaMedra(data);
           this.cargandoMedra = false; // desactiva la animacion de carga
         },
@@ -1195,7 +1262,7 @@ export class EstadisticasComponent implements OnInit {
       );
     }
     if (this.rangoMedraSel == "M") { // mensual
-      this.cuestService.datosGraficaMedraMensuales(this.inicioSemanaMedra, this.selMedra).subscribe(
+      this.cuestService.datosGraficaMedraMensuales(this.lang(),this.inicioSemanaMedra, this.selMedra).subscribe(
         data => {
           this.datosGraficaMedra = data;
           this.creaGraficaMedra(data);
@@ -1212,9 +1279,9 @@ export class EstadisticasComponent implements OnInit {
     }
   }
 
-  seriesMedraEdad:any;
-  crearGraficaMedraVsEdad(datos:any): void{
-    
+  seriesMedraEdad: any;
+  crearGraficaMedraVsEdad(datos: any): void {
+
     let datosHombre = [];
     let datosMujer = [];
     let datosTotal = [];
@@ -1224,23 +1291,23 @@ export class EstadisticasComponent implements OnInit {
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
     if (this.rangoPadeSel == "S") { // grafica semanal
-      title = this.lang() == 'en' ? "Weekly disease summary\n"+this.selMedraEdad : this.lang() == 'br' ? "Resumo semanal da doença\n"+this.selMedraEdad : "Resumen semanal padecimiento\n"+this.selMedraEdad;
+      title = this.lang() == 'en' ? "Weekly disease summary\n" + this.selMedraEdad : this.lang() == 'br' ? "Resumo semanal da doença\n" + this.selMedraEdad : "Resumen semanal padecimiento\n" + this.selMedraEdad;
     } else { // grafica mensual
-      title = this.lang() == 'en' ? "Monthly disease summary\n"+this.selMedraEdad : this.lang() == 'br' ? "Resumo mensal da doença\n"+this.selMedraEdad : "Resumen mensual padecimiento\n"+this.selMedraEdad;
+      title = this.lang() == 'en' ? "Monthly disease summary\n" + this.selMedraEdad : this.lang() == 'br' ? "Resumo mensal da doença\n" + this.selMedraEdad : "Resumen mensual padecimiento\n" + this.selMedraEdad;
     }
 
-      // labels de las fechas
-      categorias = [datos.datos[0].rango, datos.datos[1].rango, datos.datos[2].rango,
-      datos.datos[3].rango, datos.datos[4].rango, datos.datos[5].rango, datos.datos[6].rango];
-      // datos de hombres
-      datosHombre = [datos.datos[0].hombres, datos.datos[1].hombres, datos.datos[2].hombres,
-      datos.datos[3].hombres, datos.datos[4].hombres, datos.datos[5].hombres, datos.datos[6].hombres];
-      //datos de mujeres
-      datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
-      datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
-      //datos total
-      datosTotal = [datos.datos[0].total, datos.datos[1].total, datos.datos[2].total,
-      datos.datos[3].total, datos.datos[4].total, datos.datos[5].total, datos.datos[6].total];
+    // labels de las fechas
+    categorias = [datos.datos[0].rango, datos.datos[1].rango, datos.datos[2].rango,
+    datos.datos[3].rango, datos.datos[4].rango, datos.datos[5].rango, datos.datos[6].rango];
+    // datos de hombres
+    datosHombre = [datos.datos[0].hombres, datos.datos[1].hombres, datos.datos[2].hombres,
+    datos.datos[3].hombres, datos.datos[4].hombres, datos.datos[5].hombres, datos.datos[6].hombres];
+    //datos de mujeres
+    datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
+    datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
+    //datos total
+    datosTotal = [datos.datos[0].total, datos.datos[1].total, datos.datos[2].total,
+    datos.datos[3].total, datos.datos[4].total, datos.datos[5].total, datos.datos[6].total];
 
 
     let hombresLabel = this.lang() == 'en' ? "Men" : this.lang() == 'br' ? "Masculino" : "Hombres";
@@ -1254,7 +1321,7 @@ export class EstadisticasComponent implements OnInit {
       name: totalLabel,
       color: '#51eb49',
       data: datosTotal
-    },{
+    }, {
       type: 'column',
       name: hombresLabel,
       color: '#e84343',
@@ -1290,43 +1357,42 @@ export class EstadisticasComponent implements OnInit {
 
   }
 
-  cargarGraficaMedraVsEdad(): void{
+  cargarGraficaMedraVsEdad(rango: string): void {
     this.cargandoMedraEdad = true; // activa la animacion de carga
-    if (this.rangoMedraSelEdad == "T") { // grafica semanañl
-      this.cuestService. datosGraficaMedraEdadesTodo(this.lang(),this.selMedraEdad).subscribe(
+    if (rango == "T") { // grafica semanañl
+      this.cuestService.datosGraficaMedraEdadesTodo(this.lang(), this.selMedra).subscribe(
         data => {
-          this.cargandoMedraEdad = false; 
+          this.cargandoMedraEdad = false;
           this.datosGraficaMedraEdad = data;
-         this.crearGraficaMedraVsEdad(data);
+          this.crearGraficaMedraVsEdad(data);
         },
         err => {
-          this.cargandoMedraEdad = false; 
+          this.cargandoMedraEdad = false;
 
         }
       );
     }
-    if (this.rangoMedraSelEdad == "S") { // mensual
-      this.cuestService.datosGraficaMedraEdadesWeek(this.lang(),this.inicioSemanaMedraEdad, this.selMedraEdad).subscribe(
+    if (rango == "S") { // mensual
+      this.cuestService.datosGraficaMedraEdadesWeek(this.lang(), this.inicioSemanaMedra, this.selMedra).subscribe(
         data => {
-          this.cargandoMedraEdad = false; 
+          this.cargandoMedraEdad = false;
           this.datosGraficaMedraEdad = data;
           this.crearGraficaMedraVsEdad(data);
         },
         error => {
-          this.cargandoMedraEdad = false; 
-
+          this.cargandoMedraEdad = false;
         }
       );
     }
-    if (this.rangoMedraSelEdad == "M") { // mensual
-      this.cuestService.datosGraficaMedraEdadesMounth(this.lang(),this.inicioSemanaMedraEdad, this.selMedraEdad).subscribe(
+    if (rango == "M") { // mensual
+      this.cuestService.datosGraficaMedraEdadesMounth(this.lang(), this.inicioSemanaMedra, this.selMedra).subscribe(
         data => {
-          this.cargandoMedraEdad = false; 
+          this.cargandoMedraEdad = false;
           this.datosGraficaMedraEdad = data;
           this.crearGraficaMedraVsEdad(data);
         },
         error => {
-          this.cargandoMedraEdad = false; 
+          this.cargandoMedraEdad = false;
 
         }
       );
@@ -1482,6 +1548,212 @@ export class EstadisticasComponent implements OnInit {
       );
     }
   }
+
+  //////////////Graficas RAM 
+
+ 
+  seriesRamEdad: any = [];
+  creaGraficaRisk(datos: any){
+    
+    let datosHombre = [];
+    let datosMujer = [];
+    let datosTotal = [];
+    let categorias = [];
+    let rangoText = "";
+    let tipoText = "";
+    let title= "";
+    let fecha = this.lang() == 'en' ? "Age" : this.lang() == 'br' ? "Era" : "Edad";
+    let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
+
+    if (this.rangoRamSel == "S") { // grafica semanal
+      rangoText = this.lang() == 'en' ? "Weekly": this.lang() == 'br' ? "semanal" : "semanal";
+    } else if(this.rangoRamSel == "T"){
+      rangoText = this.lang() == 'en' ? "All" : this.lang() == 'br' ? "Tudo" : "Todo";
+    }else{ // grafica mensual
+      rangoText = this.lang() == 'en' ? "Monthly" : this.lang() == 'br' ? "Mensal" : "Mensual";
+    }
+    if (this.tipoRamSel == "R") { // grafica semanal
+      tipoText = this.lang() == 'en' ? "Important Risk": this.lang() == 'br' ? "Grande risco" : "Riesgo Importante";
+    } else if(this.tipoRamSel == "PR"){
+      tipoText = this.lang() == 'en' ? "Potential Risk" : this.lang() == 'br' ? "Risco potencial" : "Riesgo Potencial";
+    }else{ // grafica mensual
+      tipoText = this.lang() == 'en' ? "Missing Info" : this.lang() == 'br' ? "Informação faltando" : "Información faltante";
+    }
+
+    title = `${rangoText} ${tipoText} `;
+
+    // labels de las fechas
+    categorias = [datos.datos[0].rango, datos.datos[1].rango, datos.datos[2].rango,
+    datos.datos[3].rango, datos.datos[4].rango, datos.datos[5].rango, datos.datos[6].rango];
+    // datos de hombres
+    datosHombre = [datos.datos[0].hombres, datos.datos[1].hombres, datos.datos[2].hombres,
+    datos.datos[3].hombres, datos.datos[4].hombres, datos.datos[5].hombres, datos.datos[6].hombres];
+    //datos de mujeres
+    datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
+    datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
+    //datos total
+    datosTotal = [datos.datos[0].total, datos.datos[1].total, datos.datos[2].total,
+    datos.datos[3].total, datos.datos[4].total, datos.datos[5].total, datos.datos[6].total];
+
+
+    let hombresLabel = this.lang() == 'en' ? "Men" : this.lang() == 'br' ? "Masculino" : "Hombres";
+    let mujeresLabel = this.lang() == 'en' ? "Women" : this.lang() == 'br' ? "Mulheres" : "Mujeres";
+    let totalLabel = this.lang() == 'en' ? "Total" : this.lang() == 'br' ? "Total" : "Total";
+    let total = this.lang() == 'en' ? "Total patients" : this.lang() == 'br' ? "Pacientes totais" : "Pacientes totales";
+
+
+    this.seriesRamEdad = [{
+      type: 'column',
+      name: totalLabel,
+      color: '#51eb49',
+      data: datosTotal
+    }, {
+      type: 'column',
+      name: hombresLabel,
+      color: '#e84343',
+      data: datosHombre
+    }, {
+      type: 'column',
+      name: mujeresLabel,
+      color: '#4956eb',
+      data: datosMujer
+    }
+    ]
+
+
+
+
+    this.graficaCombinadaRamEdad = {
+      title: {
+        text: title + this.riskRam
+      },
+      xAxis: {
+        title: {
+          text: fecha
+        },
+        categories: categorias
+      },
+      yAxis: {
+        title: {
+          text: pacientes
+        }
+      },
+      series: this.seriesRamEdad
+    };
+  }
+
+  
+  cargarGraficaRisk(tipo: string, rango: string, risk: string, date?: string) {
+    this.cargandoRamEdad = true;
+    if (tipo == "R") { //riesgos
+      if (rango == "T") { //todos
+        this.cuestService.datosGraficaRamRiskEdadesTodo(this.lang(), risk).subscribe(
+          data => {
+            this.datosGraficaRamEdad = data;
+            this.creaGraficaRisk(data);
+             this.cargandoRamEdad = false;
+          },
+          err => {
+            this.cargandoRamEdad = false;
+          }
+        );
+      } else if (rango == "M") { //mensual
+        this.cuestService.datosGraficaRamRiskEdadesMounth(this.lang(), date, risk).subscribe(
+          data => {
+            this.datosGraficaRamEdad = data;
+            this.creaGraficaRisk(data);
+            this.cargandoRamEdad = false;
+          },
+          err => {
+            this.cargandoRamEdad = false;
+          }
+        );
+      } else { // semanal 
+        this.cuestService.datosGraficaRamRiskEdadesWeek(this.lang(),date,risk).subscribe(
+          data => {
+            this.datosGraficaRamEdad = data;
+            this.creaGraficaRisk(data);
+            this.cargandoRamEdad = false;
+          },
+          err => {
+            this.cargandoRamEdad = false;
+          }
+        );
+      }
+    } else if (tipo == "PR") {
+      if (rango == "T") { //todos 
+        this.cuestService.datosGraficaRamPotRiskEdadesTodo(this.lang(), risk).subscribe(
+          data => {
+            this.datosGraficaRamEdad = data;
+            this.creaGraficaRisk(data);
+            this.cargandoRamEdad = false;
+          },
+          err => {
+            this.cargandoRamEdad = false;
+          }
+        );
+      } else if (rango == "M") { //mensual
+        this.cuestService.datosGraficaRamPotRiskEdadesMounth(this.lang(), date, risk).subscribe(
+          data => {
+            this.datosGraficaRamEdad = data;
+            this.creaGraficaRisk(data);
+            this.cargandoRamEdad = false;
+          },
+          err => {
+            this.cargandoRamEdad = false;
+          }
+        );
+      } else { // semanal
+        this.cuestService.datosGraficaRamPotRiskEdadesWeek(this.lang(),date,risk).subscribe(
+          data => {
+            this.datosGraficaRamEdad = data;
+            this.creaGraficaRisk(data);
+            this.cargandoRamEdad = false;
+          },
+          err => {
+            this.cargandoRamEdad = false;
+          }
+        );
+      }
+    } else { //Missing info
+      if (rango == "T") { //todos
+        this.cuestService.datosGraficaRamMissEdadesTodo(this.lang(), risk).subscribe(
+          data => {
+            this.datosGraficaRamEdad = data;
+            this.creaGraficaRisk(data);
+            this.cargandoRamEdad = false;
+          },
+          err => {
+            this.cargandoRamEdad = false;
+          }
+        );
+      }else if (rango == "M") { //mensual
+        this.cuestService.datosGraficaRamMissEdadesMounth(this.lang(),date,risk).subscribe(
+          data => {
+            this.datosGraficaRamEdad = data;
+            this.creaGraficaRisk(data);
+            this.cargandoRamEdad = false;
+          },
+          err => {
+            this.cargandoRamEdad = false;
+          }
+        );
+      } else { // semanal
+        this.cuestService.datosGraficaRamMissEdadesWeek(this.lang(),date,risk).subscribe(
+          data => {
+            this.datosGraficaRamEdad = data;
+            this.creaGraficaRisk(data);
+            this.cargandoRamEdad = false;
+          },
+          err => {
+            this.cargandoRamEdad = false;
+          }
+        );
+      }
+    }
+  }
+
+
 
   lang(): string {
     return this.authService.lang();

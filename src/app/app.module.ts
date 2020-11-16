@@ -28,8 +28,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ModalInfoTerapComponent } from './cuestionario/modal-info-terap/modal-info-terap.component';
 import {MatDialogModule} from '@angular/material/dialog';
-import {MatDialog} from '@angular/material/dialog';
-import {MatDialogRef} from '@angular/material/dialog';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditarMedicamentoComponent } from './medicamentos/editar-medicamento/editar-medicamento.component';

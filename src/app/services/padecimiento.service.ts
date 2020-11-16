@@ -9,40 +9,40 @@ import { AuthService } from './auth.service';
 })
 export class PadecimientoService {
 
-  padecimientoURL:string;
+  padecimientoURL: string;
 
   constructor(private httpClient: HttpClient,
-    private authService:AuthService) { 
-      this.padecimientoURL = authService.getServidor()+'/padecimiento/';
+    private authService: AuthService) {
+    this.padecimientoURL = `${authService.getServidor()}/padecimiento/`;
 
   }
 
 
   public findAll(): Observable<Padecimiento[]> {
-    return this.httpClient.get<Padecimiento[]>(this.padecimientoURL + "findAll");
+    return this.httpClient.get<Padecimiento[]>(`${this.padecimientoURL}findAll`);
   }
 
-  public findAllPagination(page:number,size:number,orderBy:string): Observable<Padecimiento[]> {
-    return this.httpClient.get<Padecimiento[]>(this.padecimientoURL + "findAll/page/"+page+"/size/"+size+"/orderCol/"+orderBy);
+  public findAllPagination(page: number, size: number, orderBy: string): Observable<Padecimiento[]> {
+    return this.httpClient.get<Padecimiento[]>(`${this.padecimientoURL}findAll/page/${page}/size/${size}/orderCol/${orderBy}`);
   }
 
   public findAllIniciaCon(nombre: string, lang: string): Observable<Padecimiento[]> {
-    return this.httpClient.get<Padecimiento[]>(this.padecimientoURL + "findAll/regex/" + nombre + "/lang/" + lang);
+    return this.httpClient.get<Padecimiento[]>(`${this.padecimientoURL}findAll/regex/${nombre}/lang/${lang}`);
   }
 
   public nuevo(nuevoPadecimiento: Padecimiento): Observable<any> {
-    return this.httpClient.post<any>(this.padecimientoURL + 'create', nuevoPadecimiento);
+    return this.httpClient.post<any>(`${this.padecimientoURL}create`, nuevoPadecimiento);
   }
 
   public elimina(nombrePadecimiento: string): Observable<any> {
-    return this.httpClient.delete<any>(this.padecimientoURL + "delete/" + nombrePadecimiento);
+    return this.httpClient.delete<any>(`${this.padecimientoURL}delete/${nombrePadecimiento}`);
   }
 
   public update(nombre: string, padecimiento: Padecimiento): Observable<any> {
-    return this.httpClient.put<any>(this.padecimientoURL + "update/" + nombre, padecimiento);
+    return this.httpClient.put<any>(`${this.padecimientoURL}update/${nombre}`, padecimiento);
   }
 
   public findByCatalogKey(clave: String): Observable<any> {
-    return this.httpClient.get<any>(this.padecimientoURL + "findByCatalogKey/" + clave);
+    return this.httpClient.get<any>(`${this.padecimientoURL}findByCatalogKey/${clave}`);
   }
 }

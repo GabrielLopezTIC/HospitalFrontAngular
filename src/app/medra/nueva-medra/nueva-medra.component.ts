@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Medra } from 'src/app/models/medra';
 import { AuthService } from 'src/app/services/auth.service';
@@ -12,6 +13,8 @@ import { TokenService } from 'src/app/services/token.service';
   styleUrls: ['./nueva-medra.component.css']
 })
 export class NuevaMedraComponent implements OnInit {
+
+  @BlockUI() blockUI: NgBlockUI;
   nuevoPadecimiento: Medra;
   medraEs:string
   medraEn:string;
@@ -36,6 +39,7 @@ export class NuevaMedraComponent implements OnInit {
 
   onRegister(): void {
     if (confirm("¿Desea registrar el nuevo MedDRA?") === true) {
+      this.blockUI.start(" ");
       this.nuevoPadecimiento = new Medra(
         this.socEs,
         this.socEn,
@@ -49,6 +53,7 @@ export class NuevaMedraComponent implements OnInit {
           this.toastr.success('MedDRA añadido', 'OK', {
             timeOut: 3000, positionClass: 'toast-top-center'
           });
+          this.blockUI.stop();
           this.router.navigate(['/listaMedra']);
         },
         err => {
@@ -56,6 +61,7 @@ export class NuevaMedraComponent implements OnInit {
           this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
             timeOut: 3000, positionClass: 'toast-top-center',
           });
+          this.blockUI.stop();
         }
       );
     }

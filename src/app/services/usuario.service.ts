@@ -18,7 +18,7 @@ export class UsuarioService {
 
   constructor(private httpClient: HttpClient,
     private authService:AuthService) {
-      this.usuariosURL = authService.getServidor()+'/usuarios/';
+      this.usuariosURL = `${authService.getServidor()}/usuarios/`;
   }
 
   /**
@@ -28,14 +28,14 @@ export class UsuarioService {
    * @param orderBy 
    */
   public findAllPagination(page:number,size:number,orderBy:string): Observable<Usuario[]> {
-    return this.httpClient.get<Usuario[]>(this.usuariosURL + "findAll/page/"+page+"/size/"+size+"/orderCol/"+orderBy);
+    return this.httpClient.get<Usuario[]>(`${this.usuariosURL}findAll/page/${page}/size/${size}/orderCol/${orderBy}`);
   }
 
   /**
    * Devuelve una lista
    */
   public findAllPaginationByUserAnSub(user:string,page:number,size:number,orderBy:string): Observable<Usuario[]> {
-    return this.httpClient.get<Usuario[]>(this.usuariosURL + "findAll/user/"+user+"/page/"+page+"/size/"+size+"/orderCol/"+orderBy);
+    return this.httpClient.get<Usuario[]>(`${this.usuariosURL}findAll/user/${user}/page/${page}/size/${size}/orderCol/${orderBy}`);
   }
 
   /**
@@ -43,7 +43,7 @@ export class UsuarioService {
    * @param nuevoUsuario 
    */
   public nuevo(nuevoUsuario: NuevoUsuario): Observable<any> {
-    return this.httpClient.post<any>(this.usuariosURL + 'create', nuevoUsuario);
+    return this.httpClient.post<any>(`${this.usuariosURL}create`, nuevoUsuario);
   }
 
   /**
@@ -51,7 +51,7 @@ export class UsuarioService {
    * @param nombreUsuario
    */
   public elimina(nombreUsuario:String): Observable<any>{
-    return this.httpClient.delete<any>(this.usuariosURL+"delete/"+nombreUsuario);
+    return this.httpClient.delete<any>(`${this.usuariosURL}delete/${nombreUsuario}`);
   }
 
   /**
@@ -60,11 +60,11 @@ export class UsuarioService {
    * @param usuario 
    */
   public update(username:String, usuario: NuevoUsuario): Observable<any> {
-    return this.httpClient.put<any>(this.usuariosURL+"update/"+username,usuario);
+    return this.httpClient.put<any>(`${this.usuariosURL}update/${username}`,usuario);
   }
 
   public updateByMedico(username:String, usuario: NuevoUsuario): Observable<any> {
-    return this.httpClient.put<any>(this.usuariosURL+"updateByMedico/"+username,usuario);
+    return this.httpClient.put<any>(`${this.usuariosURL}updateByMedico/${username}`,usuario);
   }
 
   /**
@@ -72,7 +72,7 @@ export class UsuarioService {
    * @param username 
    */
   public details(username:String): Observable<any> {
-    return this.httpClient.get<any>(this.usuariosURL+"find/"+username);
+    return this.httpClient.get<any>(`${this.usuariosURL}find/${username}`);
   }
 
   /**
@@ -80,7 +80,7 @@ export class UsuarioService {
    * @param username 
    */
   public detailsByMedico(username:String): Observable<any> {
-    return this.httpClient.get<any>(this.usuariosURL+"findBy/medico/"+username);
+    return this.httpClient.get<any>(`${this.usuariosURL}findBy/medico/${username}`);
   }
 
 }

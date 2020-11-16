@@ -40,6 +40,7 @@ export class EditarUsuarioComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.blockUI.start(" ");
     const nombreUsuario = this.activatedRoute.snapshot.params.nombreUsuario;
     this.usuarioService.details(nombreUsuario).subscribe(
       data => {
@@ -52,12 +53,14 @@ export class EditarUsuarioComponent implements OnInit {
           this.rolSelec = 'farmaceutico';
         }
         this.statusSelect = this.usuario.enabled;
+        this.blockUI.stop();
       },
       err => {
         this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
         this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
+        this.blockUI.stop();
         this.router.navigate(['/listaUsuario']);
       }
     );

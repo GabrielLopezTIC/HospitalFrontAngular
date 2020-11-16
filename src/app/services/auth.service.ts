@@ -16,7 +16,7 @@ export class AuthService {
   //servidor = "http://localhost:5555"; // locale 
   servidor = "https://hospital-tsis.herokuapp.com"; // web
   
-  authURL = this.servidor+'/auth/';
+  authURL = `${this.servidor}/auth/`;
 
 
   constructor(private httpClient: HttpClient) { }
@@ -25,7 +25,7 @@ export class AuthService {
    * Realiza la solicitud de authenticacion al servidor
    */
   public login(loginUsuario: LoginUsuario): Observable<JwtDto> {
-    return this.httpClient.post<JwtDto>(this.authURL + 'login', loginUsuario);
+    return this.httpClient.post<JwtDto>(`${this.authURL}login`, loginUsuario);
   }
 
 
