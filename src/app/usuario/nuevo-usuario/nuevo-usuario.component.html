@@ -7,12 +7,14 @@
             <div class="row">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
-                    <h2 *ngIf="lang()=='es'">Registro de nuevo usuario</h2>
-                    <h2 *ngIf="lang()=='en'">
-                        New user registration</h2>
-                    <h2 *ngIf="lang()=='br'">Registo de novo usuário</h2>
+                    <h1 *ngIf="lang()=='es'">Registro de nuevo usuario</h1>
+                    <h1 *ngIf="lang()=='en'">
+                        New user registration</h1>
+                    <h1 *ngIf="lang()=='br'">Registo de novo usuário</h1>
                 </div>
-                <div class="col-sm-3"></div>
+                <div class="col-sm-3">
+                    <img class="img-fluid" src="assets/nuevo-usuario.png" alt="">
+                </div>
             </div>
             <form #f="ngForm" (ngSubmit)="onRegister()" novalidate>
                 <div class="row">

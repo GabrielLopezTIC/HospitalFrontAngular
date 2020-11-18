@@ -65,6 +65,7 @@ export class CuestionarioService {
     return this.httpClient.get<any>(`${this.cuestionarioURL}findByClave/${clave}`);
   }
 
+  /////////////////////////////////////////Toxicomanias
 
   /**
    * graficas semanales para 
@@ -72,13 +73,35 @@ export class CuestionarioService {
   public datosGraficaToxicomaniasSemanales(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
     return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(`${this.cuestionarioURL}findDataGraphWeek/date/${fecha}/lang/${lenguaje}`);
   }
-
   /**
    * Graficas mensuiales toxicomanias
    */
   public datosGraficaToxicomaniasMensuales(fecha: string, lenguaje: string): Observable<DatosGraficaToxicomaniasDTO[]> {
     return this.httpClient.get<DatosGraficaToxicomaniasDTO[]>(`${this.cuestionarioURL}findDataGraphMounth/date/${fecha}/lang/${lenguaje}`);
   }
+
+
+  //Toxicomanias vs edades
+
+  //Todo
+  public datosGraficaToxicEdadTodo(lang: string, toxic:string): Observable<any> {
+    return this.httpClient.get<any>(`${this.cuestionarioURL}findDataGraphToxicEdadesTotal/lang/${lang}/toxic/${toxic}`);
+  }
+
+  //Semanal
+  public datosGraficaToxicEdadWeek(lang: string,date:string, toxic:string): Observable<any> {
+    return this.httpClient.get<any>(`${this.cuestionarioURL}findDataGraphToxicEdadesWeek/lang/${lang}/date/${date}/toxic/${toxic}`);
+  }
+
+  //Mensual
+  public datosGraficaToxicEdadMonth(lang: string,date:string, toxic:string): Observable<any> {
+    return this.httpClient.get<any>(`${this.cuestionarioURL}findDataToxicGraphEdadesMounth/lang/${lang}/date/${date}/toxic/${toxic}`);
+  }
+
+
+
+
+
 
   ////////////////////////////////////////////////////////////////////PAdecimientoa
 
@@ -96,7 +119,22 @@ export class CuestionarioService {
     return this.httpClient.get<DatosGraficaPadecimientoDto>(`${this.cuestionarioURL}findDataPadeGraphWeek/lang/${lang}/date/${fecha}/pade/${pade}`);
   }
 
-  ////////////////////////////////////////////////////////////////////MedDRA
+  //////Graficas de edades padecimientos
+  /////Todo
+  public datosGraficaPadecimientoEdadesTodo(lang: string, pade: string): Observable<any> {
+    return this.httpClient.get<any>(`${this.cuestionarioURL}findDataGraphEdadesTotal/lang/${lang}/pade/${pade}`)
+  }
+  /////Semanal
+  public datosGraficaPadecimientoEdadesWeek(lang: string, date: string, pade: string): Observable<any> {
+    return this.httpClient.get<any>(`${this.cuestionarioURL}findDataGraphEdadesWeek/lang/${lang}/date/${date}/pade/${pade}`)
+  }
+  /////Mensual
+  public datosGraficaPadecimientoEdadesMounth(lang: string, date: string, pade: string): Observable<any> {
+    return this.httpClient.get<any>(`${this.cuestionarioURL}findDataGraphEdadesMounth/lang/${lang}/date/${date}/pade/${pade}`)
+  }
+
+
+  ////////////////////////////////////////////////////////////////////MedDRA//////////////////
 
   /**
    * Graficas mensuiales medra
@@ -138,20 +176,6 @@ export class CuestionarioService {
     return this.httpClient.get<DatosGraficaCie10[]>(`${this.cuestionarioURL}findDataSoc/mounth/${fecha}/lang/${lang}`);
   }
 
-  //////Graficas de edades padecimientos
-  /////Todo
-  public datosGraficaPadecimientoEdadesTodo(lang: string, pade: string): Observable<any> {
-    return this.httpClient.get<any>(`${this.cuestionarioURL}findDataGraphEdadesTotal/lang/${lang}/pade/${pade}`)
-  }
-  /////Semanal
-  public datosGraficaPadecimientoEdadesWeek(lang: string, date: string, pade: string): Observable<any> {
-    return this.httpClient.get<any>(`${this.cuestionarioURL}findDataGraphEdadesWeek/lang/${lang}/date/${date}/pade/${pade}`)
-  }
-  /////Mensual
-  public datosGraficaPadecimientoEdadesMounth(lang: string, date: string, pade: string): Observable<any> {
-    return this.httpClient.get<any>(`${this.cuestionarioURL}findDataGraphEdadesMounth/lang/${lang}/date/${date}/pade/${pade}`)
-  }
-
 
   //////Graficas de edades medra
   /////Todo
@@ -169,7 +193,7 @@ export class CuestionarioService {
 
 
 
-  //////////////RAM 
+  //////////////RAM /////////////////////////////////////////////////////////////
 
   /////Todo risk
   public datosGraficaRamRiskEdadesTodo(lang: string, risk: string): Observable<any> {

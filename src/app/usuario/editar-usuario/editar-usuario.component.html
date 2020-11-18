@@ -5,15 +5,17 @@
         <div class="card-body">
              <mat-progress-bar *ngIf="creandoUsuario" mode="indeterminate"></mat-progress-bar>
             <div class="row">
-                <div class="col-sm-4"></div>
-                <div class="col-sm-4">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
                     <h2 *ngIf="lang()=='es'">Editar usuario</h2>
                     <h2 *ngIf="lang()=='en'">
                         User edit</h2>
                     <h2 *ngIf="lang()=='br'">
                         Edição do usuário</h2>
                 </div>
-                <div class="col-sm-4"></div>
+                <div class="col-sm-3">
+                    <img class="img-fluid" src="assets/editar-usuario.jpeg" alt="">
+                </div>
             </div>
             <form #f="ngForm" (ngSubmit)="onUpdate()" novalidate *ngIf="usuario != null">
                 <div class="row">

@@ -42,7 +42,8 @@ export class EstadisticasComponent implements OnInit {
   cargandoSoc: boolean = false;
   cargandoPadeEdad: boolean = false;
   cargandoMedraEdad: boolean = false;
-  cargandoRamEdad:boolean = false;
+  cargandoRamEdad: boolean = false;
+  cargandoToxicEdad: boolean = false;
 
   //////////////////////////////////labels emanal y mensual
   semanal = this.lang() == 'br' ? 'SEMANAL' : this.lang() == 'en' ? 'WEEKLY' : 'SEMANAL';
@@ -63,10 +64,6 @@ export class EstadisticasComponent implements OnInit {
   rangoSelSoc: string = "S";
   rangosSOC: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }, { clave: "T", valor: this.always }];
   inicioSemanaSoc: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
-
-
-
-
 
   ///////////////////////////////////Padecimientos
   tituloPade: string = this.lang() == "en" ? "Summary of ailments" : this.lang() == "br" ?
@@ -123,31 +120,26 @@ export class EstadisticasComponent implements OnInit {
   ///RAM/////////////////////////////////////////////// riesgo edad
   rangoRam: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }, { clave: "T", valor: this.always }];
   tipoRam: Rango[] = [{ clave: "R", valor: "Riesgo Importante" }, { clave: "PR", valor: "Riesgo potencial" }, { clave: "M", valor: "Informacion faltante" }];
-  rangoRamSel:string = "S";
-  tipoRamSel:string = "R"; 
-  riskRam:string;
-  dateRam:string= moment().subtract(7, 'd').format('YYYY-MM-DD');
+  rangoRamSel: string = "S";
+  tipoRamSel: string = "R";
+  riskRam: string;
+  dateRam: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
-   ///RAM/////////////////////////////////////////////// riesgo edad
-   rangoToxicEdadSel:string = "S";
-   rangosToxicEdad: Rango[] = [
-     { clave: "S", valor: this.semanal },
-     { clave: "M", valor: this.mensual },
-     { clave: "T", valor: this.always }];
-  tipoToxicEdadSel:string = "Alc";
-   tiposToxicEdad: Rango[] = [
-     { clave: "Alc", valor: this.lang()=="en"? "Alcoholism" : this.lang()=="br"? "Alcoolismo": "Alcoholismo"},
-     { clave: "Tab", valor: this.lang()=="en"? "Smoking" : this.lang()=="br"? "Fumar": "Tabaquismo"},
-     { clave: "Drog", valor: this.lang()=="en"? "Drugs" : this.lang()=="br"? "Drogas": "Drogas"},
-     { clave: "Supl", valor: this.lang()=="en"? "Supplements" : this.lang()=="br"? "Suplementos": "Suplementos"},
-     { clave: "Herb", valor: this.lang()=="en"? "Herbalist" : this.lang()=="br"? "Herbalist": "Herbolaria"},
-     { clave: "MTrad", valor: this.lang()=="en"? "Trad. Medic" : this.lang()=="br"? "Med. Tradic": "Med. Tradic"}];
-   
+  ///RAM/////////////////////////////////////////////// riesgo edad
+  rangoToxicEdadSel: string = "S";
+  rangosToxicEdad: Rango[] = [
+    { clave: "S", valor: this.semanal },
+    { clave: "M", valor: this.mensual },
+    { clave: "T", valor: this.always }];
+  tipoToxicEdadSel: string = "alcoholismo";
+  tiposToxicEdad: Rango[] = [
+    { clave: "alcoholismo", valor: this.lang() == "en" ? "Alcoholism" : this.lang() == "br" ? "Alcoolismo" : "Alcoholismo" },
+    { clave: "tabaquismo", valor: this.lang() == "en" ? "Smoking" : this.lang() == "br" ? "Fumar" : "Tabaquismo" },
+    { clave: "drogas", valor: this.lang() == "en" ? "Drugs" : this.lang() == "br" ? "Drogas" : "Drogas" },
+    { clave: "suplementos", valor: this.lang() == "en" ? "Supplements" : this.lang() == "br" ? "Suplementos" : "Suplementos" },
+    { clave: "herbolaria", valor: this.lang() == "en" ? "Herbalist" : this.lang() == "br" ? "Herbalist" : "Herbolaria" },
+    { clave: "medTradicional", valor: this.lang() == "en" ? "Trad. Medic" : this.lang() == "br" ? "Med. Tradic" : "Med. Tradic" }];
 
-
-
-
-  
 
   HighToxic: typeof Highcharts = Highcharts;
   HighPade: typeof Highcharts = Highcharts;
@@ -157,6 +149,7 @@ export class EstadisticasComponent implements OnInit {
   HighPadeEdad: typeof Highcharts = Highcharts;
   HighMedEdad: typeof Highcharts = Highcharts;
   HighRamEdad: typeof Highcharts = Highcharts;
+  HighToxicEdad: typeof Highcharts = Highcharts;
 
 
 
@@ -168,11 +161,13 @@ export class EstadisticasComponent implements OnInit {
   graficaCombinadaPadeEdad: Highcharts.Options;
   graficaCombinadaMedraEdad: Highcharts.Options;
   graficaCombinadaRamEdad: Highcharts.Options;
+  graficaCombinadaToxicEdad: Highcharts.Options;
 
 
   datosGraficaToxicomanias: DatosGraficaToxicomaniasDTO[];
   datosGraficaPadecimientos: DatosGraficaPadecimientoDto;
   datosGraficaPadecimientosEdad: DatosGraficaEdadesDto;
+  datosGraficaToxicEdad: DatosGraficaEdadesDto;
   datosGraficaMedra: DatosGraficaPadecimientoDto;
   datosGraficaMedraEdad: DatosGraficaEdadesDto;
   datosGraficaRamEdad: DatosGraficaEdadesDto;
@@ -198,11 +193,12 @@ export class EstadisticasComponent implements OnInit {
     this.cargaGraficaCIE10();
     this.cargaSoc();
     this.cargaGraficaToxic();
+    this.cargarGraficaToxicEdad(this.rangoToxicEdadSel, this.tipoToxicEdadSel, this.inicioSemana);
     this.cargarPadecimientos("A");
-    //this.crearGraficaRisk("R","T","REACCION DE HIPERSENSIBILIDAD");
   }
 
   toxicLabel: string = this.lang() == "en" ? "Drug Adiction" : this.lang() == "br" ? "Dependência de Drogas" : "Toxicomanías";
+  toxicEdadLabel: string = this.lang() == "en" ? "Drug Adiction by age range" : this.lang() == "br" ? "Dependência de Drogas por faixa etária" : "Toxicomanías por edades";
   medraEdadLabel: string = this.lang() == "en" ? "MedDRA by age range" : this.lang() == "br" ? "MedDRA por faixa etária" : "MedDRA por rango de edad";
   padeEdadLabel: string = this.lang() == "en" ? "Ailment by age range" : this.lang() == "br" ? "Doença por faixa etária" : "Padecimiento por rango de edad";
 
@@ -216,6 +212,7 @@ export class EstadisticasComponent implements OnInit {
     color: 'primary',
     subtasks: [
       { name: this.toxicLabel, completed: false, color: 'warn' },
+      { name: this.toxicEdadLabel, completed: false, color: 'warn' },
       { name: 'MedDRA', completed: false, color: 'warn' },
       { name: this.medraEdadLabel, completed: false, color: 'warn' },
       { name: this.padeLabel, completed: false, color: 'warn' },
@@ -252,13 +249,8 @@ export class EstadisticasComponent implements OnInit {
     this.task.subtasks.forEach(t => t.completed = completed);
   }
 
-
   descargaPdf() {
-
     const doc = new jsPDF()
-
-
-
 
     let fecha = this.lang() == "en" ? "Date" : this.lang() == "br" ? "Data" : "Fecha";
     let edad = this.lang() == "en" ? "Age" : this.lang() == "br" ? "Era" : "Edad";
@@ -266,15 +258,15 @@ export class EstadisticasComponent implements OnInit {
     let mujeres = this.lang() == "en" ? "Women" : this.lang() == "br" ? "Mulheres" : "Mujeres";
 
     ////////////////////////////////////Toxicomanias
-
-    let datosToxic = this.datosGraficaToxicomanias;
-    if (this.task.subtasks[0].completed && datosToxic.length > 0) {
+    if (this.task.subtasks[0].completed && this.datosGraficaToxicomanias.length > 0) {
+      let datosToxic = this.datosGraficaToxicomanias;
       let bod = [];
       let title_text = this.lang() == "br" ? "Resumo Semanal Dependência de Drogas" : this.lang() == "en" ? "Drug Addiction Weekly Summary" : "Resumen Semanal Toxicomanías";
+      let titleMensual_text = this.lang() == "br" ? "Resumo Mensal Dependência de Drogas" : this.lang() == "en" ? "Drug Addiction Monthly Summary" : "Resumen Mensual Toxicomanías";
       let toxic_date = this.lang() == "br" ? "Data" : this.lang() == "en" ? "Date" : "Fecha";
 
       if (this.rangoSel == "S") {
-        bod.push([{ content: title_text, colSpan: 16, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+        bod.push([{ content: title_text, colSpan: 18, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
         bod.push([
           { content: toxic_date, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
           { content: datosToxic[0].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
@@ -283,9 +275,10 @@ export class EstadisticasComponent implements OnInit {
           { content: datosToxic[3].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
           { content: datosToxic[4].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
           { content: datosToxic[5].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-          { content: datosToxic[6].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+          { content: datosToxic[6].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
         ]);
-        //Alcoholismo
+
         for (let i = 0; i < datosToxic[0].toxicomanias.length; i++) {
           bod.push([
             { content: datosToxic[0].toxicomanias[i].nombre, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
@@ -296,16 +289,26 @@ export class EstadisticasComponent implements OnInit {
             { content: datosToxic[4].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
             { content: datosToxic[5].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
             { content: datosToxic[6].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            {
+              content: datosToxic[0].toxicomanias[i].cantidad +
+                datosToxic[1].toxicomanias[i].cantidad +
+                datosToxic[2].toxicomanias[i].cantidad +
+                datosToxic[3].toxicomanias[i].cantidad +
+                datosToxic[4].toxicomanias[i].cantidad +
+                datosToxic[5].toxicomanias[i].cantidad +
+                datosToxic[6].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' }
+            }
           ]);
         }
       } else if (this.rangoSel == "M") {
-        bod.push([{ content: "Resumen Mensual Toxicomanias", colSpan: 10, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+        bod.push([{ content: titleMensual_text, colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
         bod.push([
-          { content: "Toxic/Fecha", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: toxic_date, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
           { content: datosToxic[0].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
           { content: datosToxic[1].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
           { content: datosToxic[2].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
           { content: datosToxic[3].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+          { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
         ]);
         for (let i = 0; i < datosToxic[0].toxicomanias.length; i++) {
           bod.push([
@@ -314,6 +317,13 @@ export class EstadisticasComponent implements OnInit {
             { content: datosToxic[1].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
             { content: datosToxic[2].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
             { content: datosToxic[3].toxicomanias[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+            {
+              content: datosToxic[0].toxicomanias[i].cantidad +
+                datosToxic[1].toxicomanias[i].cantidad +
+                datosToxic[2].toxicomanias[i].cantidad +
+                datosToxic[3].toxicomanias[i].cantidad
+              , colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' }
+            }
           ]);
         }
       }
@@ -325,12 +335,70 @@ export class EstadisticasComponent implements OnInit {
         }
       );
     }
+    ////////////////////////////////////Toxicomanias Edades
+    if (this.task.subtasks[1].completed && this.datosGraficaToxicEdad != null) {
+      let title_text = this.lang() == "br" ? "Resumo Semanal Dependência de Drogas por faixa etária" : this.lang() == "en" ? "Drug Addiction Weekly Summary by age range" : "Resumen Semanal Toxicomanías por rango de edad";
+      let toxic_date = this.lang() == "br" ? "Data" : this.lang() == "en" ? "Date" : "Fecha";
+      let datosToxicEdad = this.datosGraficaToxicEdad;
+      let toxBodEdad = [];
+      let titleToxicEdad = "";
+      if (this.rangoToxicEdadSel == "S") {
+        titleToxicEdad = this.lang() == "en" ? "Weekly Summary " :
+          this.lang() == "br" ? "Resumo semanal " :
+            "Resumen Semanal ";
+      } else if (this.rangoToxicEdadSel == "M") {
+        titleToxicEdad = this.lang() == "en" ? "Monthly Summary " :
+          this.lang() == "br" ? "Resumo mensal " :
+            "Resumen Mensual ";
+      } else {
+        titleToxicEdad = this.lang() == "en" ? "Total " :
+          this.lang() == "br" ? "Total " :
+            "Total ";
+      }
 
+
+      toxBodEdad.push([{ content: titleToxicEdad + this.selMedra, colSpan: 8, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      toxBodEdad.push([
+        { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+      ]);
+
+      let sum0 = 0, sum1 = 0, sum2 = 0;
+      for (let i = 0; i < datosToxicEdad.datos.length; i++) {
+        toxBodEdad.push([
+          { content: datosToxicEdad.datos[i].rango, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosToxicEdad.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          { content: datosToxicEdad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          {
+            content: datosToxicEdad.datos[i].hombres +
+              datosToxicEdad.datos[i].mujeres
+            , colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' }
+          }
+        ]);
+        sum0 += datosToxicEdad.datos[i].hombres;
+        sum1 += datosToxicEdad.datos[i].mujeres;
+        sum2 += datosToxicEdad.datos[i].hombres + datosToxicEdad.datos[i].mujeres;
+      }
+      toxBodEdad.push([
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum0, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum1, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum2, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+      ]);
+
+
+      autoTable(doc,
+        {
+          theme: "grid",
+          body: toxBodEdad
+        }
+      );
+    }
     /////////////////////////////////Medra
-
-    let datosMed = this.datosGraficaMedra;
-    if (this.task.subtasks[1].completed && datosMed != null) {
-
+    if (this.task.subtasks[2].completed && this.datosGraficaMedra != null) {
+      let datosMed = this.datosGraficaMedra;
       let medBod = [];
       let titleMedra = "";
       if (this.rangoMedraSel == "S") {
@@ -343,20 +411,36 @@ export class EstadisticasComponent implements OnInit {
             "Resumen Mensual Diccionario Médico para Actividades Reguladoras\n";
       }
 
-      medBod.push([{ content: titleMedra + this.selMedra, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      medBod.push([{ content: titleMedra + this.selMedra, colSpan: 8, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
       medBod.push([
         { content: fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
         { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
-        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
       ]);
 
+      let sum0 = 0, sum1 = 0, sum2 = 0;
       for (let i = 0; i < datosMed.datos.length; i++) {
         medBod.push([
           { content: datosMed.datos[i].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
           { content: datosMed.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-          { content: datosMed.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+          { content: datosMed.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          {
+            content: datosMed.datos[i].hombres +
+              datosMed.datos[i].mujeres
+            , colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' }
+          }
         ]);
+        sum0 += datosMed.datos[i].hombres;
+        sum1 += datosMed.datos[i].mujeres;
+        sum2 += datosMed.datos[i].hombres + datosMed.datos[i].mujeres;
       }
+      medBod.push([
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum0, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum1, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum2, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+      ]);
 
       autoTable(doc,
         {
@@ -365,11 +449,9 @@ export class EstadisticasComponent implements OnInit {
         }
       );
     }
-
     /////////////////////////////////Medra por edades
-    let datosMedEdad = this.datosGraficaMedraEdad;
-    if (this.task.subtasks[2].completed && datosMedEdad != null) {
-
+    if (this.task.subtasks[3].completed && this.datosGraficaMedraEdad != null) {
+      let datosMedEdad = this.datosGraficaMedraEdad;
       let medBod = [];
       let titleMedra = "";
       if (this.rangoMedraSelEdad == "S") {
@@ -386,20 +468,37 @@ export class EstadisticasComponent implements OnInit {
             "Total Diccionario Médico para Actividades Reguladoras\n";
       }
 
-      medBod.push([{ content: titleMedra + this.selMedra, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      medBod.push([{ content: titleMedra + this.selMedra, colSpan: 8, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
       medBod.push([
         { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
         { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
-        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
       ]);
 
+      let sum0 = 0, sum1 = 0, sum2 = 0;
       for (let i = 0; i < datosMedEdad.datos.length; i++) {
         medBod.push([
           { content: datosMedEdad.datos[i].rango, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
           { content: datosMedEdad.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-          { content: datosMedEdad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+          { content: datosMedEdad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          {
+            content: datosMedEdad.datos[i].hombres +
+              datosMedEdad.datos[i].mujeres
+            , colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' }
+          }
         ]);
+        sum0 += datosMedEdad.datos[i].hombres;
+        sum1 += datosMedEdad.datos[i].mujeres;
+        sum2 += datosMedEdad.datos[i].hombres + datosMedEdad.datos[i].mujeres;
       }
+
+      medBod.push([
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum0, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum1, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum2, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+      ]);
 
       autoTable(doc,
         {
@@ -408,12 +507,9 @@ export class EstadisticasComponent implements OnInit {
         }
       );
     }
-
     /////////////////////////////////Padecimientos
-
-    let datosPad = this.datosGraficaPadecimientos;
-    if (this.task.subtasks[3].completed && datosPad != null) {
-
+    if (this.task.subtasks[4].completed && this.datosGraficaPadecimientos != null) {
+      let datosPad = this.datosGraficaPadecimientos;
       let padBod = [];
 
       let titlePade = "";
@@ -427,20 +523,35 @@ export class EstadisticasComponent implements OnInit {
             "Resumen Mensual Padecimientos\n";
       }
 
-      padBod.push([{ content: titlePade + this.selPade, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      padBod.push([{ content: titlePade + this.selPade, colSpan: 8, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
       padBod.push([
         { content: fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
         { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
-        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
       ]);
-
+      let sum0 = 0, sum1 = 0, sum2 = 0;
       for (let i = 0; i < datosPad.datos.length; i++) {
         padBod.push([
           { content: datosPad.datos[i].fecha, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
           { content: datosPad.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-          { content: datosPad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+          { content: datosPad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          {
+            content: datosPad.datos[i].hombres +
+              datosPad.datos[i].mujeres
+            , colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' }
+          }
         ]);
+        sum0 += datosPad.datos[i].hombres;
+        sum1 += datosPad.datos[i].mujeres;
+        sum2 += datosPad.datos[i].hombres + datosPad.datos[i].mujeres;
       }
+      padBod.push([
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum0, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum1, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum2, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+      ]);
 
       autoTable(doc,
         {
@@ -449,11 +560,9 @@ export class EstadisticasComponent implements OnInit {
         }
       );
     }
-
     //////////////////////////////Padecimientos por edades
-    let datosPadEdad = this.datosGraficaPadecimientosEdad;
-    if (this.task.subtasks[4].completed && datosPadEdad != null) {
-
+    if (this.task.subtasks[5].completed && this.datosGraficaPadecimientosEdad != null) {
+      let datosPadEdad = this.datosGraficaPadecimientosEdad;
       let padBod = [];
 
       let titlePade = "";
@@ -471,20 +580,35 @@ export class EstadisticasComponent implements OnInit {
             "Total Padecimientos\n";
       }
 
-      padBod.push([{ content: titlePade + this.selPade, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      padBod.push([{ content: titlePade + this.selPade, colSpan: 8, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
       padBod.push([
         { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
         { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
-        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
       ]);
-
+      let sum0 = 0, sum1 = 0, sum2 = 0;
       for (let i = 0; i < datosPadEdad.datos.length; i++) {
         padBod.push([
           { content: datosPadEdad.datos[i].rango, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
           { content: datosPadEdad.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-          { content: datosPadEdad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+          { content: datosPadEdad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          {
+            content: datosPadEdad.datos[i].hombres +
+              datosPadEdad.datos[i].mujeres
+            , colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' }
+          }
         ]);
+        sum0 += datosPadEdad.datos[i].hombres;
+        sum1 += datosPadEdad.datos[i].mujeres;
+        sum2 += datosPadEdad.datos[i].hombres + datosPadEdad.datos[i].mujeres;
       }
+      padBod.push([
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum0, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum1, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum2, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+      ]);
 
       autoTable(doc,
         {
@@ -493,11 +617,9 @@ export class EstadisticasComponent implements OnInit {
         }
       );
     }
-
     //////////////////////////////Ram por rango de edades
-    let datosRamEdad = this.datosGraficaRamEdad;
-    if (this.task.subtasks[5].completed && datosRamEdad != null) {
-
+    if (this.task.subtasks[6].completed && this.datosGraficaRamEdad != null) {
+      let datosRamEdad = this.datosGraficaRamEdad;
       let padBod = [];
 
       let titlePade = "";
@@ -515,20 +637,36 @@ export class EstadisticasComponent implements OnInit {
             "Total RAM\n";
       }
 
-      padBod.push([{ content: titlePade + this.selPade, colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      padBod.push([{ content: titlePade, colSpan: 8, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
       padBod.push([
         { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
         { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
-        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }
+        { content: mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
       ]);
 
+      let sum0 = 0, sum1 = 0, sum2 = 0;
       for (let i = 0; i < datosRamEdad.datos.length; i++) {
         padBod.push([
           { content: datosRamEdad.datos[i].rango, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
           { content: datosRamEdad.datos[i].hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
-          { content: datosRamEdad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
+          { content: datosRamEdad.datos[i].mujeres, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+          {
+            content: datosRamEdad.datos[i].hombres +
+              datosRamEdad.datos[i].mujeres
+            , colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' }
+          }
         ]);
+        sum0 += datosRamEdad.datos[i].hombres;
+        sum1 += datosRamEdad.datos[i].mujeres;
+        sum2 += datosRamEdad.datos[i].hombres + datosRamEdad.datos[i].mujeres;
       }
+      padBod.push([
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum0, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum1, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum2, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+      ]);
 
       autoTable(doc,
         {
@@ -537,11 +675,9 @@ export class EstadisticasComponent implements OnInit {
         }
       );
     }
-
     ///////////////////////////////////CIE10
-    let datosCie10 = this.datosGraficaCie10;
-    if (this.task.subtasks[6].completed && datosCie10.length > 0) {
-
+    if (this.task.subtasks[7].completed && this.datosGraficaCie10.length > 0) {
+      let datosCie10 = this.datosGraficaCie10;
       let cieBod = [];
 
       let titulo = () => {
@@ -563,6 +699,7 @@ export class EstadisticasComponent implements OnInit {
 
       let total = 0;
       datosCie10.forEach(e => { if (e.cantidad > 0) { total = total + e.cantidad } });
+      let sum0 = 0;
       for (let i = 0; i < datosCie10.length; i++) {
         if (datosCie10[i].cantidad > 0) {
           cieBod.push([
@@ -570,8 +707,14 @@ export class EstadisticasComponent implements OnInit {
             { content: datosCie10[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
             { content: ((datosCie10[i].cantidad * 100) / total), colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
           ]);
+          sum0 += datosCie10[i].cantidad;
         }
       }
+      cieBod.push([
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum0, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: "100%", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+      ]);
 
 
       autoTable(doc,
@@ -581,11 +724,9 @@ export class EstadisticasComponent implements OnInit {
         }
       );
     }
-
     ///////////////////////////////////Soc
-    let datosSoc = this.datosGraficaSoc;
-    if (this.task.subtasks[7].completed && datosSoc.length > 0) {
-
+    if (this.task.subtasks[8].completed && this.datosGraficaSoc.length > 0) {
+      let datosSoc = this.datosGraficaSoc;
       let socBod = [];
 
       let titulo = () => {
@@ -606,6 +747,7 @@ export class EstadisticasComponent implements OnInit {
 
       let total = 0;
       datosSoc.forEach(e => { if (e.cantidad > 0) { total = total + e.cantidad } });
+      let sum0 = 0;
       for (let i = 0; i < datosSoc.length; i++) {
         if (datosSoc[i].cantidad > 0) {
           socBod.push([
@@ -613,8 +755,14 @@ export class EstadisticasComponent implements OnInit {
             { content: datosSoc[i].cantidad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
             { content: ((datosSoc[i].cantidad * 100) / total), colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }
           ]);
+          sum0 += datosSoc[i].cantidad;
         }
       }
+      socBod.push([
+        { content: "Total", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: sum0, colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+        { content: "100%", colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } }
+      ]);
 
 
       autoTable(doc,
@@ -627,6 +775,7 @@ export class EstadisticasComponent implements OnInit {
 
     doc.output('dataurlnewwindow');
   }
+
 
 
   //////////////////////////Grafica de padecimientos////////////////////////////////////////////////////
@@ -773,7 +922,7 @@ export class EstadisticasComponent implements OnInit {
   cargarGraficaPade(): void {
     this.cargandoPade = true; // activa la animacion de carga
     if (this.rangoPadeSel == "S") { // grafica semanañl
-      this.cuestService.datosGraficaPadecimientosSemanales(this.lang(),this.inicioSemanaPade, this.selPade).subscribe(
+      this.cuestService.datosGraficaPadecimientosSemanales(this.lang(), this.inicioSemanaPade, this.selPade).subscribe(
         data => {
           this.datosGraficaPadecimientos = data;
           this.creaGraficaPade(data);
@@ -789,7 +938,7 @@ export class EstadisticasComponent implements OnInit {
       );
     }
     if (this.rangoPadeSel == "M") { // mensual
-      this.cuestService.datosGraficaPadecimientosMensuales(this.lang(),this.inicioSemanaPade, this.selPade).subscribe(
+      this.cuestService.datosGraficaPadecimientosMensuales(this.lang(), this.inicioSemanaPade, this.selPade).subscribe(
         data => {
           this.datosGraficaPadecimientos = data;
           this.creaGraficaPade(data);
@@ -814,9 +963,9 @@ export class EstadisticasComponent implements OnInit {
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
     if (this.rangoPadeSel == "S") { // grafica semanal
-      title = this.lang() == 'en' ? "Weekly disease summary\n" + this.selPadeEdad : this.lang() == 'br' ? "Resumo semanal da doença\n" + this.selPadeEdad : "Resumen semanal padecimiento\n" + this.selPadeEdad;
+      title = this.lang() == 'en' ? "Weekly summary " : this.lang() == 'br' ? "Resumo semanal " : "Resumen semanal ";
     } else { // grafica mensual
-      title = this.lang() == 'en' ? "Monthly disease summary\n" + this.selPadeEdad : this.lang() == 'br' ? "Resumo mensal da doença\n" + this.selPadeEdad : "Resumen mensual padecimiento\n" + this.selPadeEdad;
+      title = this.lang() == 'en' ? "Monthly summary " : this.lang() == 'br' ? "Resumo mensal " : "Resumen mensual ";
     }
 
     // labels de las fechas
@@ -1244,7 +1393,7 @@ export class EstadisticasComponent implements OnInit {
   cargarGraficaMedra(): void {
     this.cargandoMedra = true; // activa la animacion de carga
     if (this.rangoMedraSel == "S") { // grafica semanañl
-      this.cuestService.datosGraficaMedraSemanales(this.lang(),this.inicioSemanaMedra, this.selMedra).subscribe(
+      this.cuestService.datosGraficaMedraSemanales(this.lang(), this.inicioSemanaMedra, this.selMedra).subscribe(
         data => {
           this.datosGraficaMedra = data;
           console.log("Datos semanales medra")
@@ -1262,7 +1411,7 @@ export class EstadisticasComponent implements OnInit {
       );
     }
     if (this.rangoMedraSel == "M") { // mensual
-      this.cuestService.datosGraficaMedraMensuales(this.lang(),this.inicioSemanaMedra, this.selMedra).subscribe(
+      this.cuestService.datosGraficaMedraMensuales(this.lang(), this.inicioSemanaMedra, this.selMedra).subscribe(
         data => {
           this.datosGraficaMedra = data;
           this.creaGraficaMedra(data);
@@ -1291,9 +1440,9 @@ export class EstadisticasComponent implements OnInit {
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
     if (this.rangoPadeSel == "S") { // grafica semanal
-      title = this.lang() == 'en' ? "Weekly disease summary\n" + this.selMedraEdad : this.lang() == 'br' ? "Resumo semanal da doença\n" + this.selMedraEdad : "Resumen semanal padecimiento\n" + this.selMedraEdad;
+      title = this.lang() == 'en' ? "Weekly summary " : this.lang() == 'br' ? "Resumo semanal " : "Resumen semanal ";
     } else { // grafica mensual
-      title = this.lang() == 'en' ? "Monthly disease summary\n" + this.selMedraEdad : this.lang() == 'br' ? "Resumo mensal da doença\n" + this.selMedraEdad : "Resumen mensual padecimiento\n" + this.selMedraEdad;
+      title = this.lang() == 'en' ? "Monthly summary " : this.lang() == 'br' ? "Resumo mensal " : "Resumen mensual ";
     }
 
     // labels de las fechas
@@ -1549,34 +1698,156 @@ export class EstadisticasComponent implements OnInit {
     }
   }
 
+
+
+  seriesToxicEdad: any;
+  creaGraficaToxicEdad(datos: any) {
+
+    let datosHombre = [];
+    let datosMujer = [];
+    let datosTotal = [];
+    let categorias = [];
+    let title = "";
+    let fecha = this.lang() == 'en' ? "Age" : this.lang() == 'br' ? "Era" : "Edad";
+    let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
+
+    if (this.rangoPadeSel == "S") { // grafica semanal
+      title = this.lang() == 'en' ? "Weekly summary " : this.lang() == 'br' ? "Resumo semanal " : "Resumen semanal ";
+    } else { // grafica mensual
+      title = this.lang() == 'en' ? "Monthly summary " : this.lang() == 'br' ? "Resumo mensal " : "Resumen mensual ";
+    }
+
+    // labels de las fechas
+    categorias = [datos.datos[0].rango, datos.datos[1].rango, datos.datos[2].rango,
+    datos.datos[3].rango, datos.datos[4].rango, datos.datos[5].rango, datos.datos[6].rango];
+    // datos de hombres
+    datosHombre = [datos.datos[0].hombres, datos.datos[1].hombres, datos.datos[2].hombres,
+    datos.datos[3].hombres, datos.datos[4].hombres, datos.datos[5].hombres, datos.datos[6].hombres];
+    //datos de mujeres
+    datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
+    datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
+    //datos total
+    datosTotal = [datos.datos[0].total, datos.datos[1].total, datos.datos[2].total,
+    datos.datos[3].total, datos.datos[4].total, datos.datos[5].total, datos.datos[6].total];
+
+
+    let hombresLabel = this.lang() == 'en' ? "Men" : this.lang() == 'br' ? "Masculino" : "Hombres";
+    let mujeresLabel = this.lang() == 'en' ? "Women" : this.lang() == 'br' ? "Mulheres" : "Mujeres";
+    let totalLabel = this.lang() == 'en' ? "Total" : this.lang() == 'br' ? "Total" : "Total";
+    let total = this.lang() == 'en' ? "Total patients" : this.lang() == 'br' ? "Pacientes totais" : "Pacientes totales";
+
+
+    this.seriesToxicEdad = [{
+      type: 'column',
+      name: totalLabel,
+      color: '#51eb49',
+      data: datosTotal
+    }, {
+      type: 'column',
+      name: hombresLabel,
+      color: '#e84343',
+      data: datosHombre
+    }, {
+      type: 'column',
+      name: mujeresLabel,
+      color: '#4956eb',
+      data: datosMujer
+    }
+    ]
+
+
+
+
+    this.graficaCombinadaToxicEdad = {
+      title: {
+        text: title + this.tipoToxicEdadSel
+      },
+      xAxis: {
+        title: {
+          text: fecha
+        },
+        categories: categorias
+      },
+      yAxis: {
+        title: {
+          text: pacientes
+        }
+      },
+      series: this.seriesToxicEdad
+    };
+
+  }
+
+  cargarGraficaToxicEdad(rango: string, toxic: string, date: string): void {
+    this.cargandoToxicEdad = true; // activa la animacion de carga
+    if (rango == "T") { // grafica semanañl
+      this.cuestService.datosGraficaToxicEdadTodo(this.lang(), toxic).subscribe(
+        data => {
+          this.cargandoToxicEdad = false;
+          this.datosGraficaToxicEdad = data;
+          this.creaGraficaToxicEdad(data)
+
+        },
+        err => {
+          this.cargandoMedraEdad = false;
+
+        }
+      );
+    }
+    if (rango == "S") { // mensual
+      this.cuestService.datosGraficaToxicEdadWeek(this.lang(), date, toxic).subscribe(
+        data => {
+          this.cargandoToxicEdad = false;
+          this.datosGraficaToxicEdad = data;
+          this.creaGraficaToxicEdad(data)
+        },
+        error => {
+          this.cargandoToxicEdad = false;
+        }
+      );
+    }
+    if (rango == "M") { // mensual
+      this.cuestService.datosGraficaToxicEdadMonth(this.lang(), date, toxic).subscribe(
+        data => {
+          this.cargandoToxicEdad = false;
+          this.datosGraficaToxicEdad = data;
+          this.creaGraficaToxicEdad(data)
+        },
+        error => {
+          this.cargandoToxicEdad = false;
+        }
+      );
+    }
+  }
+
   //////////////Graficas RAM 
 
- 
+
   seriesRamEdad: any = [];
-  creaGraficaRisk(datos: any){
-    
+  creaGraficaRisk(datos: any) {
+
     let datosHombre = [];
     let datosMujer = [];
     let datosTotal = [];
     let categorias = [];
     let rangoText = "";
     let tipoText = "";
-    let title= "";
+    let title = "";
     let fecha = this.lang() == 'en' ? "Age" : this.lang() == 'br' ? "Era" : "Edad";
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
     if (this.rangoRamSel == "S") { // grafica semanal
-      rangoText = this.lang() == 'en' ? "Weekly": this.lang() == 'br' ? "semanal" : "semanal";
-    } else if(this.rangoRamSel == "T"){
+      rangoText = this.lang() == 'en' ? "Weekly" : this.lang() == 'br' ? "semanal" : "semanal";
+    } else if (this.rangoRamSel == "T") {
       rangoText = this.lang() == 'en' ? "All" : this.lang() == 'br' ? "Tudo" : "Todo";
-    }else{ // grafica mensual
+    } else { // grafica mensual
       rangoText = this.lang() == 'en' ? "Monthly" : this.lang() == 'br' ? "Mensal" : "Mensual";
     }
     if (this.tipoRamSel == "R") { // grafica semanal
-      tipoText = this.lang() == 'en' ? "Important Risk": this.lang() == 'br' ? "Grande risco" : "Riesgo Importante";
-    } else if(this.tipoRamSel == "PR"){
+      tipoText = this.lang() == 'en' ? "Important Risk" : this.lang() == 'br' ? "Grande risco" : "Riesgo Importante";
+    } else if (this.tipoRamSel == "PR") {
       tipoText = this.lang() == 'en' ? "Potential Risk" : this.lang() == 'br' ? "Risco potencial" : "Riesgo Potencial";
-    }else{ // grafica mensual
+    } else { // grafica mensual
       tipoText = this.lang() == 'en' ? "Missing Info" : this.lang() == 'br' ? "Informação faltando" : "Información faltante";
     }
 
@@ -1642,7 +1913,7 @@ export class EstadisticasComponent implements OnInit {
     };
   }
 
-  
+
   cargarGraficaRisk(tipo: string, rango: string, risk: string, date?: string) {
     this.cargandoRamEdad = true;
     if (tipo == "R") { //riesgos
@@ -1651,7 +1922,7 @@ export class EstadisticasComponent implements OnInit {
           data => {
             this.datosGraficaRamEdad = data;
             this.creaGraficaRisk(data);
-             this.cargandoRamEdad = false;
+            this.cargandoRamEdad = false;
           },
           err => {
             this.cargandoRamEdad = false;
@@ -1669,7 +1940,7 @@ export class EstadisticasComponent implements OnInit {
           }
         );
       } else { // semanal 
-        this.cuestService.datosGraficaRamRiskEdadesWeek(this.lang(),date,risk).subscribe(
+        this.cuestService.datosGraficaRamRiskEdadesWeek(this.lang(), date, risk).subscribe(
           data => {
             this.datosGraficaRamEdad = data;
             this.creaGraficaRisk(data);
@@ -1704,7 +1975,7 @@ export class EstadisticasComponent implements OnInit {
           }
         );
       } else { // semanal
-        this.cuestService.datosGraficaRamPotRiskEdadesWeek(this.lang(),date,risk).subscribe(
+        this.cuestService.datosGraficaRamPotRiskEdadesWeek(this.lang(), date, risk).subscribe(
           data => {
             this.datosGraficaRamEdad = data;
             this.creaGraficaRisk(data);
@@ -1727,8 +1998,8 @@ export class EstadisticasComponent implements OnInit {
             this.cargandoRamEdad = false;
           }
         );
-      }else if (rango == "M") { //mensual
-        this.cuestService.datosGraficaRamMissEdadesMounth(this.lang(),date,risk).subscribe(
+      } else if (rango == "M") { //mensual
+        this.cuestService.datosGraficaRamMissEdadesMounth(this.lang(), date, risk).subscribe(
           data => {
             this.datosGraficaRamEdad = data;
             this.creaGraficaRisk(data);
@@ -1739,7 +2010,7 @@ export class EstadisticasComponent implements OnInit {
           }
         );
       } else { // semanal
-        this.cuestService.datosGraficaRamMissEdadesWeek(this.lang(),date,risk).subscribe(
+        this.cuestService.datosGraficaRamMissEdadesWeek(this.lang(), date, risk).subscribe(
           data => {
             this.datosGraficaRamEdad = data;
             this.creaGraficaRisk(data);

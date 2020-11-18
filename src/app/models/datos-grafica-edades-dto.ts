@@ -8,7 +8,7 @@ export class DatosGraficaEdadesDto {
 
 export class ItemGraficaEdadesDto{
     rango:string;
-    hombres:string;
-    mujeres:string;
-    total:string;
+    hombres:number;
+    mujeres:number;
+    total:number;
 }
