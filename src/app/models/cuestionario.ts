@@ -8,8 +8,8 @@ export class Cuestionario {
     nombre:string;
     apellido:string;
     fechaNacimiento:string;
-    peso:number;
-    talla:number;
+    peso:string;
+    talla:string;
     imc:number;
     ciudadNacimiento:string;
     tipoSangre:string;
@@ -35,8 +35,8 @@ export class Cuestionario {
         nombre:string,
         apellido:string,
         fechaNacimiento:string,
-        peso:number,
-        talla:number,
+        peso:string,
+        talla:string,
         imc:number,
         ciudadNacimiento:string,
         tipoSangre:string,

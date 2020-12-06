@@ -106,12 +106,10 @@
                   <label *ngIf="lang()=='es'" class="font-weight-bold">Nombre:</label>
                   <label *ngIf="lang()=='en'" class="font-weight-bold">Name:</label>
                   <label *ngIf="lang()=='br'" class="font-weight-bold">Nome:</label><br>
-
                   {{paciente.medicoTratante.nombre}}<br>
                   <label *ngIf="lang()=='es'" class="font-weight-bold">Usuario:</label>
                   <label *ngIf="lang()=='en'" class="font-weight-bold">User:</label>
                   <label *ngIf="lang()=='br'" class="font-weight-bold">Usuário:</label><br>
-
                   {{paciente.medicoTratante.nombreUsuario}}<br>
                   <label *ngIf="lang()=='es'" class="font-weight-bold">Email:</label>
                   <label *ngIf="lang()=='en'" class="font-weight-bold">Email:</label>
@@ -121,21 +119,21 @@
                 <td>{{paciente.nombre}}</td>
                 <td>{{paciente.apellido}}</td>
                 <td>
-                  <label *ngFor="let pade of paciente.padecimientos">
-                    <p *ngIf="lang()=='es'">- {{pade.nombreEs}}</p>
-                    <p *ngIf="lang()=='en'">- {{pade.nombreEn}}</p>
-                    <p *ngIf="lang()=='br'">- {{pade.nombreBr}}</p>
-                  </label>
+                  <span *ngFor="let pade of paciente.padecimientos">
+                    <span *ngIf="lang()=='es'">-{{pade.nombreEs}}<br></span>
+                    <span *ngIf="lang()=='en'">-{{pade.nombreEn}}<br></span>
+                    <span *ngIf="lang()=='br'">-{{pade.nombreBr}}<br></span>
+                  </span>
                 </td>
                 <td>
-                  <label *ngFor="let medra of paciente.medraList">
-                    <p *ngIf="lang()=='es'">- {{medra.medDraEs}}</p>
-                    <p *ngIf="lang()=='en'">- {{medra.medDraEn}}</p>
-                    <p *ngIf="lang()=='br'">- {{medra.medDraBr}}</p>
-                  </label>
+                  <span *ngFor="let medra of paciente.medraList">
+                    <span *ngIf="lang()=='es'">-{{medra.medDraEs}}<br></span>
+                    <span *ngIf="lang()=='en'">-{{medra.medDraEn}}<br></span>
+                    <span *ngIf="lang()=='br'">-{{medra.medDraBr}}<br></span>
+                  </span>
                 </td>
                 <td>
-                  <label *ngFor="let terap of paciente.terapeuticas">- {{terap.medicamento.productName}}</label>
+                  <span *ngFor="let terap of paciente.terapeuticas">-{{terap.medicamento.productName}}<br></span>
                 </td>
                 <td *ngIf="roleType() == 'ROLE_MEDICO' || roleType() == 'ROLE_ADMIN'"><button
                     class="btn btn-outline-info" routerLink="/editarCuestionario/{{paciente.clavePaciente}}"><i

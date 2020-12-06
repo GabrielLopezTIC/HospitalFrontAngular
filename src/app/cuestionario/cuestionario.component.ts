@@ -37,29 +37,35 @@ export class GeneroOpc {
 
 export class CuestionarioComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
-  
+
+  /// informacion del paciente//////////////////////////////////////
+  public generoSel: string = ""; // genero
+  public nombre: string = ""; //nombre cuestionario
+  public apellido: string = ""; //apellido cuestionario
+  public peso: string = ""; //number; //peso cuestionario
+  public talla: string = "";//number; //talla cuestionario
+  public imc: number = 0; //imc cestionario
+  public f_nac: string = ""; //fecha nacimiento cuestionario
+  public l_nac: string = ""; //lugar nacimiento cuestionario
+
+
+
+
+
   //public registrando: boolean = false; // indica si se esta llevando a cabo el proceso de registro , se utiliza para animaciones
-  public turno: string; // turno
+  public turno: string=""; // turno
   ///////////////////////////////////////genero
   public genero: GeneroOpc[] = [{ clave: 'H', valor: this.lang() == 'br' ? 'H' : this.lang() == 'en' ? 'M' : 'H' }, { clave: 'M', valor: this.lang() == 'br' ? 'M' : this.lang() == 'en' ? 'W' : 'M' }];
-  public generoSel: string; // genero
-  public nombre: string; //nombre cuestionario
-  public apellido: string; //apellido cuestionario
-  public peso: number; //peso cuestionario
-  public talla: number; //talla cuestionario
-  public imc: number; //imc cestionario
-  public f_nac: string; //fecha nacimiento cuestionario
-  public l_nac: string; //lugar nacimiento cuestionario
-  public obsClin: string; // observaciones clinicas 
-  public datosLabo: string; // datos laboratorio
+  public obsClin: string=""; // observaciones clinicas 
+  public datosLabo: string=""; // datos laboratorio
 
   /////////////////////////////////Grupo sanguineo
-  public opSangSel: string;
+  public opSangSel: string="";
   public opcSangre = ['O -', 'O +', 'A -', 'A +', 'B -', 'B +',
     'AB -', 'AB +'];
   //////////////////////////////////Grados informacion
-  public opcGradoInfo = ['0', '1', '2']; 
-  public gradoInfo: string;
+  public opcGradoInfo = ['0', '1', '2'];
+  public gradoInfo: string = "0";
   ///////////////////////////////////Opciones si y no
   public opcionesEs = [{ clave: 'si', valor: 'POSITIVO' }, { clave: 'no', valor: "NEGATIVO" }];
   public opcionesEn = [{ clave: 'si', valor: 'POSITIVE' }, { clave: 'no', valor: "NEGATIVE" }];
@@ -78,10 +84,14 @@ export class CuestionarioComponent implements OnInit {
   public optionsPade: string[] = []; // lista donde se cargan los datos de los padecimientos desde el servidor
   public filteredOptionsPade: Observable<string[]>;
   public selPade: string; // variable que guarda el padecimiento elegido
-  public padecimientosList = []; //lista que guarda los padecimientos elegidos momentaneamente
+  public padecimientosList: any[] = []; //lista que guarda los padecimientos elegidos momentaneamente
   public inicialesPade: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+
+
+
+
   ///////////////////////////////////Terapeutica indicada
-  public iniTerap:string;
+  public iniTerap: string;
   public myControl = new FormControl();
   public optionsMedic: Medicamento[] = [];
   public options: string[] = [];
@@ -94,9 +104,9 @@ export class CuestionarioComponent implements OnInit {
   public optionsMedra: string[] = []; // lista donde se cargan los datos de los padecimientos desde el servidor
   public filteredOptionsMedra: Observable<string[]>;
   public selMedra: string; // variable que guarda el padecimiento elegido
-  public medraList = []; //lista que guarda los padecimientos elegidos momentaneamente
+  public medraList: any[] = []; //lista que guarda los padecimientos elegidos momentaneamente
 
- 
+
   public socMedra: string[] = [];
   ///////////////////////////////Constructor
   public nuevoRegistro: Cuestionario;
@@ -120,20 +130,18 @@ export class CuestionarioComponent implements OnInit {
       this.cargaSoc();
       this.cargarMedicamentos("A"); // carga lista de medicamentos que comienzan con A
       this.cargarPadecimientos("A"); // carga lista de padecimientos que comientzan con A
-      // carga MEdra del primer ti´po
-      
     }
   }
 
-  public cargaSoc():void{
+  public cargaSoc(): void {
     this.medraService.findAllSoc(this.lang()).subscribe(
-      data =>{
+      data => {
         this.socMedra = data;
         this.cargarMedra(this.socMedra[0]);
       },
-      err =>{
-        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+      err => {
+        this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+          this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -141,7 +149,7 @@ export class CuestionarioComponent implements OnInit {
   }
 
 
-  public cargarMedra(soc: string):void {
+  public cargarMedra(soc: string): void {
     // segun el idioma se elige el mensaje de busqueda
     this.lang() === "es" ? this.myControlMedra.setValue("Buscando...") : this.lang() === "en" ? this.myControlMedra.setValue("Searching...") : this.myControlMedra.setValue("Procurando...");;
 
@@ -160,8 +168,8 @@ export class CuestionarioComponent implements OnInit {
         this.myControlMedra.setValue(""); // se limpia el campo de busqueda
       },
       err => {
-        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+        this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+          this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -185,8 +193,8 @@ export class CuestionarioComponent implements OnInit {
         this.myControlPade.setValue("");
       },
       err => {
-        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+        this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+          this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -211,8 +219,8 @@ export class CuestionarioComponent implements OnInit {
         this.myControl.setValue("");
       },
       err => {
-        this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+        this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+          this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
           timeOut: 3000, positionClass: 'toast-top-center',
         });
       }
@@ -331,12 +339,12 @@ export class CuestionarioComponent implements OnInit {
   }
 
 
-  public  registrar(): void {
-    
+  public registrar(): void {
+
 
     let texto = this.lang() === "es" ? "Desea confirmar el registro" : this.lang() === "en" ? "Do you want to confirm the registration?" : "Quer confirmar o registro?";
     let textoRegistrando = this.lang() === "es" ? "Registrando paciente..." : this.lang() === "en" ? "Registering patient?..." : "Registrando paciente...";
-    
+
 
     if (confirm(texto) === true) {
       this.blockUI.start(textoRegistrando); // habilita la animacion al registrar un cuestionario
@@ -365,7 +373,7 @@ export class CuestionarioComponent implements OnInit {
         this.obsClin,//obsClinicas
         this.datosLabo,//datoslabo
         "",//riesgoside se llena automaticamente en el back
-        this.gradoInfo,//gradoinfo
+        this.gradoInfGeneral().toString(),//gradoinfo
       );
 
       this.cuestionarioService.nuevo(this.nuevoRegistro).subscribe( // registro de cuestionario
@@ -379,28 +387,29 @@ export class CuestionarioComponent implements OnInit {
           //let texto = this.lang() === "es" ? "¿Desea imprimir formato?" : this.lang() === "en" ? "Do you want to print format?" : "Você quer imprimir o formato?";
 
           //if (confirm(texto)) {
-            this.lang() === "es" ? this.imprimePDFEs(data) : this.lang() === "en" ? this.imprimePDFEn(data) : this.imprimePDFBr(data);
-            
+          this.lang() === "es" ? this.imprimePDFEs(data) : this.lang() === "en" ? this.imprimePDFEn(data) : this.imprimePDFBr(data);
+
           //}
           this.reestablece();
           this.blockUI.stop();
         },
         err => {
-          this.toastr.error(this.lang()=="es"? err.error.mensajeEs : 
-        this.lang()=="en"? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
-          timeOut: 3000, positionClass: 'toast-top-center',
-        });
+          this.toastr.error(this.lang() == "es" ? err.error.mensajeEs :
+            this.lang() == "en" ? err.error.mensajeEn : err.error.mensajeBr, 'Fail', {
+            timeOut: 3000, positionClass: 'toast-top-center',
+          });
           this.blockUI.stop();
         }
       );
     }
   }
 
+  
   /**
    * gENERA PDF CON LA INFO DEL CUESTIONARIO EN ESPAÑOL
    */
-  public imprimePDFEs(data) {
-    let bod = [];
+  public imprimePDFEs(data): void {
+    let bod = []
     bod.push([{
       content: 'N° REGISTRO', colSpan: 2, rowSpan: 1, styles: {
         halign: 'left', fontStyle: 'bold',
@@ -412,15 +421,12 @@ export class CuestionarioComponent implements OnInit {
     { content: 'TURNO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },
-    { content: 'PERFIL FARMACOTÉRAPEUTICO', colSpan: 9, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    bod.push([/*{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },*/
+    { content: 'PERFIL FARMACOTÉRAPEUTICO', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'PACIENTE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.nombre + " " + data.apellido, colSpan: 7, rowSpan: 1, styles: { halign: 'left' } }]);
+    { content: data.nombre + " " + data.apellido, colSpan: 10, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    // obtiene la edad a partir de la fecha de nacimiento
     var hoy = new Date();
     var cumpleanos = new Date(data.fechaNacimiento);
     var edad = hoy.getFullYear() - cumpleanos.getFullYear();
@@ -430,12 +436,12 @@ export class CuestionarioComponent implements OnInit {
       edad--;
     }
 
-    bod.push([{ content: 'EDAD', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: edad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'PESO (Kg)', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold', overflow: 'linebreak' } },
-    { content: data.peso, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'ETILISMO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.alcoholismo == 'si' ? 'POSITIVO' : 'NEGATIVO', colSpan: 4, rowSpan: 1, styles: { halign: 'center' } }]);
+    bod.push([{ content: 'EDAD', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'PESO (Kg)', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold', overflow: 'linebreak' } },
+    { content: data.peso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'ETILISMO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.alcoholismo == 'si' ? 'POSITIVO' : 'NEGATIVO', colSpan: 2, rowSpan: 1, styles: { halign: 'center' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let toxicoman = [];
     if (data.tabaquismo === "si") {
@@ -459,11 +465,11 @@ export class CuestionarioComponent implements OnInit {
       tox_string = tox_string + tox + "\n";
     });
 
-    bod.push([{ content: 'GÉNERO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'GÉNERO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.genero, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'TALLA (cm)', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TALLA (cm)', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'TOXICOMANIAS', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TOXICOMANIAS', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: tox_string, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -539,7 +545,6 @@ export class CuestionarioComponent implements OnInit {
       "RIESGOS POTENCIALES: ( " + terap.medicamento.importantPotentialRiskEs + " ) \n\n"+
       "INFORMACION FALTANTE: ( "+ terap.medicamento.missingInfoEs+ " ) \n\n\n\n"; 
     });
-    
 
     bod.push([{ content: 'CONCORDANCIA CON RIESGOS IDENTIFICADOS', colSpan: 3, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: risk, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }]);
@@ -549,25 +554,24 @@ export class CuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const doc = new jsPDF()
     autoTable(doc,
-      { 
-        didDrawCell: (data) => {
+      {
+        /*didDrawCell: (data) => {
           if (data.column.index === 0 && data.row.index === 1) {
             doc.addImage(this.getLogo(), 'PNG', data.cell.x + 5, data.cell.y + 5, 50, 20);
           }
-        },
+        },*/
         theme: "grid",
         body: bod
       }
     );
-    doc.save('MedicalSoftware_'+data.clavePaciente+"_"+data.fechaIngreso+"_"+data.nombre+".pdf");
     doc.output('dataurlnewwindow');
   }
 
   /**
    * GENERA PDF CON LA INFO DEL CUESTIONARIO EN INGLES
    */
-  public imprimePDFEn(data) {
-    let bod = [];
+  public imprimePDFEn(data): void {
+    let bod = []
     bod.push([{ content: 'N° REGISTER', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.clavePaciente, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
     { content: 'DATE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
@@ -575,11 +579,11 @@ export class CuestionarioComponent implements OnInit {
     { content: 'TURN', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },
-    { content: 'PHARMACOTHERAPEUTIC PROFILE', colSpan: 9, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    bod.push([/*{ content: "", colSpan: 3, rowSpan: 1, styles: { halign: 'left' } },*/
+    { content: 'PHARMACOTHERAPEUTIC PROFILE', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'PATIENT', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.nombre + " " + data.apellido, colSpan: 7, rowSpan: 1, styles: { halign: 'left' } }]);
+    { content: data.nombre + " " + data.apellido, colSpan: 10, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var hoy = new Date();
     var cumpleanos = new Date(data.fechaNacimiento);
@@ -589,12 +593,12 @@ export class CuestionarioComponent implements OnInit {
     if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
       edad--;
     }
-    bod.push([{ content: 'AGE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: edad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'WEIGHT', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.peso, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'ETHYLISM', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.alcoholismo == 'si' ? 'POSITIVE' : 'NEGATIVE', colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
+    bod.push([{ content: 'AGE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'WEIGHT', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.peso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'ETHYLISM', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.alcoholismo == 'si' ? 'POSITIVE' : 'NEGATIVE', colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let toxicoman = [];
     if (data.tabaquismo === "si") {
@@ -618,11 +622,11 @@ export class CuestionarioComponent implements OnInit {
       tox_string = tox_string + tox + "\n";
     });
 
-    bod.push([{ content: 'GENDER', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'GENDER', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.genero == 'M' ? 'F' : 'M', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'SIZE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'SIZE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'TOXICOMANIES', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TOXICOMANIES', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: tox_string, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -710,25 +714,23 @@ export class CuestionarioComponent implements OnInit {
     const doc = new jsPDF()
     autoTable(doc,
       {
-        didDrawCell: (data) => {
+        /*didDrawCell: (data) => {
           if (data.column.index === 0 && data.row.index === 1) {
             doc.addImage(this.getLogo(), 'PNG', data.cell.x + 5, data.cell.y + 5, 50, 20);
           }
-        },
+        },*/
         theme: "grid",
         body: bod,
       }
     );
-    doc.save('MedicalSoftware_'+data.clavePaciente+"_"+data.fechaIngreso+"_"+data.nombre+".pdf");
     doc.output('dataurlnewwindow');
   }
 
   /**
      * gENERA PDF CON LA INFO DEL CUESTIONARIO EN PORTUGUES
      */
-  public imprimePDFBr(data) {
-
-    let bod = [];
+  public imprimePDFBr(data): void {
+    let bod = []
     bod.push([{ content: 'N° REGISTRO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.clavePaciente, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
     { content: 'DATA', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
@@ -736,11 +738,11 @@ export class CuestionarioComponent implements OnInit {
     { content: 'VIRAR', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },
-    { content: 'PERFIL FARMACOTERAPÊUTICO', colSpan: 9, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    bod.push([/*{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },*/
+    { content: 'PERFIL FARMACOTERAPÊUTICO', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'PACIENTE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.nombre + " " + data.apellido, colSpan: 7, rowSpan: 1, styles: { halign: 'left' } }]);
+    { content: data.nombre + " " + data.apellido, colSpan: 10, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var hoy = new Date();
     var cumpleanos = new Date(data.fechaNacimiento);
@@ -750,12 +752,12 @@ export class CuestionarioComponent implements OnInit {
     if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
       edad--;
     }
-    bod.push([{ content: 'ERA', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: edad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'PESO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.peso, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'ETILISMO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.alcoholismo == 'si' ? 'POSITIVO' : 'NEGATIVO', colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
+    bod.push([{ content: 'ERA', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'PESO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.peso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'ETILISMO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.alcoholismo == 'si' ? 'POSITIVO' : 'NEGATIVO', colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let toxicoman = [];
     if (data.tabaquismo === "si") {
@@ -779,11 +781,11 @@ export class CuestionarioComponent implements OnInit {
       tox_string = tox_string + tox + "\n";
     });
 
-    bod.push([{ content: 'GÊNERO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'GÊNERO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.genero, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'TAMANHO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TAMANHO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'TOXICOMANIAS', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TOXICOMANIAS', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: tox_string, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -812,10 +814,11 @@ export class CuestionarioComponent implements OnInit {
       bod.push(m);
     });
 
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: '', colSpan: 12, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: 'DROGAS PRESCRITAS', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    bod.push([{ content: 'DROGAS UTILIZADAS', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'GENÉRICO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: 'DISTINTIVO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
@@ -859,7 +862,6 @@ export class CuestionarioComponent implements OnInit {
       "RISCOS POTENCIAIS: ( " + terap.medicamento.importantPotentialRiskBr + " ) \n\n"+
       "FALTA DE INFORMAÇÃO: ( "+ terap.medicamento.missingInfoBr+ " ) \n\n\n\n"; 
     });
-    
 
     bod.push([{ content: 'CONCORDÂNCIA COM RISCOS IDENTIFICADOS', colSpan: 4, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: risk, colSpan: 8, rowSpan: 1, styles: { halign: 'center' } }]);
@@ -870,74 +872,188 @@ export class CuestionarioComponent implements OnInit {
     const doc = new jsPDF()
     autoTable(doc,
       {
-        didDrawCell: (data) => {
+        /*didDrawCell: (data) => {
           if (data.column.index === 0 && data.row.index === 1) {
             doc.addImage(this.getLogo(), 'PNG', data.cell.x + 5, data.cell.y + 5, 50, 20);
           }
-        },
+        },*/
         theme: "grid",
         body: bod
       }
     );
-    doc.save('MedicalSoftware_'+data.clavePaciente+"_"+data.fechaIngreso+"_"+data.nombre+".pdf");
     doc.output('dataurlnewwindow');
   }
+
+  // info paciente y toxicomanias
+  public gradoInfA(): boolean {
+    let cont = 0;
+    if (this.generoSel != "")
+      cont++;
+    if (this.nombre != "")
+      cont++
+    if (this.apellido != "")
+      cont++;
+    if (this.peso !== "")
+      cont++;
+    if (this.talla !== "")
+      cont++;
+    if (this.imc !== 0)
+      cont++;
+    if (this.f_nac != "")
+      cont++
+    if (this.l_nac != "")
+
+      cont++;
+
+    if (cont >= 6) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //padecimientos
+  public gradoInfB(): boolean {
+    if (this.padecimientosList == null || this.padecimientosList == undefined || this.padecimientosList.length == 0) {
+      return false;
+    } else {
+      return true;
+    }
+
+  }
+
+
+  //medra y terapeutica
+  public gradoInfC(): boolean {
+    if ( (this.medraList !=null && 
+          this.medraList != undefined &&
+          this.medraList.length != 0)  && 
+          (this.terapeuticasList != null &&
+            this.terapeuticasList != undefined &&
+            this.terapeuticasList.length != 0))
+      return true;
+    return false;
+  }
+
+
+  public gradoInfGeneral(): number {
+
+    /// A B C
+
+    // False True True
+    if (this.gradoInfB() && this.gradoInfC() && !this.gradoInfA())
+      return 1;
+      // True True False
+    if (this.gradoInfA() && this.gradoInfB() && !this.gradoInfC())
+      return 1;
+      // True False True
+    if (this.gradoInfA() && this.gradoInfC() && !this.gradoInfB())
+      return 2;
+      // True False False
+    if (this.gradoInfA() && !this.gradoInfB() && !this.gradoInfC())
+      return 1;
+      // False True False
+    if (this.gradoInfB() && !this.gradoInfA() && !this.gradoInfC())
+      return 0;
+      //False False True
+    if (this.gradoInfC() && !this.gradoInfA() && !this.gradoInfB())
+      return 1;
+      // False False False
+    if (!this.gradoInfA() && !this.gradoInfB() && !this.gradoInfC())
+      return 0;
+      // True True True
+    if (this.gradoInfA() && this.gradoInfB() && this.gradoInfC())
+      return 3;
+  }
+
 
   public reestablece() {
     this.cargarMedicamentos("A"); // carga lista de medicamentos que comienzan con A
     this.cargarPadecimientos("A"); // carga lista de padecimientos que comientzan con A
     // carga MEdra del primer ti´po
     this.cargarMedra(this.socMedra[0]);
-  
-    this.turno = "" 
+
+    this.turno = ""
     this.generoSel = ""
     this.nombre = "";
     this.apellido = "";
-    this.peso= undefined;
-    this.talla = undefined;
-    this.imc = undefined;
+    this.peso = "";
+    this.talla = "";
+    this.imc = 0;
     this.f_nac = "";
     this.l_nac = "";
-    this.obsClin = ""; 
+    this.obsClin = "";
     this.datosLabo = "";
     this.opSangSel = "";
     this.gradoInfo = "";
     this.opAlcoholSel = "no";
-    this.opTabSel= "no";
+    this.opTabSel = "no";
     this.opDrogSel = "no";
     this.opSuplSel = "no";
-    this.opHerbSel= "no";
+    this.opHerbSel = "no";
     this.opMedTradSel = "no";
     ///////////////////////////////////Padecimientos
     this.iniPade = "A";
     this.padecimientosList = []; //lista que guarda los padecimientos elegidos momentaneamente
-    this.iniTerap ="A" ;
-    this.terapeuticasList= [];
+    this.iniTerap = "A";
+    this.terapeuticasList = [];
     /////////////////////////////////////////Medra
-    this.socMedraSel=  this.socMedra[0];
+    this.socMedraSel = this.socMedra[0];
     this.medraList = []; //lista que guarda los padecimientos elegidos momentaneamente
   }
 
- // regresa el lenguaje en el que se esta trabajando
+  hasChanges():boolean{
+
+    console.log("El arreglo es: "+this.padecimientosList.length);
+
+    if( this.turno != "" ||
+    this.generoSel != "" ||
+    this.nombre != "" ||
+    this.apellido != "" ||
+    this.peso != "" ||
+    this.talla != "" ||
+    this.imc != 0 ||
+    this.f_nac != "" ||
+    this.l_nac != "" ||
+    this.obsClin != "" ||
+    this.datosLabo != "" ||
+    this.opSangSel != "" ||
+    this.gradoInfo != "0" ||
+    this.opAlcoholSel != "no" ||
+    this.opTabSel != "no" ||
+    this.opDrogSel != "no" ||
+    this.opSuplSel != "no" ||
+    this.opHerbSel != "no" ||
+    this.opMedTradSel != "no" ||
+    this.padecimientosList.length != 0 ||
+    this.terapeuticasList.length != 0 ||
+    this.medraList.length != 0 ){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  // regresa el lenguaje en el que se esta trabajando
   public lang(): string {
     return this.language.lang();
   }
 
-  public comparaFechaNacimiento(fecha:string): boolean{
-    let fechaHoy =  moment().format("YYYY-MM-DD")
+  public comparaFechaNacimiento(fecha: string): boolean {
+    let fechaHoy = moment().format("YYYY-MM-DD")
     return moment(fecha).isAfter(fechaHoy);
   }
 
-  public comparaFechaInicioMed(fecha:string): boolean{
-    let fechaAyer =  moment().subtract(1, "days").format("YYYY-MM-DD")
+  public comparaFechaInicioMed(fecha: string): boolean {
+    let fechaAyer = moment().subtract(1, "days").format("YYYY-MM-DD")
     return !moment(fecha).isAfter(fechaAyer);
   }
 
-  public comparaFechaTerminoMed(fechaIni:string,fechaTerm:string):boolean{
+  public comparaFechaTerminoMed(fechaIni: string, fechaTerm: string): boolean {
     return !moment(fechaTerm).isAfter(moment(fechaIni).subtract(1, "days").format("YYYY-MM-DD"));
   }
-  public comparaFechaCaducidadMed(fechaBase:string):boolean{
-    let fechaHoy =  moment().subtract(1, "days").format("YYYY-MM-DD")
+  public comparaFechaCaducidadMed(fechaBase: string): boolean {
+    let fechaHoy = moment().subtract(1, "days").format("YYYY-MM-DD")
     return !moment(fechaBase).isAfter(fechaHoy);
   }
 
@@ -948,10 +1064,13 @@ export class CuestionarioComponent implements OnInit {
   //solo permite decimales en un campo de texto
   public onlyDecimalNumberKey(event): boolean {
     let charCode = (event.which) ? event.which : event.keyCode;
-    if (charCode != 46 && charCode > 31
-      && (charCode < 48 || charCode > 57))
-      return false;
-    return true;
+
+    if ((charCode > 47 && charCode < 58) ||
+      (charCode > 64 && charCode < 91) ||
+      (charCode > 96 && charCode < 123) ||
+      charCode == 46)
+      return true;
+    return false;
   }
 
   public getLogo(): string {

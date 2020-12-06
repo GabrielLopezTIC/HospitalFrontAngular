@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { ProdGuardService as guard } from './guards/prod-guard.service';
+import { ConfirmDeactivateGuardService as guardConf } from './guards/confirm-deactivate-guard.service';
 import { ListaUsuarioComponent } from './usuario/lista-usuario/lista-usuario.component';
 import { ListaCuestionarioComponent } from './cuestionario/lista-cuestionario/lista-cuestionario.component';
 import { EditarUsuarioComponent } from './usuario/editar-usuario/editar-usuario.component';
@@ -31,7 +32,12 @@ const routes: Routes = [
   { path: 'nuevoMedicamento', component: NuevoMedicamentoComponent, canActivate: [guard], data: { expectedRol: ['admin'] } },
   { path: 'nuevoPadecimiento', component: NuevoPadecimientoComponent, canActivate: [guard], data: { expectedRol: ['admin'] } },
   { path: 'nuevoMedra', component: NuevaMedraComponent, canActivate: [guard], data: { expectedRol: ['admin'] } }, 
-  { path: 'cuestionario', component: CuestionarioComponent, canActivate: [guard], data: { expectedRol: ['admin', 'medico', 'farmaceutico'] } },
+  { path: 'cuestionario',
+    component: CuestionarioComponent,
+    canActivate: [guard],
+    canDeactivate: [guardConf],
+    data: { expectedRol: ['admin', 'medico', 'farmaceutico'] }
+  },
   { path: 'estadisticas', component: EstadisticasComponent, canActivate: [guard], data: { expectedRol: ['admin','medico'] } },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

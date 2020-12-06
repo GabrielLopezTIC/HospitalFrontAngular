@@ -65,9 +65,9 @@
                     </div>
                     <div class="col-sm-3">
                         <mat-form-field>
-                            <input matInput [(ngModel)]="peso" type="number" [placeholder]="lang() == 'es'? 'Ingrese peso (Kg)' : 
-                                lang() == 'en'? 'Enter weight (Kg)' : 'Digite o peso (Kg)' "
-                                (keypress)="onlyDecimalNumberKey($event)">
+                            <input matInput [(ngModel)]="peso" type="text" [placeholder]="lang() == 'es'? 'Ingrese peso' : 
+                                lang() == 'en'? 'Enter weight' : 'Digite o peso' "
+                                (keypress)="onlyDecimalNumberKey($event)" oninput="this.value = this.value.toUpperCase()">
                             <button mat-button *ngIf="peso" matSuffix mat-icon-button aria-label="Clear"
                                 (click)="peso=''">
                                 <mat-icon>x</mat-icon>
@@ -76,9 +76,9 @@
                     </div>
                     <div class="col-sm-3">
                         <mat-form-field>
-                            <input matInput [(ngModel)]="talla" type="number" [placeholder]="lang() == 'es'? 'Ingrese talla (cm)' : 
-                                lang() == 'en'? 'Enter size (cm)' : 'Digite o tamanho (cm)' "
-                                (keypress)="onlyDecimalNumberKey($event)">
+                            <input matInput [(ngModel)]="talla" type="text" [placeholder]="lang() == 'es'? 'Ingrese talla' : 
+                                lang() == 'en'? 'Enter size' : 'Digite o tamanho' "
+                                (keypress)="onlyDecimalNumberKey($event)" oninput="this.value = this.value.toUpperCase()">
                             <button mat-button *ngIf="talla" matSuffix mat-icon-button aria-label="Clear"
                                 (click)="talla=''">
                                 <mat-icon>x</mat-icon>
@@ -609,6 +609,9 @@
                     </div>
                     <div class="col-sm-4">
                         <mat-form-field>
+                            <input matInput [(ngModel)]="gradoInfo" type="text" disabled [value]= "gradoInfGeneral()">
+                        </mat-form-field>
+                       <!-- <mat-form-field disable>
                             <mat-select matSelect
                                 [placeholder]="lang() === 'es'? 'Grado de información': lang() === 'en'? 'Degree of information' : 'Grau de informação'  "
                                 [(ngModel)]="gradoInfo" name="gInfo" [value]="gradoInfo">
@@ -620,7 +623,7 @@
                                 (click)="gradoInfo=''">
                                 <mat-icon>x</mat-icon>
                             </button>
-                        </mat-form-field>
+                        </mat-form-field>-->
                     </div>
                 </div>
                 <button class="btn btn-success" (click)="registrar()">

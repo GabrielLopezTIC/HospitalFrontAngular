@@ -118,10 +118,13 @@ export class EstadisticasComponent implements OnInit {
   inicioSemanaMedraEdad: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
   ///RAM/////////////////////////////////////////////// riesgo edad
-  rangoRam: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }, { clave: "T", valor: this.always }];
-  tipoRam: Rango[] = [{ clave: "R", valor: "Riesgo Importante" }, { clave: "PR", valor: "Riesgo potencial" }, { clave: "M", valor: "Informacion faltante" }];
-  rangoRamSel: string = "S";
   tipoRamSel: string = "R";
+  rangoRam: Rango[] = [{ clave: "S", valor: this.semanal }, { clave: "M", valor: this.mensual }, { clave: "T", valor: this.always }];
+  tipoRam: Rango[] = [
+    { clave: "R", valor: this.lang() == "br"? "Grande Risco" : this.lang()=="en"? "Important Risk" : "Riesgo Importante" }, 
+    { clave: "PR", valor: this.lang() == "br"? "Risco Potencial" : this.lang()=="en"? "Potential Risk" : "Riesgo Potencial" }, 
+    { clave: "M", valor: this.lang() == "br"? "Faltando Informação" : this.lang()=="en"? "Missing Info" : "Información Faltante" }];
+  rangoRamSel: string = "S";
   riskRam: string;
   dateRam: string = moment().subtract(7, 'd').format('YYYY-MM-DD');
 
@@ -201,7 +204,7 @@ export class EstadisticasComponent implements OnInit {
   toxicEdadLabel: string = this.lang() == "en" ? "Drug Adiction by age range" : this.lang() == "br" ? "Dependência de Drogas por faixa etária" : "Toxicomanías por edades";
   medraEdadLabel: string = this.lang() == "en" ? "MedDRA by age range" : this.lang() == "br" ? "MedDRA por faixa etária" : "MedDRA por rango de edad";
   padeEdadLabel: string = this.lang() == "en" ? "Ailment by age range" : this.lang() == "br" ? "Doença por faixa etária" : "Padecimiento por rango de edad";
-
+  ramLabel: string = this.lang()=="en"? "Safety information" : this.lang()=="br"? "Informação de segurança" : "Información de seguridad";
 
   padeLabel: string = this.lang() == "en" ? "Ailments" : this.lang() == "br" ? "Doenças" : "Padecimientos"
   todosLabel: string = this.lang() == "en" ? 'All/None' : this.lang() == "br" ? "Tudo/Nenhum" : "Todos/Ninguno"
@@ -217,7 +220,7 @@ export class EstadisticasComponent implements OnInit {
       { name: this.medraEdadLabel, completed: false, color: 'warn' },
       { name: this.padeLabel, completed: false, color: 'warn' },
       { name: this.padeEdadLabel, completed: false, color: 'warn' },
-      { name: "RAM", completed: false, color: 'warn' },
+      { name: this.ramLabel, completed: false, color: 'warn' },
       { name: 'CIE10', completed: false, color: 'warn' },
       { name: 'Soc', completed: false, color: 'warn' }
     ]
@@ -342,22 +345,18 @@ export class EstadisticasComponent implements OnInit {
       let datosToxicEdad = this.datosGraficaToxicEdad;
       let toxBodEdad = [];
       let titleToxicEdad = "";
+
+
       if (this.rangoToxicEdadSel == "S") {
-        titleToxicEdad = this.lang() == "en" ? "Weekly Summary " :
-          this.lang() == "br" ? "Resumo semanal " :
-            "Resumen Semanal ";
+        titleToxicEdad = this.lang() == "br" ? "Resumo Semanal Dependência de Drogas" : this.lang() == "en" ? "Drug Addiction Weekly Summary" : "Resumen Semanal Toxicomanías";
       } else if (this.rangoToxicEdadSel == "M") {
-        titleToxicEdad = this.lang() == "en" ? "Monthly Summary " :
-          this.lang() == "br" ? "Resumo mensal " :
-            "Resumen Mensual ";
+        titleToxicEdad = this.lang() == "br" ? "Resumo Mensal Dependência de Drogas" : this.lang() == "en" ? "Drug Addiction Monthly Summary" : "Resumen Mensual Toxicomanías";
       } else {
-        titleToxicEdad = this.lang() == "en" ? "Total " :
-          this.lang() == "br" ? "Total " :
-            "Total ";
+        titleToxicEdad = this.lang() == "br" ? "Total Dependência de Drogas" : this.lang() == "en" ? "Drug Addiction Total" : "Total Toxicomanías";
       }
 
 
-      toxBodEdad.push([{ content: titleToxicEdad + this.selMedra, colSpan: 8, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+      toxBodEdad.push([{ content: `${titleToxicEdad} ${this.tipoToxicEdadSel.toUpperCase()}`, colSpan: 8, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
       toxBodEdad.push([
         { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
         { content: hombres, colSpan: 2, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } },
@@ -622,19 +621,24 @@ export class EstadisticasComponent implements OnInit {
       let datosRamEdad = this.datosGraficaRamEdad;
       let padBod = [];
 
+      let tipoRiskLabelEs = this.tipoRamSel == "R"? "Riesgo Importante" : this.tipoRamSel == "PR"? "Riesgo Potencial": "Información Faltante";
+      let tipoRiskLabelEn = this.tipoRamSel == "R"? "Important Risk" : this.tipoRamSel == "PR"? "Potential Risk": "Missing Info";
+      let tipoRiskLabelBr = this.tipoRamSel == "R"? "Grande Risco" : this.tipoRamSel == "PR"? "Risco Potencial": "Faltando Informação";
+     
+
       let titlePade = "";
       if (this.rangoRamSel == "S") {
-        titlePade = this.lang() == "en" ? "Weekly Summary RAM\n" :
-          this.lang() == "br" ? "Resumo Semanal RAM\n" :
-            "Resumen Semanal RAM\n";
+        titlePade = this.lang() == "en" ? `${tipoRiskLabelEn} Weekly Summary ${this.ramLabel}\n` :
+          this.lang() == "br" ? `${tipoRiskLabelBr} Resumo Semanal ${this.ramLabel}\n` :
+            `${tipoRiskLabelEs} Resumen Semanal ${this.ramLabel}\n`;
       } else if (this.rangoRamSel == "M") {
-        titlePade = this.lang() == "en" ? "Monthly Summary RAM\n" :
-          this.lang() == "br" ? "Resumo Mensal RAM\n" :
-            "Resumen Mensual RAM\n";
+        titlePade = this.lang() == "en" ? `${tipoRiskLabelEn} Monthly Summary ${this.ramLabel}\n` :
+          this.lang() == "br" ? `${tipoRiskLabelBr} Resumo Mensal ${this.ramLabel}\n` :
+            `${tipoRiskLabelEs} Resumen Mensual ${this.ramLabel}\n`;
       } else {
-        titlePade = this.lang() == "en" ? "Total Summary RAM\n" :
-          this.lang() == "br" ? "Total RAM\n" :
-            "Total RAM\n";
+        titlePade = this.lang() == "en" ? `${tipoRiskLabelEn} Total Summary ${this.ramLabel}\n` :
+          this.lang() == "br" ? `${tipoRiskLabelBr} Total ${this.ramLabel}\n` :
+            `${tipoRiskLabelEs} Total ${this.ramLabel}\n`;
       }
 
       padBod.push([{ content: titlePade, colSpan: 8, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
@@ -731,11 +735,11 @@ export class EstadisticasComponent implements OnInit {
 
       let titulo = () => {
         if (this.rangoSelSoc == "S") {
-          return this.lang() == "en" ? "Weekly Summary By Soc starting on " + this.inicioSemanaSoc : this.lang() == "br" ? "Resumo semanal por Soc começando em " + this.inicioSemanaSoc : "Resumen Semanal Por Soc iniciando el " + this.inicioSemanaSoc;
+          return this.lang() == "en" ? "Weekly Summary By SOC Starting on " + this.inicioSemanaSoc : this.lang() == "br" ? "Resumo Semanal Por SOC Começando em " + this.inicioSemanaSoc : "Resumen Semanal Por SOC Iniciando El " + this.inicioSemanaSoc;
         } else if (this.rangoSelSoc == "M") {
-          return this.lang() == "en" ? "Monthly Summary By Soc starting on " + this.inicioSemanaSoc : this.lang() == "br" ? "Resumo mensal por Soc começando em " + this.inicioSemanaSoc : "Resumen Mensual Por Soc iniciando el " + this.inicioSemanaSoc;
+          return this.lang() == "en" ? "Monthly Summary By SOC Starting on " + this.inicioSemanaSoc : this.lang() == "br" ? "Resumo Mensal Por SOC Começando em " + this.inicioSemanaSoc : "Resumen Mensual Por SOC Iniciando El " + this.inicioSemanaSoc;
         } else {
-          return this.lang() == "en" ? "Total Data By Soc" : this.lang() == "br" ? "Dados totais por Soc" : "Datos Totales Por Soc";
+          return this.lang() == "en" ? "Total Data By SOC" : this.lang() == "br" ? "Dados Totais Por SOC" : "Datos Totales Por SOC";
         }
       }
       socBod.push([{ content: titulo(), colSpan: 6, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
@@ -835,7 +839,7 @@ export class EstadisticasComponent implements OnInit {
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
     if (this.rangoPadeSel == "S") { // grafica semanal
-      title = this.lang() == 'en' ? "Weekly disease summary " : this.lang() == 'br' ? "Resumo semanal da doença " : "Resumen semanal padecimiento ";
+      title = this.lang() == 'en' ? "Weekly Disease Summary " : this.lang() == 'br' ? "Resumo Semanal Da Doença " : "Resumen Semanal Padecimiento ";
       // labels de las fechas
       categorias = [datos.datos[0].fecha, datos.datos[1].fecha, datos.datos[2].fecha,
       datos.datos[3].fecha, datos.datos[4].fecha, datos.datos[5].fecha, datos.datos[6].fecha];
@@ -846,7 +850,7 @@ export class EstadisticasComponent implements OnInit {
       datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
       datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
     } else { // grafica mensual
-      title = this.lang() == 'en' ? "Monthly MedDRA summary " : this.lang() == 'br' ? "Resumo mensal da MedDRA " : "Resumen mensual MedDRA ";
+      title = this.lang() == 'en' ? "Monthly Disease Summary " : this.lang() == 'br' ? "Resumo Mensal Da Doença " : "Resumen Mensual Padecimiento ";
       //label de fechas;
       categorias = [datos.datos[0].fecha, datos.datos[1].fecha, datos.datos[2].fecha,
       datos.datos[3].fecha];
@@ -962,10 +966,12 @@ export class EstadisticasComponent implements OnInit {
     let fecha = this.lang() == 'en' ? "Age" : this.lang() == 'br' ? "Era" : "Edad";
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
-    if (this.rangoPadeSel == "S") { // grafica semanal
-      title = this.lang() == 'en' ? "Weekly summary " : this.lang() == 'br' ? "Resumo semanal " : "Resumen semanal ";
-    } else { // grafica mensual
-      title = this.lang() == 'en' ? "Monthly summary " : this.lang() == 'br' ? "Resumo mensal " : "Resumen mensual ";
+    if (this.rangoPadeSelEdad == "S") { // grafica semanal
+      title = this.lang() == 'en' ? "Weekly Summary " : this.lang() == 'br' ? "Resumo Semanal " : "Resumen Semanal ";
+    } else if (this.rangoPadeSelEdad == "M"){ // grafica mensual
+      title = this.lang() == 'en' ? "Monthly Summary " : this.lang() == 'br' ? "Resumo Mensal " : "Resumen Mensual ";
+    }else{
+      title = this.lang() == 'en' ? "Todo " : this.lang() == 'br' ? "Todo " : "Todo ";
     }
 
     // labels de las fechas
@@ -1112,8 +1118,8 @@ export class EstadisticasComponent implements OnInit {
       if (e.cantidad > 0)
         datos.push({ name: e.nombre, y: e.cantidad })
     });
-    let titulo = this.lang() == "en" ? "Total CIE10 registrations" :
-      this.lang() == "br" ? "Total de registros CIE10" : "Total de registros CIE10";
+    let titulo = this.lang() == "en" ? "CIE10 Registrations" :
+      this.lang() == "br" ? "Registros CIE10" : "Registros CIE10";
 
     this.serieCie = [{
       name: 'Brands',
@@ -1206,8 +1212,8 @@ export class EstadisticasComponent implements OnInit {
       if (e.cantidad > 0)
         datos.push({ name: e.nombre, y: e.cantidad })
     });
-    let titulo = this.lang() == "en" ? "Total SOC registrations" :
-      this.lang() == "br" ? "Total de registros SOC" : "Total de registros SOC";
+    let titulo = this.lang() == "en" ? "SOC Registrations" :
+      this.lang() == "br" ? "Registros SOC" : "Registros SOC";
 
     this.serieSoc = [{
       name: 'Brands',
@@ -1309,7 +1315,7 @@ export class EstadisticasComponent implements OnInit {
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
     if (this.rangoMedraSel == "S") { // grafica semanal
-      title = this.lang() == 'en' ? "Weekly MedDRA summary " : this.lang() == 'br' ? "Resumo semanal da MedDRA " : "Resumen semanal MedDRA ";
+      title = this.lang() == 'en' ? "Weekly MedDRA Summary " : this.lang() == 'br' ? "Resumo Semanal Da MedDRA " : "Resumen Semanal MedDRA ";
 
       // labels de las fechas
       categorias = [datos.datos[0].fecha, datos.datos[1].fecha, datos.datos[2].fecha,
@@ -1321,7 +1327,7 @@ export class EstadisticasComponent implements OnInit {
       datosMujer = [datos.datos[0].mujeres, datos.datos[1].mujeres, datos.datos[2].mujeres,
       datos.datos[3].mujeres, datos.datos[4].mujeres, datos.datos[5].mujeres, datos.datos[6].mujeres];
     } else { // grafica mensual
-      title = this.lang() == 'en' ? "Monthly MedDRA summary " : this.lang() == 'br' ? "Resumo mensal da MedDRA " : "Resumen mensual MedDRA ";
+      title = this.lang() == 'en' ? "Monthly MedDRA Summary " : this.lang() == 'br' ? "Resumo Mensal Da MedDRA " : "Resumen Mensual MedDRA ";
       //label de fechas;
       categorias = [datos.datos[0].fecha, datos.datos[1].fecha, datos.datos[2].fecha,
       datos.datos[3].fecha];
@@ -1439,10 +1445,12 @@ export class EstadisticasComponent implements OnInit {
     let fecha = this.lang() == 'en' ? "Age" : this.lang() == 'br' ? "Era" : "Edad";
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
-    if (this.rangoPadeSel == "S") { // grafica semanal
-      title = this.lang() == 'en' ? "Weekly summary " : this.lang() == 'br' ? "Resumo semanal " : "Resumen semanal ";
-    } else { // grafica mensual
-      title = this.lang() == 'en' ? "Monthly summary " : this.lang() == 'br' ? "Resumo mensal " : "Resumen mensual ";
+    if (this.rangoMedraSelEdad == "S") { // grafica semanal
+      title = this.lang() == 'en' ? "Weekly Summary " : this.lang() == 'br' ? "Resumo Semanal " : "Resumen Semanal ";
+    } else if (this.rangoMedraSelEdad == "M") { // grafica mensual
+      title = this.lang() == 'en' ? "Monthly Summary " : this.lang() == 'br' ? "Resumo Mensal " : "Resumen Mensual ";
+    }else{
+      title = this.lang() == 'en' ? "Total " : this.lang() == 'br' ? "Total " : "Total ";
     }
 
     // labels de las fechas
@@ -1488,7 +1496,7 @@ export class EstadisticasComponent implements OnInit {
 
     this.graficaCombinadaMedraEdad = {
       title: {
-        text: title + this.selPade
+        text: title + this.selMedra
       },
       xAxis: {
         title: {
@@ -1579,7 +1587,12 @@ export class EstadisticasComponent implements OnInit {
     }
     ];
 
-    let title_text = this.lang() == "br" ? "Resumo Semanal Dependência de Drogas" : this.lang() == "en" ? "Drug Addiction Weekly Summary" : "Resumen Semanal Toxicomanías";
+    let title_text = "";
+    if (this.rangoSel == "S") { // grafica semanal
+      title_text = this.lang() == 'en' ? "Weekly Summary Drug Addiction " : this.lang() == 'br' ? "Resumo Semanal Dependência de Drogas " : "Resumen Semanal Toxicomanías ";
+    } else{ // grafica mensual
+      title_text = this.lang() == 'en' ? "Monthly Summary Drug Addiction " : this.lang() == 'br' ? "Resumo Mensal Dependência de Drogas " : "Resumen Mensual Toxicomanías ";
+    }
     let y_label = this.lang() == "br" ? "Pacientes" : this.lang() == "en" ? "Patiens" : "Pacientes";
     let x_label = this.lang() == "br" ? "Data" : this.lang() == "en" ? "Date" : "Fecha";
 
@@ -1711,10 +1724,12 @@ export class EstadisticasComponent implements OnInit {
     let fecha = this.lang() == 'en' ? "Age" : this.lang() == 'br' ? "Era" : "Edad";
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
-    if (this.rangoPadeSel == "S") { // grafica semanal
-      title = this.lang() == 'en' ? "Weekly summary " : this.lang() == 'br' ? "Resumo semanal " : "Resumen semanal ";
-    } else { // grafica mensual
-      title = this.lang() == 'en' ? "Monthly summary " : this.lang() == 'br' ? "Resumo mensal " : "Resumen mensual ";
+    if (this.rangoToxicEdadSel == "S") { // grafica semanal
+      title = this.lang() == 'en' ? "Weekly Summary " : this.lang() == 'br' ? "Resumo Semanal " : "Resumen Semanal ";
+    } else if(this.rangoToxicEdadSel == "M") { // grafica mensual
+      title = this.lang() == 'en' ? "Monthly Summary " : this.lang() == 'br' ? "Resumo Mensal " : "Resumen Mensual ";
+    }else{
+      title = this.lang() == 'en' ? "Total " : this.lang() == 'br' ? "Total " : "Total ";
     }
 
     // labels de las fechas
@@ -1760,7 +1775,7 @@ export class EstadisticasComponent implements OnInit {
 
     this.graficaCombinadaToxicEdad = {
       title: {
-        text: title + this.tipoToxicEdadSel
+        text: title + this.tipoToxicEdadSel.toUpperCase()
       },
       xAxis: {
         title: {
@@ -1837,7 +1852,7 @@ export class EstadisticasComponent implements OnInit {
     let pacientes = this.lang() == 'en' ? "Patients" : this.lang() == 'br' ? "Pacientes" : "Pacientes";
 
     if (this.rangoRamSel == "S") { // grafica semanal
-      rangoText = this.lang() == 'en' ? "Weekly" : this.lang() == 'br' ? "semanal" : "semanal";
+      rangoText = this.lang() == 'en' ? "Weekly" : this.lang() == 'br' ? "Semanal" : "Semanal";
     } else if (this.rangoRamSel == "T") {
       rangoText = this.lang() == 'en' ? "All" : this.lang() == 'br' ? "Tudo" : "Todo";
     } else { // grafica mensual
@@ -1896,7 +1911,7 @@ export class EstadisticasComponent implements OnInit {
 
     this.graficaCombinadaRamEdad = {
       title: {
-        text: title + this.riskRam
+        text: title + this.riskRam.toUpperCase()
       },
       xAxis: {
         title: {
@@ -1912,7 +1927,6 @@ export class EstadisticasComponent implements OnInit {
       series: this.seriesRamEdad
     };
   }
-
 
   cargarGraficaRisk(tipo: string, rango: string, risk: string, date?: string) {
     this.cargandoRamEdad = true;

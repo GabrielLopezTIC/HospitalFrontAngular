@@ -30,18 +30,20 @@ export class EditarCuestionarioComponent implements OnInit {
 
   @BlockUI() blockUI: NgBlockUI;
 
+  /// informacion del paciente//////////////////////////////////////
+  public generoSel: string = ""; // genero
+  public nombre: string = ""; //nombre cuestionario
+  public apellido: string = ""; //apellido cuestionario
+  public peso: string = ""; //number; //peso cuestionario
+  public talla: string = "";//number; //talla cuestionario
+  public imc: number = 0; //imc cestionario
+  public f_nac: string = ""; //fecha nacimiento cuestionario
+  public l_nac: string = ""; //lugar nacimiento cuestionario
+
   public registrando: boolean = false;
   public turno: string; ///turno
   ///////////////////////////////////////genero opciones
   public genero: GeneroOpc[] = [{ clave: 'H', valor: this.lang() == 'br' ? 'H' : this.lang() == 'en' ? 'M' : 'H' }, { clave: 'M', valor: this.lang() == 'br' ? 'M' : this.lang() == 'en' ? 'F' : 'M' }]
-  public generoSel: string; /// genero
-  public nombre: string; //nombre cuestionario
-  public apellido: string; //apellido cuestionario
-  public peso: number; //peso cuestionario
-  public talla: number; //talla cuestionario
-  public imc: number; //imc cestionario
-  public f_nac: string; //fecha nacimiento cuestionario
-  public l_nac: string; //lugar nacimiento cuestionario
   public obsClin: string; // observaciones clinicas 
   public datosLabo: string; // datos laboratorio
 
@@ -119,6 +121,7 @@ export class EditarCuestionarioComponent implements OnInit {
       // carga los datos del cuestionario
       this.cuestionarioService.details(this.claveCuestionario).subscribe(
         data => {
+         
           this.turno = data.turno;
           this.generoSel = data.genero;
           this.nombre = data.nombre; //nombre cuestionario
@@ -425,7 +428,7 @@ export class EditarCuestionarioComponent implements OnInit {
         this.obsClin,//obsClinicas
         this.datosLabo,//datoslabo
         "",//riesgoside se llena automaticamente en el back
-        this.gradoInfo,//gradoinfo
+        this.gradoInfGeneral().toString()//gradoinfo
       );
 
       let textoCargando = this.lang()=="en"? "Updating patient..." : this.lang()=="br"? "Atualizando paciente..." : "Actualizando paciente..." ;
@@ -474,11 +477,11 @@ export class EditarCuestionarioComponent implements OnInit {
     { content: 'TURNO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },
-    { content: 'PERFIL FARMACOTÉRAPEUTICO', colSpan: 9, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    bod.push([/*{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },*/
+    { content: 'PERFIL FARMACOTÉRAPEUTICO', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'PACIENTE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.nombre + " " + data.apellido, colSpan: 7, rowSpan: 1, styles: { halign: 'left' } }]);
+    { content: data.nombre + " " + data.apellido, colSpan: 10, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var hoy = new Date();
     var cumpleanos = new Date(data.fechaNacimiento);
@@ -489,12 +492,12 @@ export class EditarCuestionarioComponent implements OnInit {
       edad--;
     }
 
-    bod.push([{ content: 'EDAD', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: edad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'PESO (Kg)', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold', overflow: 'linebreak' } },
-    { content: data.peso, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'ETILISMO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.alcoholismo == 'si' ? 'POSITIVO' : 'NEGATIVO', colSpan: 4, rowSpan: 1, styles: { halign: 'center' } }]);
+    bod.push([{ content: 'EDAD', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'PESO (Kg)', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold', overflow: 'linebreak' } },
+    { content: data.peso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'ETILISMO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.alcoholismo == 'si' ? 'POSITIVO' : 'NEGATIVO', colSpan: 2, rowSpan: 1, styles: { halign: 'center' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let toxicoman = [];
     if (data.tabaquismo === "si") {
@@ -518,11 +521,11 @@ export class EditarCuestionarioComponent implements OnInit {
       tox_string = tox_string + tox + "\n";
     });
 
-    bod.push([{ content: 'GÉNERO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'GÉNERO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.genero, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'TALLA (cm)', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TALLA (cm)', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'TOXICOMANIAS', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TOXICOMANIAS', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: tox_string, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -608,11 +611,11 @@ export class EditarCuestionarioComponent implements OnInit {
     const doc = new jsPDF()
     autoTable(doc,
       {
-        didDrawCell: (data) => {
+        /*didDrawCell: (data) => {
           if (data.column.index === 0 && data.row.index === 1) {
             doc.addImage(this.getLogo(), 'PNG', data.cell.x + 5, data.cell.y + 5, 50, 20);
           }
-        },
+        },*/
         theme: "grid",
         body: bod
       }
@@ -632,11 +635,11 @@ export class EditarCuestionarioComponent implements OnInit {
     { content: 'TURN', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },
-    { content: 'PHARMACOTHERAPEUTIC PROFILE', colSpan: 9, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    bod.push([/*{ content: "", colSpan: 3, rowSpan: 1, styles: { halign: 'left' } },*/
+    { content: 'PHARMACOTHERAPEUTIC PROFILE', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'PATIENT', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.nombre + " " + data.apellido, colSpan: 7, rowSpan: 1, styles: { halign: 'left' } }]);
+    { content: data.nombre + " " + data.apellido, colSpan: 10, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var hoy = new Date();
     var cumpleanos = new Date(data.fechaNacimiento);
@@ -646,12 +649,12 @@ export class EditarCuestionarioComponent implements OnInit {
     if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
       edad--;
     }
-    bod.push([{ content: 'AGE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: edad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'WEIGHT', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.peso, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'ETHYLISM', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.alcoholismo == 'si' ? 'POSITIVE' : 'NEGATIVE', colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
+    bod.push([{ content: 'AGE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'WEIGHT', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.peso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'ETHYLISM', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.alcoholismo == 'si' ? 'POSITIVE' : 'NEGATIVE', colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let toxicoman = [];
     if (data.tabaquismo === "si") {
@@ -675,11 +678,11 @@ export class EditarCuestionarioComponent implements OnInit {
       tox_string = tox_string + tox + "\n";
     });
 
-    bod.push([{ content: 'GENDER', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'GENDER', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.genero == 'M' ? 'F' : 'M', colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'SIZE', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'SIZE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'TOXICOMANIES', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TOXICOMANIES', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: tox_string, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -767,11 +770,11 @@ export class EditarCuestionarioComponent implements OnInit {
     const doc = new jsPDF()
     autoTable(doc,
       {
-        didDrawCell: (data) => {
+        /*didDrawCell: (data) => {
           if (data.column.index === 0 && data.row.index === 1) {
             doc.addImage(this.getLogo(), 'PNG', data.cell.x + 5, data.cell.y + 5, 50, 20);
           }
-        },
+        },*/
         theme: "grid",
         body: bod,
       }
@@ -791,11 +794,11 @@ export class EditarCuestionarioComponent implements OnInit {
     { content: 'VIRAR', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.turno, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bod.push([{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },
-    { content: 'PERFIL FARMACOTERAPÊUTICO', colSpan: 9, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
+    bod.push([/*{ content: "", colSpan: 3, rowSpan: 4, styles: { halign: 'left' } },*/
+    { content: 'PERFIL FARMACOTERAPÊUTICO', colSpan: 12, rowSpan: 1, styles: { halign: 'center', fontStyle: 'bold' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bod.push([{ content: 'PACIENTE', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.nombre + " " + data.apellido, colSpan: 7, rowSpan: 1, styles: { halign: 'left' } }]);
+    { content: data.nombre + " " + data.apellido, colSpan: 10, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var hoy = new Date();
     var cumpleanos = new Date(data.fechaNacimiento);
@@ -805,12 +808,12 @@ export class EditarCuestionarioComponent implements OnInit {
     if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
       edad--;
     }
-    bod.push([{ content: 'ERA', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: edad, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'PESO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.peso, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'ETILISMO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
-    { content: data.alcoholismo == 'si' ? 'POSITIVO' : 'NEGATIVO', colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
+    bod.push([{ content: 'ERA', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: edad, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'PESO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.peso, colSpan: 2, rowSpan: 1, styles: { halign: 'left' } },
+    { content: 'ETILISMO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: data.alcoholismo == 'si' ? 'POSITIVO' : 'NEGATIVO', colSpan: 2, rowSpan: 1, styles: { halign: 'left' } }]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     let toxicoman = [];
     if (data.tabaquismo === "si") {
@@ -834,11 +837,11 @@ export class EditarCuestionarioComponent implements OnInit {
       tox_string = tox_string + tox + "\n";
     });
 
-    bod.push([{ content: 'GÊNERO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    bod.push([{ content: 'GÊNERO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.genero, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'TAMANHO', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TAMANHO', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: data.talla, colSpan: 1, rowSpan: 1, styles: { halign: 'left' } },
-    { content: 'TOXICOMANIAS', colSpan: 1, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
+    { content: 'TOXICOMANIAS', colSpan: 2, rowSpan: 1, styles: { halign: 'left', fontStyle: 'bold' } },
     { content: tox_string, colSpan: 4, rowSpan: 1, styles: { halign: 'left' } }]);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -863,7 +866,7 @@ export class EditarCuestionarioComponent implements OnInit {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     data.medraList.forEach(med => {
       let m = [{ content: med.socBr, colSpan: 3, rowSpan: 1, styles: { halign: 'left' } },
-      { content: med.medDraBR, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }];
+      { content: med.medDraBr, colSpan: 9, rowSpan: 1, styles: { halign: 'center' } }];
       bod.push(m);
     });
 
@@ -925,11 +928,11 @@ export class EditarCuestionarioComponent implements OnInit {
     const doc = new jsPDF()
     autoTable(doc,
       {
-        didDrawCell: (data) => {
+        /*didDrawCell: (data) => {
           if (data.column.index === 0 && data.row.index === 1) {
             doc.addImage(this.getLogo(), 'PNG', data.cell.x + 5, data.cell.y + 5, 50, 20);
           }
-        },
+        },*/
         theme: "grid",
         body: bod
       }
@@ -937,11 +940,98 @@ export class EditarCuestionarioComponent implements OnInit {
     doc.output('dataurlnewwindow');
   }
 
+ // info paciente y toxicomanias
+ public gradoInfA(): boolean {
+  let cont = 0;
+  if (this.generoSel != "")
+    cont++;
+  if (this.nombre != "")
+    cont++
+  if (this.apellido != "")
+    cont++;
+  if (this.peso !== "")
+    cont++;
+  if (this.talla !== "")
+    cont++;
+  if (this.imc !== 0)
+    cont++;
+  if (this.f_nac != "")
+    cont++
+  if (this.l_nac != "")
+
+    cont++;
+
+  if (cont >= 6) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+//padecimientos
+public gradoInfB(): boolean {
+  if (this.padecimientosList == null || this.padecimientosList == undefined || this.padecimientosList.length == 0) {
+    return false;
+  } else {
+    return true;
+  }
+
+}
+
+
+//medra y terapeutica
+public gradoInfC(): boolean {
+  if ( (this.medraList !=null && 
+        this.medraList != undefined &&
+        this.medraList.length != 0)  && 
+        (this.terapeuticasList != null &&
+          this.terapeuticasList != undefined &&
+          this.terapeuticasList.length != 0))
+    return true;
+  return false;
+}
+
+
+public gradoInfGeneral(): number {
+
+ 
+  /// A B C
+
+  // False True True
+  if (this.gradoInfB() && this.gradoInfC() && !this.gradoInfA())
+    return 1;
+    // True True False
+  if (this.gradoInfA() && this.gradoInfB() && !this.gradoInfC())
+    return 1;
+    // True False True
+  if (this.gradoInfA() && this.gradoInfC() && !this.gradoInfB())
+    return 2;
+    // True False False
+  if (this.gradoInfA() && !this.gradoInfB() && !this.gradoInfC())
+    return 1;
+    // False True False
+  if (this.gradoInfB() && !this.gradoInfA() && !this.gradoInfC())
+    return 0;
+    //False False True
+  if (this.gradoInfC() && !this.gradoInfA() && !this.gradoInfB())
+    return 1;
+    // False False False
+  if (!this.gradoInfA() && !this.gradoInfB() && !this.gradoInfC())
+    return 0;
+    // True True True
+  if (this.gradoInfA() && this.gradoInfB() && this.gradoInfC())
+    return 3;
+}
+
+
+
+
+
+
   public lang(): string {
     return this.language.lang();
   }
 
-  
   public comparaFechaNacimiento(fecha:string): boolean{
     let fechaHoy =  moment().format("YYYY-MM-DD")
     return moment(fecha).isAfter(fechaHoy);
@@ -964,10 +1054,14 @@ export class EditarCuestionarioComponent implements OnInit {
 
   public onlyDecimalNumberKey(event): boolean {
     let charCode = (event.which) ? event.which : event.keyCode;
-    if (charCode != 46 && charCode > 31
-      && (charCode < 48 || charCode > 57))
-      return false;
-    return true;
+   
+
+    if( (charCode > 47 && charCode < 58) || 
+    (charCode > 64 && charCode < 91) || 
+    (charCode > 96 && charCode < 123) || 
+    charCode == 46 )
+      return true;
+    return false;
   }
 
   public getLogo(): string {

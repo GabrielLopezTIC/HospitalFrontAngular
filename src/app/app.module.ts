@@ -3,7 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { interceptorProvider } from './interceptors/prod-interceptor.service';
-
+import { ProdGuardService}  from './guards/prod-guard.service';
+import { ConfirmDeactivateGuardService}  from './guards/confirm-deactivate-guard.service';
 import { HttpClientModule } from '@angular/common/http';
 
 
@@ -117,7 +118,10 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatProgressBarModule,
   ],
   providers: [
-    interceptorProvider
+    interceptorProvider,
+    ProdGuardService,
+    ConfirmDeactivateGuardService
+    
   ],
   bootstrap: [AppComponent]
 })
