@@ -103,6 +103,7 @@ export class CuestionarioService {
 
 
 
+
   ////////////////////////////////////////////////////////////////////PAdecimientoa
 
   /**
@@ -235,6 +236,13 @@ export class CuestionarioService {
   public datosGraficaRamMissEdadesMounth(lang: string, date: string, risk: string): Observable<any> {
     return this.httpClient.get<any>(`${this.cuestionarioURL}missingMounth/lang/${lang}/date/${date}/risk/${risk}`)
   }            
+
+  //REporte cuestionarios excell todos
+  public reporteXlsxAllCuestionarios(lang: string,orderBy:string): Observable<any> {
+    return this.httpClient.get<any>(`${this.cuestionarioURL}download/cuestionarios/lang/${lang}/orderBy/${orderBy}`, {
+      responseType: 'blob' as 'json'
+    });
+  }
 
 
 

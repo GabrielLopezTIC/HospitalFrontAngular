@@ -17,10 +17,11 @@
           <label *ngIf="lang()=='en'">Search</label>
           <label *ngIf="lang()=='br'">Procurar</label>
         </button>
+        <input type="button" (click)="fireEvent()" value="All XLSX" class="btn btn-secondary ml-2">
       </div>
       <div>
         <div class="table-container">
-          <table class="table">
+          <table class="table" #table>
             <thead>
               <tr class="color-theme-green">
                 <th scope="col">
@@ -34,9 +35,9 @@
                   <label *ngIf="lang()=='br'">Data ou atualizado de registro</label>
                 </th>
                 <th scope="col">
-                  <label *ngIf="lang()=='es'">Registrado o actualizado por:</label>
-                  <label *ngIf="lang()=='en'">Registered or updated by:</label>
-                  <label *ngIf="lang()=='br'">Registrado ou atualizado por:</label>
+                  <label *ngIf="lang()=='es'">Registrado o actualizado por</label>
+                  <label *ngIf="lang()=='en'">Registered or updated by</label>
+                  <label *ngIf="lang()=='br'">Registrado ou atualizado por</label>
                 </th>
                 <th scope="col">
                   <label *ngIf="lang()=='es'">Médico tratante</label>
@@ -55,12 +56,12 @@
                 </th>
                 <th scope="col">
                   <label *ngIf="lang()=='es'">Padecimientos</label>
-                  <label *ngIf="lang()=='en'">Diagnostic´s</label>
+                  <label *ngIf="lang()=='en'">Diagnostics</label>
                   <label *ngIf="lang()=='br'">Doenças</label></th>
                 <th scope="col">
                   <label *ngIf="lang()=='es'">MedDRA</label>
                   <label *ngIf="lang()=='en'">MedDRA</label>
-                  <label *ngIf="lang()=='br'">medDRA</label></th>
+                  <label *ngIf="lang()=='br'">MedDRA</label></th>
                 <th scope="col">
                   <label *ngIf="lang()=='es'">Terapéutica indicada</label>
                   <label *ngIf="lang()=='en'">Indicated therapeutic</label>

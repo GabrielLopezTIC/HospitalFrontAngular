@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-   alert("Sistema en mantenimiento, algunas funciones pueden fallar");
+  //alert("Sistema en mantenimiento, algunas funciones pueden fallar");
     if (this.tokenService.getToken()) {
       this.isLogged = true;
       this.isLoginFail = false;
